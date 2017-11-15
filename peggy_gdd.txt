@@ -1,0 +1,10 @@
+personnage :
+  x, y, w, h (int)
+  equip[] (pointeurs sur obj)
+  contenu (string)
+  main (obj)
+  image (référence)
+  index (int)
+  letal (bool)
+  vie (int)
+  solid (bool)
