@@ -16,8 +16,8 @@
 #define WINDOW_H 650
 #define WINDOW_W 1300
 
-#include "move.h"
 #include "structs.h"
+#include "move.h"
 #include "screen.h"
 #include "load.h"
 #include "inputs.h"

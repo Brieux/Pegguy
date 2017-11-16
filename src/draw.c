@@ -3,8 +3,26 @@
 void drawGame(Game *game)
 {
   clearScreen(game->screen);
+  drawMap(game);
   drawImage(game->perso->image, game->perso->x, game->perso->y, game->screen->pRenderer);
   SDL_RenderPresent(game->screen->pRenderer);
+}
+
+void drawMap(Game *game)
+{
+  for (int x=0; x<game->wmap; x++)
+  {
+    for (int y=0; y<game->hmap; y++)
+    {
+      switch (game->map[x][y]->type)
+      {
+        case 1:
+          game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
+          drawImage(game->map[x][y]->image, x*32, y*32, game->screen->pRenderer);
+          break;
+      }
+    }
+  }
 }
 
 void clearScreen(Screen *screen)

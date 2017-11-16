@@ -33,6 +33,13 @@ typedef struct Perso
 
 }Perso;
 
+typedef struct Bloc
+{
+  int x, y, w, h;
+  int type;
+  SDL_Texture *image;
+}Bloc;
+
 
 typedef struct Game
 {
@@ -40,6 +47,8 @@ typedef struct Game
   SDL_Texture *ground;
   Input *input;
   Perso *perso;
+  Bloc ***map;
+  int wmap, hmap;
 }Game;
 
 #endif

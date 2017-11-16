@@ -46,11 +46,11 @@ void updateInputs(Game *game)
   }
   if (game->input->key[SDL_SCANCODE_D])
   {
-      move(&game->perso->x, &game->perso->y, game->perso->hSpeed, 0);
+      move(game, &game->perso->x, &game->perso->y, game->perso->hSpeed, 0);
   }
   if (game->input->key[SDL_SCANCODE_A])
   {
-    move(&game->perso->x, &game->perso->y, -game->perso->hSpeed, 0);
+    move(game, &game->perso->x, &game->perso->y, -game->perso->hSpeed, 0);
   }
   if (game->input->key[SDL_SCANCODE_LEFT])
   {
