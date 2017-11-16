@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -std=c99
-LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
+CFLAGS = -Wall -std=c99 -g
+LDFLAGS =  -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
 SOURCES = $(wildcard *.c)
 OBJETS = $(SOURCES:.c=.o)
 EXEC = peggy

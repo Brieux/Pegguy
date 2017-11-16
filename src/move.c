@@ -5,7 +5,7 @@ void move(Game *game, int *x, int *y, int vx, int vy)
   for (uint i=0; i<abs(vx); i++)
   {
     if (!collision(game->perso->x + abs(vx)/vx, game->perso->y, game->perso->w, game->perso->h,
-                   0, 0, 0, WINDOW_H) &&
+                   -1, 0, 0, WINDOW_H) &&
         !collision(game->perso->x + abs(vx)/vx, game->perso->y, game->perso->w, game->perso->h,
                    WINDOW_W, 0, 0, WINDOW_H))
     {

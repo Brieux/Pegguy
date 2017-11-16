@@ -17,9 +17,13 @@ Game *loadGame()
   for (uint i=0; i<game->wmap; i++)
   {
     game->map[i] = malloc(game->hmap*sizeof(Bloc));
+    for (uint k=0; k<game->hmap; k++)
+    {
+      game->map[i][k] = malloc(sizeof(Bloc));
+    }
     if (!game->map[i])
     {
-      printf("Unable to calloc map %d\n", i);
+      printf("Unable to malloc map %d\n", i);
       exit(EXIT_FAILURE);
     }
   }
@@ -27,17 +31,14 @@ Game *loadGame()
   {
     for (int y=0; y<game->hmap; y++)
     {
-      game->map[x][y]->type = 0;
+      game->map[x][y]->type = EMPTY;
     }
   }
-  game->map[0][0]->type = 1;
-  game->map[1][4]->type = 1;
-  game->map[0][3]->type = 1;
-  game->map[10][10]->type = 1;
-  game->map[8][6]->type = 1;
+  game->map[0][0]->type = GROUND;
 
   return game;
 }
+
 
 Perso *loadPerso(Game *game)
 {
@@ -45,8 +46,8 @@ Perso *loadPerso(Game *game)
   perso->image = loadTexture("../graphics/perso.png", game->screen->pRenderer);
   perso->w = 32;
   perso->h = 64;
-  perso->x = 100;
-  perso->y = 100;
+  perso->x = 96;
+  perso->y = 96;
   perso->hSpeed = 5;
   perso->vSpeed = 5;
 

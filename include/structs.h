@@ -5,6 +5,8 @@
 
 typedef unsigned int uint;
 
+enum {GROUND, EMPTY};
+
 typedef struct Screen
 {
   SDL_Window *pWindow;

@@ -13,8 +13,8 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 
-#define WINDOW_H 650
-#define WINDOW_W 1300
+#define WINDOW_H 640
+#define WINDOW_W 1280
 
 #include "structs.h"
 #include "move.h"
