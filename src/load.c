@@ -24,9 +24,15 @@ Perso *loadPerso(Game *game)
   perso->w = 32;
   perso->h = 64;
   perso->x = 96;
-  perso->y = 96;
+  perso->xMap = 96;
+  perso->y = 200;
+  perso->y = 200;
   perso->hSpeed = 5;
-  perso->vSpeed = 5;
+  perso->vSpeed = 0;
+  perso->vJump = 13;
+  perso->hJump = 13;
+  perso->hJumpAct = 0;
+  perso->jump = true;
 
   return perso;
 }
@@ -86,6 +92,18 @@ void initMap(FILE *file, Game *game)
     for (int x=0; x<game->wmap; x++)
     {
       game->map[x][y]->type = fgetc(file) - 48;
+      if (game->map[x][y]->type == GROUND)
+      {
+        game->map[x][y]->solid = true;
+      }
+      else
+      {
+        game->map[x][y]->solid = false;
+      }
+      game->map[x][y]->x = x*32;
+      game->map[x][y]->y = y*32;
+      game->map[x][y]->w = 32;
+      game->map[x][y]->h = 32;
       game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
     }
     jumpLine(file);

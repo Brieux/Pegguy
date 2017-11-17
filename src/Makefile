@@ -16,7 +16,4 @@ include depends.txt
 .PHONY : clean apocalypse
 
 clean :
-	rm *.o depends.txt peggy
-
-apocalypse:clean
-	rm $(EXEC)
+	rm *.o $(EXEC) depends.txt

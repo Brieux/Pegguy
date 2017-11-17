@@ -15,6 +15,7 @@
 
 #define WINDOW_H 640
 #define WINDOW_W 1280
+#define GRAVITE 2
 
 #include "structs.h"
 #include "move.h"

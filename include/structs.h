@@ -22,6 +22,7 @@ typedef struct Input
 typedef struct Perso
 {
   int x, y ,w ,h;
+  int xMap, yMap;
   int index, hp;
   int hSpeed, vSpeed;
   int hJump, vJump;
@@ -39,6 +40,7 @@ typedef struct Bloc
 {
   int x, y, w, h;
   int type;
+  bool solid;
   SDL_Texture *image;
 }Bloc;
 

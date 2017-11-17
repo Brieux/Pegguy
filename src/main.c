@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
   while (!game->input->quit)//boucle principale
   {
     inputs(game);
+    gravite(game->perso);
     drawGame(game);
 
   }
