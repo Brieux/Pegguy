@@ -5,7 +5,7 @@
 
 typedef unsigned int uint;
 
-enum {GROUND, EMPTY};
+enum {EMPTY=0, GROUND};
 
 typedef struct Screen
 {
@@ -45,12 +45,13 @@ typedef struct Bloc
 
 typedef struct Game
 {
+  int wmap, hmap;
+  int level;
   Screen *screen;
   SDL_Texture *ground;
   Input *input;
   Perso *perso;
   Bloc ***map;
-  int wmap, hmap;
 }Game;
 
 #endif
