@@ -1,8 +1,14 @@
 #include "../include/inputs.h"
 
+//Création de l'input
 Input *generateInput()
 {
   Input *input = malloc(sizeof(Input));
+  if (!input){
+    fprintf(stderr, "Unable to alloc input in generateInput\n");
+    exit(EXIT_FAILURE);
+  }
+  //On met toute les touches en 'non appuyée'
   input->quit = false;
   for (uint i=0; i<SDL_NUM_SCANCODES; i++)
   {
