@@ -14,6 +14,7 @@ Screen *initScreen(char *title)
   if (!screen){
     error("Unable to alloc screen.");
   }
+
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
     error("Unable to initialize SDL:");
@@ -28,12 +29,14 @@ Screen *initScreen(char *title)
     error("Unable to initialize the window:");
   }
 
+  //on cree le renderer de la fenetre
   screen->pRenderer = SDL_CreateRenderer(screen->pWindow, -1, SDL_RENDERER_PRESENTVSYNC);
   if (screen->pRenderer == NULL)
   {
     error("Unable to initialize the renderer:");
   }
 
+  //on initialise sdl2_image
   if (!IMG_Init(IMG_INIT_JPG))
   {
     printf( "Unable to initialize SDL_image: %s\n", IMG_GetError());
@@ -41,6 +44,7 @@ Screen *initScreen(char *title)
   }
 
 
+  //on cache le curseur
   SDL_ShowCursor(SDL_DISABLE);
 
   return screen;

@@ -25,7 +25,7 @@ Perso *loadPerso(Game *game)
     exit(EXIT_FAILURE);
   }
   perso->image = loadTexture("../graphics/perso.png", game->screen->pRenderer);
-  //A changer celon les maps je suppose ?
+  //A changer selon les maps je suppose ?
   perso->w = 32;
   perso->h = 64;
   perso->x = 96;
@@ -41,8 +41,8 @@ Perso *loadPerso(Game *game)
 
 SDL_Texture *loadTexture(char *image, SDL_Renderer *pRenderer)
 {
-  SDL_Surface *surface = IMG_Load(image);
-  SDL_Texture *texture = SDL_CreateTextureFromSurface(pRenderer, surface);
+  SDL_Surface *surface = IMG_Load(image);//on charge la surface
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(pRenderer, surface);// puis la texture correspondante
   SDL_FreeSurface(surface);
 
   return texture;
