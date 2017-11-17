@@ -78,7 +78,8 @@ void updateInputs(Game *game)
   }
   else
   {
-    if (game->perso->y + game->perso->h + 1 <120)
+    if (!collisionMap(game, game->perso->x, game->perso->y + game->perso->h + 1,
+        game->perso->w, game->perso->h))
     {
       game->perso->hJumpAct = game->perso->hJump;
     }

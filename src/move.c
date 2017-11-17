@@ -49,12 +49,13 @@ bool collisionMap(Game *game, int x1, int y1, int w1, int h1)
   return false;
 }
 
-void gravite(Perso *perso)
+void gravite(Game *game, Perso *perso)
 {
   if (perso->jump)
   {
     perso->vSpeed += GRAVITE;
-    if (perso->y + perso->h + perso->vSpeed >= 544)
+    if (collisionMap(game, perso->x, perso->y + perso->h + perso->vSpeed,
+        game->perso->w, game->perso->h))
     {
       perso->y = 544 - perso->h;
       perso->jump = 0;
