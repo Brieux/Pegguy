@@ -29,8 +29,6 @@ Perso *loadPerso(Game *game)
   perso->w = 32;
   perso->h = 64;
   perso->x = 96;
-  perso->xMap = 96;
-  perso->y = 200;
   perso->y = 200;
   perso->hSpeed = 5;
   perso->vSpeed = 0;

@@ -2,25 +2,18 @@
 
 void move(Game *game, int vx, int vy)
 {
-  int xPerso = game->perso->x;
-  int xMapPerso = game->perso->xMap;
-  int yPerso = game->perso->y;
-  int yMapPerso = game->perso->yMap;
   int wPerso = game->perso->w;
   int hPerso = game->perso->h;
 
-  printf("x %d y %d xPerso:%d yPerso:%d\n", game->perso->x, game->perso->y, xPerso, yPerso);
-
   for (uint i=0; i<abs(vx); i++)
   {
-    if (!collision(xPerso + abs(vx)/vx, yPerso, wPerso, hPerso,
+    if (!collision(game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso,
                    -1, 0, 0, WINDOW_H) &&
-        !collision(xPerso + abs(vx)/vx, yPerso, wPerso, hPerso,
+        !collision(game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso,
                    game->wmap, 0, 0, WINDOW_H) && //J'ai mis game->wmap au lieu de WINDO_W pour pas être bloqué
-        !collisionMap(game, xMapPerso + abs(vx)/vx, yMapPerso, wPerso, hPerso))
+        !collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
     {
       game->perso->x+=abs(vx)/vx;
-      game->perso->xMap+=abs(vx)/vx;
     }
     else
     {
@@ -31,6 +24,7 @@ void move(Game *game, int vx, int vy)
 
 bool collision(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2)
 {
+  w1--, w2--, h1--, h2--;
   return !(x1+w1<x2 || x1>x2+w2 || y1+h1<y2 || y1>y2+h2);
 }
 
@@ -45,9 +39,7 @@ bool collisionMap(Game *game, int x1, int y1, int w1, int h1)
         if (collision(x1, y1, w1, h1, game->map[x][y]->x, game->map[x][y]->y,
                                        game->map[x][y]->w, game->map[x][y]->h))
         {
-          printf("bloc %d %d: %d %d\n", x, y, game->map[x][y]->x, game->map[x][y]->y);
-          printf("perso x %d y %d xMap %d yMap %d\n", game->perso->x, game->perso->y, x1, y1);
-          printf("%d\n", game->map[x][y]->solid);
+          printf("bloc %d %d: %d %d\n\n", x, y, game->map[x][y]->x, game->map[x][y]->y);
 
           return true;
         }
@@ -62,10 +54,9 @@ void gravite(Perso *perso)
   if (perso->jump)
   {
     perso->vSpeed += GRAVITE;
-    if (perso->y + perso->h + perso->vSpeed >= 460)
+    if (perso->y + perso->h + perso->vSpeed >= 544)
     {
-      perso->y = 460 - perso->h;
-      perso->yMap = 460 - perso->h;
+      perso->y = 544 - perso->h;
       perso->jump = 0;
       perso->vSpeed = 0;
       perso->hJumpAct = 0;
@@ -73,7 +64,6 @@ void gravite(Perso *perso)
     else
     {
       perso->y += perso->vSpeed;
-      perso->yMap += perso->vSpeed;
     }
   }
 }

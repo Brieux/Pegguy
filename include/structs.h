@@ -22,7 +22,6 @@ typedef struct Input
 typedef struct Perso
 {
   int x, y ,w ,h;
-  int xMap, yMap;
   int index, hp;
   int hSpeed, vSpeed;
   int hJump, vJump;
