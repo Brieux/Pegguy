@@ -35,8 +35,6 @@ bool collisionMap(Game *game, int x1, int y1, int w1, int h1)
         if (collision(x1, y1, w1, h1, game->map[x][y]->x, game->map[x][y]->y,
                                        game->map[x][y]->w, game->map[x][y]->h))
         {
-          printf("bloc %d %d: %d %d\n\n", x, y, game->map[x][y]->x, game->map[x][y]->y);
-
           return true;
         }
       }
@@ -49,6 +47,11 @@ void gravite(Game *game, Perso *perso)
 {
 
     perso->vSpeed += GRAVITE;
+    if (perso->vSpeed > VDOWN)
+    {
+      perso->vSpeed = VDOWN;
+    }
+    
     for (uint i=0; i<abs(perso->vSpeed); i++)
     {
       if (collisionMap(game, perso->x, perso->y + abs(perso->vSpeed)/perso->vSpeed,
@@ -56,6 +59,7 @@ void gravite(Game *game, Perso *perso)
       {
         perso->vSpeed = 0;
         perso->hJumpAct = perso->hJump;
+
         if (collisionMap(game, perso->x, perso->y + 1,
             game->perso->w, game->perso->h))
         {
