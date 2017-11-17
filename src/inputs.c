@@ -19,7 +19,10 @@ Input *generateInput()
 
 void inputs(Game *game)
 {
+  //On regarde quelle touche à été appuyée
   updateEvents(game->input);
+
+  //on agit en conséquence
   updateInputs(game);
 }
 
