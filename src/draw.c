@@ -29,7 +29,7 @@ void drawMap(Game *game){
 
     
     if (perso_y > WINDOW_H){
-        dep_y = perso_y - WINDOW_H;
+        dep_y = perso_y - WINDOW_H/2;
     } else {
         dep_y = 0;
     }
@@ -39,7 +39,10 @@ void drawMap(Game *game){
         if (x + dep_x/32>= game->wmap){
             break;
         }
-        for (int y = 0; y < WINDOW_H/32; y++){
+        for (int y = 0; y < WINDOW_H/32 + 1; y++){
+            if (y + dep_y/32>= game->hmap){
+                break;
+            }
             switch (game->map[x + dep_x/32][y + dep_y/32]->type){
                 case GROUND:
                     drawImage(game->map[x + dep_x/32][y + dep_y/32]->image, x*32 - dep_x%32, y*32 - dep_y%32, game->screen->pRenderer);
@@ -47,7 +50,8 @@ void drawMap(Game *game){
             }
         }
     }
-    drawImage(game->perso->image, perso_x-dep_x, game->perso->y, game->screen->pRenderer);
+    drawImage(game->perso->image, perso_x-dep_x, perso_y-dep_y, game->screen->pRenderer);
+    //printf(" Perso en %d:%d\n", perso_x, perso_y);
 
 }
 
