@@ -1,9 +1,13 @@
 #include "../include/load.h"
 
+//Génération du game
 Game *loadGame()
 {
   Game *game = malloc(sizeof(Game));
-  game->screen = initScreen("They Come in Peace");
+  if (!game){
+    error("Unable to alloc game.");
+  }
+  game->screen = initScreen("Peggy");
   game->perso = loadPerso(game);
   game->input = generateInput();
   game->level = 1;
