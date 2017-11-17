@@ -13,12 +13,14 @@ void drawGame(Game *game)
 void drawMap(Game *game){
     int perso_x = game->perso->x;
     int dep_x; //Faudra gérer dep_y
+    static int save_dep;
 
     if (perso_x > game->wmap*32 - WINDOW_W/2){
-        dep_x = game->wmap - WINDOW_W/32;
+        dep_x = save_dep; 
         
     } else if (perso_x > WINDOW_W/2){
         dep_x = perso_x - WINDOW_W/2;   //On affiche avec le perso au centre
+        save_dep = dep_x;
     }
     else {
         dep_x = 0;
@@ -36,7 +38,8 @@ void drawMap(Game *game){
             }
         }
     }
-    drawImage(game->perso->image, game->perso->x - dep_x, game->perso->y, game->screen->pRenderer);
+    drawImage(game->perso->image, perso_x-dep_x, game->perso->y, game->screen->pRenderer);
+    printf("----=== %d %d\n", perso_x-dep_x, dep_x);
 }
 
 void clearScreen(Screen *screen)
