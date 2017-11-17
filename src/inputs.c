@@ -71,8 +71,8 @@ void updateInputs(Game *game)
   //saut
   if (game->input->key[SDL_SCANCODE_W])
   {
-    if (game->perso->hJumpAct < game->perso->hJump)/*si le perso n'a pas dépassé
-    {                                                la hauteur de saut max*/
+    if (game->perso->hJumpAct < game->perso->hJump)//si le perso n'a pas dépassé
+    {                                                //la hauteur de saut max
       jump(game->perso);
     }
     else
@@ -82,9 +82,9 @@ void updateInputs(Game *game)
   }
   else
   {
-    if (!collisionMap(game, game->perso->x, game->perso->y + 1,/*si la touche de saut n'est pas
-        game->perso->w, game->perso->h))                        appuyée et que le perso est
-    {                                                           dans le vide, */
+    if (!collisionMap(game, game->perso->x, game->perso->y + 1,//si la touche de saut n'est pas
+        game->perso->w, game->perso->h))                        //appuyée et que le perso est
+    {                                                           //dans le vide,
       game->perso->hJumpAct = game->perso->hJump; /*on l'empeche de sauter de nouveau*/
     }
   }

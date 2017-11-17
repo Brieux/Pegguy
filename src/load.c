@@ -93,8 +93,8 @@ void initMap(FILE *file, Game *game)
   {
     for (int x=0; x<game->wmap; x++)
     {
-      game->map[x][y]->type = fgetc(file) - 48;/*on copie la grille
-      if (game->map[x][y]->type == GROUND)      lue dans le fichier*/
+      game->map[x][y]->type = fgetc(file) - 48;//on copie la grille
+      if (game->map[x][y]->type == GROUND)      //lue dans le fichier
       {
         game->map[x][y]->solid = true;
       }

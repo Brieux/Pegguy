@@ -55,7 +55,7 @@ void gravite(Game *game, Perso *perso)
     for (uint i=0; i<abs(perso->vSpeed); i++)
     {
       if (collisionMap(game, perso->x, perso->y + abs(perso->vSpeed)/perso->vSpeed,
-          game->perso->w, game->perso->h))//si collision avec element du decor*/
+          game->perso->w, game->perso->h))//si collision avec element du decor
       {
         perso->vSpeed = 0;
         perso->hJumpAct = perso->hJump;//on stoppe
