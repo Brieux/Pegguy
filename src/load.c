@@ -10,7 +10,7 @@ Game *loadGame()
   game->screen = initScreen("Peggy");
   game->perso = loadPerso(game);
   game->input = generateInput();
-  game->level = 2;
+  game->level = 1;
   loadMap(game);
 
   return game;
