@@ -4,7 +4,7 @@ void drawGame(Game *game)
 {
   clearScreen(game->screen);
   drawMap(game);
-  
+
   SDL_RenderPresent(game->screen->pRenderer);
 }
 
@@ -18,20 +18,22 @@ void drawMap(Game *game){
     static int save_dep;
 
     if (perso_x > game->wmap*32 - WINDOW_W/2){
-        dep_x = save_dep; 
-        
+        dep_x = save_dep;
+
     } else if (perso_x > WINDOW_W/2){
         dep_x = perso_x - WINDOW_W/2;   //On affiche avec le perso au centre
         save_dep = dep_x;
     } else {
         dep_x = 0;
     }
+
     
     if (perso_y > WINDOW_H){
         dep_y = perso_y - WINDOW_H;
     } else {
         dep_y = 0;
     }
+
 
     for (int x = 0; x < WINDOW_W/32 + 1; x++){      //ATTENTION AU +1 dangereux source de crash
         if (x >= game->wmap){
@@ -46,7 +48,7 @@ void drawMap(Game *game){
         }
     }
     drawImage(game->perso->image, perso_x-dep_x, game->perso->y, game->screen->pRenderer);
-    printf("----=== %d\n", perso_y);
+
 }
 
 void clearScreen(Screen *screen)
