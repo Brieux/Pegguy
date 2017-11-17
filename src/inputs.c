@@ -53,10 +53,13 @@ void updateInputs(Game *game)
   {
     game->input->quit = true;
   }
+
+  //deplacement droit
   if (game->input->key[SDL_SCANCODE_D])
   {
       move(game, game->perso->hSpeed, 0);
   }
+  //deplacement gauche
   if (game->input->key[SDL_SCANCODE_A])
   {
     move(game, -game->perso->hSpeed, 0);
@@ -65,6 +68,7 @@ void updateInputs(Game *game)
   {
 
   }
+  //saut
   if (game->input->key[SDL_SCANCODE_W])
   {
     if (game->perso->hJumpAct < game->perso->hJump)
@@ -78,7 +82,7 @@ void updateInputs(Game *game)
   }
   else
   {
-    if (!collisionMap(game, game->perso->x, game->perso->y + game->perso->h + 1,
+    if (!collisionMap(game, game->perso->x, game->perso->y + 1,
         game->perso->w, game->perso->h))
     {
       game->perso->hJumpAct = game->perso->hJump;

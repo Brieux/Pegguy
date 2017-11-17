@@ -47,27 +47,30 @@ bool collisionMap(Game *game, int x1, int y1, int w1, int h1)
 
 void gravite(Game *game, Perso *perso)
 {
-  if (perso->jump)
-  {
+
     perso->vSpeed += GRAVITE;
-    if (collisionMap(game, perso->x, perso->y + perso->h + perso->vSpeed,
-        game->perso->w, game->perso->h))
+    for (uint i=0; i<abs(perso->vSpeed); i++)
     {
-      perso->y = 544 - perso->h;
-      perso->jump = 0;
-      perso->vSpeed = 0;
-      perso->hJumpAct = 0;
+      if (collisionMap(game, perso->x, perso->y + abs(perso->vSpeed)/perso->vSpeed,
+          game->perso->w, game->perso->h))
+      {
+        perso->vSpeed = 0;
+        perso->hJumpAct = perso->hJump;
+        if (collisionMap(game, perso->x, perso->y + 1,
+            game->perso->w, game->perso->h))
+        {
+          perso->hJumpAct = 0;
+        }
+      }
+      else
+      {
+        perso->y += abs(perso->vSpeed)/perso->vSpeed;
+      }
     }
-    else
-    {
-      perso->y += perso->vSpeed;
-    }
-  }
 }
 
 void jump(Perso *perso)
 {
   perso->vSpeed = -perso->vJump;
-  perso->jump = true;
   perso->hJumpAct++;
 }

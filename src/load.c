@@ -35,7 +35,6 @@ Perso *loadPerso(Game *game)
   perso->vJump = 13;
   perso->hJump = 13;
   perso->hJumpAct = 0;
-  perso->jump = true;
 
   return perso;
 }

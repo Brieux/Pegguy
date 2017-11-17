@@ -26,7 +26,6 @@ typedef struct Perso
   int hSpeed, vSpeed;
   int hJump, vJump;
   int hJumpAct;
-  bool jump;
   bool letal, solid;
   char *content;
   void *hand;
