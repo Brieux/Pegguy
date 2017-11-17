@@ -62,10 +62,10 @@ void gravite(Perso *perso)
   if (perso->jump)
   {
     perso->vSpeed += GRAVITE;
-    if (perso->y + perso->h + perso->vSpeed >= 400)
+    if (perso->y + perso->h + perso->vSpeed >= 460)
     {
-      perso->y = 400 - perso->h;
-      perso->yMap = 400 - perso->h;
+      perso->y = 460 - perso->h;
+      perso->yMap = 460 - perso->h;
       perso->jump = 0;
       perso->vSpeed = 0;
       perso->hJumpAct = 0;
