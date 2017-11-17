@@ -60,7 +60,7 @@ void updateInputs(Game *game)
   {
     if (game->perso->hJumpAct < game->perso->hJump)
     {
-      //saut(&game->perso);
+      //jump(&game->perso);
     }
     else
     {

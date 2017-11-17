@@ -17,7 +17,6 @@ void drawMap(Game *game)
       switch (game->map[x][y]->type)
       {
         case GROUND:
-          game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
           drawImage(game->map[x][y]->image, x*32, y*32, game->screen->pRenderer);
           break;
       }
