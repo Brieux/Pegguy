@@ -10,7 +10,7 @@ Game *loadGame()
   game->screen = initScreen("Peggy");
   game->perso = loadPerso(game);
   game->input = generateInput();
-  game->level = 1;
+  game->level = 2;
   loadMap(game);
 
   return game;
@@ -20,7 +20,12 @@ Game *loadGame()
 Perso *loadPerso(Game *game)
 {
   Perso *perso = malloc(sizeof(Perso));
+  if (!perso){
+    fprintf(stderr, "Unable to alloc perso in loadPerso\n");
+    exit(EXIT_FAILURE);
+  }
   perso->image = loadTexture("../graphics/perso.png", game->screen->pRenderer);
+  //A changer celon les maps je suppose ?
   perso->w = 32;
   perso->h = 64;
   perso->x = 96;
