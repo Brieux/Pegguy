@@ -30,7 +30,9 @@ void drawMap(Game *game){
     
     if (perso_y > WINDOW_H){
         dep_y = perso_y - WINDOW_H/2;
-    } else {
+    } /*else if (perso_y < 0){  //Très experimentale
+        dep_y = perso_y + WINDOW_H/2;
+    } */else {
         dep_y = 0;
     }
 
