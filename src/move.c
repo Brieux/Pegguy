@@ -7,11 +7,7 @@ void move(Game *game, int vx, int vy)
 
   for (uint i=0; i<abs(vx); i++)
   {
-    if (!collision(game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso,
-                   -1, 0, 0, WINDOW_H) &&
-        !collision(game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso,
-                   game->wmap, 0, 0, WINDOW_H) && //J'ai mis game->wmap au lieu de WINDO_W pour pas être bloqué
-        !collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
+    if (!collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
     {
       game->perso->x+=abs(vx)/vx;
     }
