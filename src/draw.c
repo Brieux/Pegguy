@@ -36,7 +36,7 @@ void drawMap(Game *game){
 
 
     for (int x = 0; x < WINDOW_W/32 + 1; x++){      //ATTENTION AU +1 dangereux source de crash
-        if (x >= game->wmap){
+        if (x + dep_x/32>= game->wmap){
             break;
         }
         for (int y = 0; y < WINDOW_H/32; y++){
