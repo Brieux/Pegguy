@@ -1,15 +1,19 @@
 #include "../include/screen.h"
 
+//Fonction à appeller en cas d'erreur
 void error(char *cmd)
 {
   fprintf(stderr, "%s %s\n", cmd, SDL_GetError());
   exit(EXIT_FAILURE);
 }
 
+//Fonction d'initialisation de la fenêtre
 Screen *initScreen(char *title)
 {
   Screen *screen = malloc(sizeof(Screen));
-
+  if (!screen){
+    error("Unable to alloc screen.");
+  }
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
     error("Unable to initialize SDL:");
@@ -42,6 +46,7 @@ Screen *initScreen(char *title)
   return screen;
 }
 
+//Fonction Mr propre
 void quitSDL(Screen *screen)
 {
   SDL_DestroyRenderer(screen->pRenderer);
