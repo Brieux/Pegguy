@@ -1,7 +1,7 @@
 #include "../include/load.h"
 
 //Génération du game
-Game *loadGame()
+Game *loadGame(int n_map)
 {
   Game *game = malloc(sizeof(Game));
   if (!game){
@@ -10,7 +10,7 @@ Game *loadGame()
   game->screen = initScreen("Peggy");
   game->perso = loadPerso(game);
   game->input = generateInput();
-  game->level = 1;
+  game->level = n_map;
   loadMap(game);
 
   return game;
