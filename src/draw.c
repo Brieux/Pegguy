@@ -12,7 +12,9 @@ void drawGame(Game *game)
 
 void drawMap(Game *game){
     int perso_x = game->perso->x;
-    int dep_x; //Faudra gérer dep_y
+    int perso_y = game->perso->y;
+    int dep_x;
+    int dep_y;
     static int save_dep;
 
     if (perso_x > game->wmap*32 - WINDOW_W/2){
@@ -21,25 +23,30 @@ void drawMap(Game *game){
     } else if (perso_x > WINDOW_W/2){
         dep_x = perso_x - WINDOW_W/2;   //On affiche avec le perso au centre
         save_dep = dep_x;
-    }
-    else {
+    } else {
         dep_x = 0;
     }
     
+    if (perso_y > WINDOW_H){
+        dep_y = perso_y - WINDOW_H;
+    } else {
+        dep_y = 0;
+    }
+
     for (int x = 0; x < WINDOW_W/32 + 1; x++){      //ATTENTION AU +1 dangereux source de crash
         if (x >= game->wmap){
             break;
         }
         for (int y = 0; y < WINDOW_H/32; y++){
-            switch (game->map[x + dep_x/32][y]->type){
+            switch (game->map[x + dep_x/32][y + dep_y/32]->type){
                 case GROUND:
-                    drawImage(game->map[x + dep_x/32][y]->image, x*32 - dep_x%32, y*32, game->screen->pRenderer);
+                    drawImage(game->map[x + dep_x/32][y + dep_y/32]->image, x*32 - dep_x%32, y*32 - dep_y%32, game->screen->pRenderer);
                   break;
             }
         }
     }
     drawImage(game->perso->image, perso_x-dep_x, game->perso->y, game->screen->pRenderer);
-    printf("----=== %d %d\n", perso_x-dep_x, dep_x);
+    printf("----=== %d\n", perso_y);
 }
 
 void clearScreen(Screen *screen)
