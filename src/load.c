@@ -53,8 +53,7 @@ void loadMap(Game *game)
   FILE *file = fopen("../texts/levels.txt", "r");
   if (!file)
   {
-    printf("Unable to open levels.txt");
-    exit(EXIT_FAILURE);
+    error("Unable to open levels.txt");
   }
 
   searchLevel(file, game->level);
@@ -66,18 +65,19 @@ void loadMap(Game *game)
 
 void initMap(FILE *file, Game *game)
 {
-  fscanf(file, "x:%d y:%d", &game->wmap, &game->hmap);
-  jumpLine(file);
+  fscanf(file, "x:%d y:%d", &game->wmap, &game->hmap);//on recupere la taille de la grille
+  jumpLine(file);//puis on passe à la ligne suivante
 
   game->map = malloc(game->wmap*sizeof(Bloc));
   if (!game->map)
   {
-    printf("Unable to malloc map\n");
-    exit(EXIT_FAILURE);
+    error("Unable to malloc map");
   }
-  for (uint i=0; i<game->wmap; i++)
+
+  for (uint i=0; i<game->wmap; i++)//pour chaque case en abscisse de la map
   {
     game->map[i] = malloc(game->hmap*sizeof(Bloc));
+    //on alloue un espace suffisant pour un tableau en ordonnee
     if (!game->map[i])
     {
       printf("Unable to malloc map %d\n", i);
@@ -85,7 +85,7 @@ void initMap(FILE *file, Game *game)
     }
     for (uint k=0; k<game->hmap; k++)
     {
-      game->map[i][k] = malloc(sizeof(Bloc));
+      game->map[i][k] = malloc(sizeof(Bloc));//et pour chaque case on initialise un Bloc
     }
   }
 
@@ -93,8 +93,8 @@ void initMap(FILE *file, Game *game)
   {
     for (int x=0; x<game->wmap; x++)
     {
-      game->map[x][y]->type = fgetc(file) - 48;
-      if (game->map[x][y]->type == GROUND)
+      game->map[x][y]->type = fgetc(file) - 48;/*on copie la grille
+      if (game->map[x][y]->type == GROUND)      lue dans le fichier*/
       {
         game->map[x][y]->solid = true;
       }
