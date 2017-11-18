@@ -29,7 +29,7 @@ typedef struct Perso
   bool letal, solid;
   char *content;
   void *hand;
-  SDL_Texture *image;
+  SDL_Texture **image;
   void *equip[];
 
 }Perso;

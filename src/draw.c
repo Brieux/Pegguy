@@ -51,7 +51,7 @@ void drawMap(Game *game){
     *   ou alors renvoyer les valeurs de dep_x et dep_y
     *   et n'afficher que si c'est sur l'écran actuel
     */
-    drawImage(game->perso->image,
+    drawImage(game->perso->image[game->perso->x%4],
                 game->perso->x - dep_x,
                 game->perso->y-dep_y,
                 game->screen->pRenderer
