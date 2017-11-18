@@ -53,6 +53,7 @@ typedef struct Game
   Input *input;
   Perso *perso;
   Bloc ***map;
+  TTF_Font *font;
 }Game;
 
 #endif

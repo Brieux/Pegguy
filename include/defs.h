@@ -17,6 +17,7 @@
 #define WINDOW_W 1280
 #define GRAVITE 2
 #define VDOWN 20
+#define DEBUG 1
 
 #include "structs.h"
 #include "move.h"

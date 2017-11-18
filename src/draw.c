@@ -5,6 +5,10 @@ void drawGame(Game *game)
   clearScreen(game->screen);
   drawMap(game);
   SDL_RenderPresent(game->screen->pRenderer);
+
+  if (DEBUG){
+      consol_d(game);
+  }
 }
 
 //Affichage de ce que l'on voit à l'écran seulement
@@ -62,6 +66,24 @@ void drawMap(Game *game){
                 game->perso->y-dep_y,
                 game->screen->pRenderer
     );
+}
+
+void consol_d(Game *game){
+    char debug_text[256];
+    sprintf(debug_text, "%d %d\n", game->perso->x, game->perso->y);
+    SDL_Color color_text = {255, 255, 255, 255};
+    SDL_Surface *text_surface = TTF_RenderText_Solid(game->font, debug_text, color_text);
+    if (!text_surface){
+        fprintf(stderr, "consol_d error: Can't create surface\n");
+        return;
+    }
+    SDL_Texture *text_texture = SDL_CreateTextureFromSurface(game->screen->pRenderer, text_surface);
+    if (!text_texture){
+        fprintf(stderr, "consol_d error: Can't create texure\n");
+        return;
+    }
+    drawImage(text_texture, 100, 100, game->screen->pRenderer);
+
 }
 
 void clearScreen(Screen *screen)

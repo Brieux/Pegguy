@@ -57,4 +57,5 @@ void quitSDL(Screen *screen)
   SDL_DestroyWindow(screen->pWindow);
   IMG_Quit();
   SDL_Quit();
+  TTF_Quit();
 }
