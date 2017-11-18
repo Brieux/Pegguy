@@ -51,7 +51,13 @@ void drawMap(Game *game){
     *   ou alors renvoyer les valeurs de dep_x et dep_y
     *   et n'afficher que si c'est sur l'écran actuel
     */
-    drawImage(game->perso->image[(game->perso->x/20)%4],
+    int frame_index = 0;
+    if (game->perso->vSpeed !=0){
+        frame_index = 4;
+    } else {
+        frame_index = (game->perso->x/20)%4;
+    }
+    drawImage(game->perso->image[frame_index],
                 game->perso->x - dep_x,
                 game->perso->y-dep_y,
                 game->screen->pRenderer
