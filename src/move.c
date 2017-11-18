@@ -16,7 +16,8 @@ void move(Game *game, int vx, int vy)
         {
           case BOX :
             if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
-                !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h))
+                (!collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h) ||
+                  collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h) == dynObj))
             {
               game->perso->x+=abs(vx)/vx;
               dynObj->x+=abs(vx)/vx;
@@ -82,6 +83,7 @@ void graviteObj(Game *game)
 {
   for (int i=0; i<game->nbDynObj; i++)
   {
+    printf("%d\n", i);
     game->mapObj[i]->vSpeed += GRAVITE;
     if (game->mapObj[i]->vSpeed > VDOWN)
     {
