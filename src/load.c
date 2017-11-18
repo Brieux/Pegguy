@@ -96,7 +96,11 @@ void initMap(FILE *file, Game *game)
   jumpLine(file);//puis on passe à la ligne suivante
 
   game->mapObj = malloc(game->nbDynObj*sizeof(DynObj));//alloue tableau objets dynamiques
-  game->map = malloc(game->wmap*sizeof(Bloc));//alloue tableau 2 dimensions map
+  if (!game->mapObj)
+  {
+    error("Unable to malloc map");
+  }
+  game->map = malloc(game->wmap*sizeof(Bloc*));//alloue tableau 2 dimensions map
   if (!game->map)
   {
     error("Unable to malloc map");
@@ -104,7 +108,7 @@ void initMap(FILE *file, Game *game)
 
   for (uint i=0; i<game->wmap; i++)//pour chaque case en abscisse de la map
   {
-    game->map[i] = malloc(game->hmap*sizeof(Bloc));
+    game->map[i] = malloc(game->hmap*sizeof(Bloc*));
     //on alloue un espace suffisant pour un tableau en ordonnee
     if (!game->map[i])
     {
@@ -124,12 +128,18 @@ void initMap(FILE *file, Game *game)
     {
       game->map[x][y]->type = fgetc(file);//on copie la grille
 
+      printf("x:%d y:%d\n", x, y);
       switch (game->map[x][y]->type)     //lue dans le fichier
       {
-        case GROUND :                     //case sol
+
+        case GROUND :                   //case sol
+          puts("ground");
           game->map[x][y]->solid = true;
           game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
-          puts("ground");
+          game->map[x][y]->w = 32;
+          game->map[x][y]->h = 32;
+          game->map[x][y]->x = x*32;
+          game->map[x][y]->y = y*32;
           break;
         case BOX :
           puts("box");
@@ -140,23 +150,20 @@ void initMap(FILE *file, Game *game)
           {
             error("Unable to malloc mapObj");
           }*/
+          game->mapObj[i] = malloc(sizeof(DynObj));
           game->mapObj[i]->solid = true;
           game->mapObj[i]->x = x*32;
           game->mapObj[i]->y = y*32;
           game->mapObj[i]->w = 64;
           game->mapObj[i]->h = 64;
-          //game->mapObj[i]->image = loadTexture("../graphics/box.png", game->screen->pRenderer);
+          game->mapObj[i]->image = loadTexture("../graphics/box.png", game->screen->pRenderer);
           i++;
+          puts("truc");
           break;
         default :
           puts("EMPTY");
           game->map[x][y]->solid = false;
       }
-      game->map[x][y]->w = 32;
-      game->map[x][y]->h = 32;
-      game->map[x][y]->x = x*32;
-      game->map[x][y]->y = y*32;
-      game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
     }
     jumpLine(file);
   }
