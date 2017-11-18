@@ -3,7 +3,8 @@
 
 #include "defs.h"
 
-void consol_d(Game *game);
+void print_line(Game *game, int x, int y, char *debug_text);
+void consol_d(Game *game, int dep_x, int dep_y);
 void drawGame(Game *game);//affiche tous les sprites du jeu game
 void drawMap(Game *game);
 void clearScreen(Screen *screen);//efface l'écran screen

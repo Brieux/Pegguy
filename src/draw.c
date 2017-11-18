@@ -4,11 +4,9 @@ void drawGame(Game *game)
 {
   clearScreen(game->screen);
   drawMap(game);
-  SDL_RenderPresent(game->screen->pRenderer);
+  
 
-  if (DEBUG){
-      consol_d(game);
-  }
+  SDL_RenderPresent(game->screen->pRenderer);
 }
 
 //Affichage de ce que l'on voit à l'écran seulement
@@ -66,11 +64,24 @@ void drawMap(Game *game){
                 game->perso->y-dep_y,
                 game->screen->pRenderer
     );
+    if (DEBUG){
+      consol_d(game, dep_x, dep_y);
+  }
 }
 
-void consol_d(Game *game){
-    char debug_text[256];
-    sprintf(debug_text, "%d %d\n", game->perso->x, game->perso->y);
+void consol_d(Game *game, int dep_x, int dep_y){
+    char debug_text[50];
+    sprintf(debug_text, "   x : %d", game->perso->x);
+    print_line(game, 20, 10, debug_text);
+    sprintf(debug_text, "   y : %d", game->perso->y);
+    print_line(game, 20, 30, debug_text);
+    sprintf(debug_text, "   dep_x : %d", dep_x);
+    print_line(game, 20, 50, debug_text);
+    sprintf(debug_text, "   dep_y : %d", dep_y);
+    print_line(game, 20, 70, debug_text);
+}
+
+void print_line(Game *game, int x, int y, char *debug_text){
     SDL_Color color_text = {255, 255, 255, 255};
     SDL_Surface *text_surface = TTF_RenderText_Solid(game->font, debug_text, color_text);
     if (!text_surface){
@@ -82,8 +93,8 @@ void consol_d(Game *game){
         fprintf(stderr, "consol_d error: Can't create texure\n");
         return;
     }
-    drawImage(text_texture, 100, 100, game->screen->pRenderer);
-
+    drawImage(text_texture, x, y, game->screen->pRenderer);
+    SDL_FreeSurface(text_surface);
 }
 
 void clearScreen(Screen *screen)
