@@ -15,8 +15,7 @@ void move(Game *game, int vx, int vy)
         switch (dynObj->type)
         {
           case BOX :
-            if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
-                !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h))
+            if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) )
             {
               game->perso->x+=abs(vx)/vx;
               dynObj->x+=abs(vx)/vx;

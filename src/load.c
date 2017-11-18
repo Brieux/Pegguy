@@ -129,12 +129,10 @@ void initMap(FILE *file, Game *game)
     {
       game->map[x][y]->type = fgetc(file);//on copie la grille
 
-      printf("x:%d y:%d\n", x, y);
       switch (game->map[x][y]->type)     //lue dans le fichier
       {
 
         case GROUND :                   //case sol
-          puts("ground");
           game->map[x][y]->solid = true;
           game->map[x][y]->image = loadTexture("../graphics/Dirt.png", game->screen->pRenderer);
           game->map[x][y]->w = 32;
@@ -143,7 +141,6 @@ void initMap(FILE *file, Game *game)
           game->map[x][y]->y = y*32;
           break;
         case BOX :
-          puts("box");
           game->map[x][y]->solid = false;
           game->map[x][y]->type = EMPTY;
           /*game->mapObj[i]->box = malloc(sizeof(Box));
@@ -161,16 +158,13 @@ void initMap(FILE *file, Game *game)
           game->mapObj[i]->h = 64;
           game->mapObj[i]->image = loadTexture("../graphics/box.png", game->screen->pRenderer);
           i++;
-          puts("truc");
           break;
         default :
-          puts("EMPTY");
           game->map[x][y]->solid = false;
       }
     }
     jumpLine(file);
   }
-  puts("coucou2");
 }
 
 int jumpLine(FILE *file)

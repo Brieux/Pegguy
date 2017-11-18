@@ -67,7 +67,6 @@ void drawMap(Game *game){
 
     int nb_obj = game->nbDynObj;
     for (int i = 0; i < nb_obj; i++){
-        printf("----- %d\n", i);
         drawImage(game->mapObj[i]->image,
                                 game->mapObj[i]->x - dep_x,
                                 game->mapObj[i]->y - dep_y,
