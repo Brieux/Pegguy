@@ -69,6 +69,7 @@ typedef struct Game
   Perso *perso;
   Bloc ***map;
   DynObj **mapObj;
+  TTF_Font *font;
 }Game;
 
 #endif

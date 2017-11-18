@@ -12,11 +12,23 @@ Game *loadGame(int n_map)
   game->input = generateInput();
   game->level = n_map;
   loadMap(game);
-  puts("coucou");
+  loadFont(game);
 
   return game;
 }
 
+void loadFont(Game *game){
+  if(TTF_Init()==-1) {
+    printf("TTF_Init: %s\n", TTF_GetError());
+    exit(EXIT_FAILURE);
+  }
+  game->font = malloc(sizeof(TTF_Font *));
+  game->font = TTF_OpenFont("../graphics/HACKED.ttf", 10);
+  if (!game->font){
+    fprintf(stderr, "Unable to load font: %s\n", SDL_GetError());
+    exit(EXIT_FAILURE);
+  }
+}
 
 Perso *loadPerso(Game *game)
 {
