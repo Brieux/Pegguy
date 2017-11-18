@@ -24,7 +24,8 @@ Perso *loadPerso(Game *game)
     fprintf(stderr, "Unable to alloc perso in loadPerso\n");
     exit(EXIT_FAILURE);
   }
-  perso->image = malloc(5 * sizeof(SDL_Texture*));
+  perso->nb_frame = 5;
+  perso->image = malloc(perso->nb_frame * sizeof(SDL_Texture*));
 
   if (!perso->image){
     fprintf(stderr, "Unable to alloc image in perso\n");

@@ -53,9 +53,9 @@ void drawMap(Game *game){
     */
     int frame_index = 0;
     if (game->perso->vSpeed !=0){
-        frame_index = 4;
+        frame_index = game->perso->nb_frame - 1;
     } else {
-        frame_index = abs((game->perso->x/20)%4);
+        frame_index = abs((game->perso->x/20)%(game->perso->nb_frame-1));
     }
     drawImage(game->perso->image[frame_index],
                 game->perso->x - dep_x,
