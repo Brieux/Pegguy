@@ -47,7 +47,7 @@ void drawMap(Game *game){
         }
     }
     /*
-    *   Faudra afficer tous les objets dans cette fonction,
+    *   Faudra afficher tous les objets dans cette fonction,
     *   ou alors renvoyer les valeurs de dep_x et dep_y
     *   et n'afficher que si c'est sur l'écran actuel
     */

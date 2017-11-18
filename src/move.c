@@ -7,7 +7,8 @@ void move(Game *game, int vx, int vy)
 
   for (uint i=0; i<abs(vx); i++)
   {
-    if (!collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
+    if (!collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso) &&
+        !collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
     {
       game->perso->x+=abs(vx)/vx;/*si le pixel suivant est vide, on fait avancer le perso*/
     }
@@ -43,6 +44,22 @@ bool collisionMap(Game *game, int x1, int y1, int w1, int h1)
   return false;
 }
 
+bool collisionMapObj(Game *game, int x1, int y1, int w1, int h1)
+{
+  for (int i=0; i<game->nbDynObj; i++)
+  {
+    if (game->mapObj[i]->solid)
+    {     /*on teste toutes les collisions solides des objets dyn de la map*/
+      if (collision(x1, y1, w1, h1, game->mapObj[i]->x, game->mapObj[i]->y,
+                                     game->mapObj[i]->w, game->mapObj[i]->h))
+      {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 void gravite(Game *game, Perso *perso)
 {
 
@@ -55,12 +72,16 @@ void gravite(Game *game, Perso *perso)
     for (uint i=0; i<abs(perso->vSpeed); i++)
     {
       if (collisionMap(game, perso->x, perso->y + abs(perso->vSpeed)/perso->vSpeed,
-          game->perso->w, game->perso->h))//si collision avec element du decor
+          game->perso->w, game->perso->h) || //si collision avec element du decor
+          collisionMapObj(game, perso->x, perso->y + abs(perso->vSpeed)/perso->vSpeed,
+          game->perso->w, game->perso->h))//si collision avec objet dynamique
       {
         perso->vSpeed = 0;
         perso->hJumpAct = perso->hJump;//on stoppe
 
         if (collisionMap(game, perso->x, perso->y + 1,
+            game->perso->w, game->perso->h) ||
+            collisionMapObj(game, perso->x, perso->y + 1,
             game->perso->w, game->perso->h))//si c'etait le sol
         {
           perso->hJumpAct = 0;//on remet le compteur de saut à 0
