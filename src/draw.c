@@ -71,14 +71,22 @@ void drawMap(Game *game){
 
 void consol_d(Game *game, int dep_x, int dep_y){
     char debug_text[50];
+    int y = 0;
+    static int count = 0;
+    count ++;
+    sprintf(debug_text, "   fps : %lf", count/(SDL_GetTicks()/1000.0));
+    print_line(game, 20, y+=20, debug_text);
     sprintf(debug_text, "   x : %d", game->perso->x);
-    print_line(game, 20, 10, debug_text);
+    print_line(game, 20, y+=20, debug_text);
     sprintf(debug_text, "   y : %d", game->perso->y);
-    print_line(game, 20, 30, debug_text);
+    print_line(game, 20, y+=20, debug_text);
     sprintf(debug_text, "   dep_x : %d", dep_x);
-    print_line(game, 20, 50, debug_text);
+    print_line(game, 20, y+=20, debug_text);
     sprintf(debug_text, "   dep_y : %d", dep_y);
-    print_line(game, 20, 70, debug_text);
+    print_line(game, 20, y+=20, debug_text);
+
+
+    
 }
 
 void print_line(Game *game, int x, int y, char *debug_text){
