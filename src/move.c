@@ -4,13 +4,31 @@ void move(Game *game, int vx, int vy)
 {
   int wPerso = game->perso->w;
   int hPerso = game->perso->h;
+  DynObj *dynObj = NULL;
 
   for (uint i=0; i<abs(vx); i++)
   {
-    if (!collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso) &&
-        !collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
+    if (!collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
     {
-      game->perso->x+=abs(vx)/vx;/*si le pixel suivant est vide, on fait avancer le perso*/
+      if ((dynObj = collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso)) != 0)
+      {
+        switch (dynObj->type)
+        {
+          case BOX :
+            if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
+                !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h))
+            {
+              game->perso->x+=abs(vx)/vx;
+              dynObj->x+=abs(vx)/vx;
+
+            }
+            break;
+        }
+      }
+      else
+      {
+        game->perso->x+=abs(vx)/vx;/*si le pixel suivant est vide, on fait avancer le perso*/
+      }
     }
     else
     {
@@ -44,7 +62,7 @@ bool collisionMap(Game *game, int x1, int y1, int w1, int h1)
   return false;
 }
 
-bool collisionMapObj(Game *game, int x1, int y1, int w1, int h1)
+DynObj *collisionMapObj(Game *game, int x1, int y1, int w1, int h1)
 {
   for (int i=0; i<game->nbDynObj; i++)
   {
@@ -53,11 +71,38 @@ bool collisionMapObj(Game *game, int x1, int y1, int w1, int h1)
       if (collision(x1, y1, w1, h1, game->mapObj[i]->x, game->mapObj[i]->y,
                                      game->mapObj[i]->w, game->mapObj[i]->h))
       {
-        return true;
+        return game->mapObj[i];
       }
     }
   }
-  return false;
+  return 0;
+}
+
+void graviteObj(Game *game)
+{
+  for (int i=0; i<game->nbDynObj; i++)
+  {
+    game->mapObj[i]->vSpeed += GRAVITE;
+    if (game->mapObj[i]->vSpeed > VDOWN)
+    {
+      game->mapObj[i]->vSpeed = VDOWN;/*si la vitesse de chute a été dépassée, on la bloque*/
+    }
+
+    for (uint i=0; i<abs(game->mapObj[i]->vSpeed); i++)
+    {
+      if (collisionMap(game, game->mapObj[i]->x, game->mapObj[i]->y + abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed,
+          game->mapObj[i]->w, game->mapObj[i]->h) || //si collision avec element du decor
+          collisionMapObj(game, game->mapObj[i]->x, game->mapObj[i]->y + abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed,
+          game->mapObj[i]->w,game->mapObj[i]->h))//si collision avec objet dynamique
+      {
+        game->mapObj[i]->vSpeed = 0;
+      }
+      else
+      {
+        game->mapObj[i]->y += abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed;//sinon on modifie la position du perso
+      }
+    }
+  }
 }
 
 void gravite(Game *game, Perso *perso)

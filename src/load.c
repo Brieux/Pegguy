@@ -60,6 +60,7 @@ Perso *loadPerso(Game *game)
   perso->vJump = 13;
   perso->hJump = 13;
   perso->hJumpAct = 0;
+  perso->interact = 0;
 
   return perso;
 }
@@ -135,7 +136,7 @@ void initMap(FILE *file, Game *game)
         case GROUND :                   //case sol
           puts("ground");
           game->map[x][y]->solid = true;
-          game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
+          game->map[x][y]->image = loadTexture("../graphics/Dirt.png", game->screen->pRenderer);
           game->map[x][y]->w = 32;
           game->map[x][y]->h = 32;
           game->map[x][y]->x = x*32;
@@ -152,6 +153,8 @@ void initMap(FILE *file, Game *game)
           }*/
           game->mapObj[i] = malloc(sizeof(DynObj));
           game->mapObj[i]->solid = true;
+          game->mapObj[i]->type = BOX;
+          game->mapObj[i]->x = x*32;
           game->mapObj[i]->x = x*32;
           game->mapObj[i]->y = y*32;
           game->mapObj[i]->w = 64;

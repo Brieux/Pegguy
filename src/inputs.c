@@ -66,7 +66,11 @@ void updateInputs(Game *game)
   }
   if (game->input->key[SDL_SCANCODE_LEFT])
   {
-
+    game->perso->interact = true;
+  }
+  else
+  {
+    game->perso->interact = false;
   }
   //saut
   if (game->input->key[SDL_SCANCODE_W])

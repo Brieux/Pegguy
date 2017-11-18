@@ -26,7 +26,7 @@ typedef struct Perso
   int hSpeed, vSpeed;
   int hJump, vJump;
   int hJumpAct;
-  bool letal, solid;
+  bool letal, solid, interact;
   char *content;
   void *hand;
   int nb_frame;
@@ -35,14 +35,10 @@ typedef struct Perso
 
 }Perso;
 
-typedef struct Box
-{
-  int type;
-}Box;
-
 typedef struct DynObj
 {
   int x, y, w, h;
+  int vSpeed;
   int type;
   bool solid;
   SDL_Texture *image;
