@@ -64,6 +64,15 @@ void drawMap(Game *game){
                 game->perso->y-dep_y,
                 game->screen->pRenderer
     );
+
+    int nb_obj = game->nbDynObj;
+    for (int i = 0; i < nb_obj; i++){
+        drawImage(game->mapObj[i]->image,
+                                game->mapObj[i]->x - dep_x,
+                                game->mapObj[i]->y - dep_y,
+                                game->screen->pRenderer
+                    );
+    }
     if (DEBUG){
       consol_d(game, dep_x, dep_y);
   }
@@ -83,6 +92,11 @@ void consol_d(Game *game, int dep_x, int dep_y){
     sprintf(debug_text, "   dep_x : %d", dep_x);
     print_line(game, 20, y+=20, debug_text);
     sprintf(debug_text, "   dep_y : %d", dep_y);
+    print_line(game, 20, y+=20, debug_text);
+
+    sprintf(debug_text, "   caisse_x : %d", game->mapObj[0]->x);
+    print_line(game, 20, y+=20, debug_text);
+    sprintf(debug_text, "   caisse_y : %d", game->mapObj[0]->y);
     print_line(game, 20, y+=20, debug_text);
 
 
