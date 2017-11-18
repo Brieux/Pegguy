@@ -46,7 +46,6 @@ typedef struct DynObj
   int type;
   bool solid;
   SDL_Texture *image;
-  Box *box;
 }DynObj;
 
 typedef struct Bloc

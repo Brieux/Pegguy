@@ -117,7 +117,7 @@ void initMap(FILE *file, Game *game)
     }
   }
 
-  int i =0;
+  int i = 0;
   for (int y=0; y<game->hmap; y++)
   {
     for (int x=0; x<game->wmap; x++)
@@ -129,28 +129,38 @@ void initMap(FILE *file, Game *game)
         case GROUND :                     //case sol
           game->map[x][y]->solid = true;
           game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
+          puts("ground");
           break;
         case BOX :
+          puts("box");
           game->map[x][y]->solid = false;
           game->map[x][y]->type = EMPTY;
-          game->mapObj[i]->box = malloc(sizeof(Box));
+          /*game->mapObj[i]->box = malloc(sizeof(Box));
+          if (!game->mapObj[i])
+          {
+            error("Unable to malloc mapObj");
+          }*/
           game->mapObj[i]->solid = true;
           game->mapObj[i]->x = x*32;
           game->mapObj[i]->y = y*32;
           game->mapObj[i]->w = 64;
           game->mapObj[i]->h = 64;
-          game->mapObj[i]->image = loadTexture("../graphics/box.png", game->screen->pRenderer);
+          //game->mapObj[i]->image = loadTexture("../graphics/box.png", game->screen->pRenderer);
+          i++;
           break;
         default :
+          puts("EMPTY");
           game->map[x][y]->solid = false;
       }
       game->map[x][y]->w = 32;
       game->map[x][y]->h = 32;
       game->map[x][y]->x = x*32;
       game->map[x][y]->y = y*32;
+      game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
     }
     jumpLine(file);
   }
+  puts("coucou2");
 }
 
 int jumpLine(FILE *file)
