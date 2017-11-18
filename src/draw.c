@@ -32,7 +32,7 @@ void drawMap(Game *game){
     }
 
     for (int x = 0; x < WINDOW_W/32 + 1; x++){
-        if (x + dep_x/32 >= game->wmap)    break;
+        if (x + dep_x/32 >= game->wmap || x + dep_x/32 < 0)    break;
         for (int y = 0; y < WINDOW_H/32 + 1; y++){
             if (y + dep_y/32>= game->hmap)    break;
             switch (game->map[x + dep_x/32][y + dep_y/32]->type){
@@ -55,7 +55,7 @@ void drawMap(Game *game){
     if (game->perso->vSpeed !=0){
         frame_index = 4;
     } else {
-        frame_index = (game->perso->x/20)%4;
+        frame_index = abs((game->perso->x/20)%4);
     }
     drawImage(game->perso->image[frame_index],
                 game->perso->x - dep_x,
