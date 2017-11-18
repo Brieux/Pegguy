@@ -4,57 +4,64 @@ void drawGame(Game *game)
 {
   clearScreen(game->screen);
   drawMap(game);
-
   SDL_RenderPresent(game->screen->pRenderer);
 }
 
 //Affichage de ce que l'on voit à l'écran seulement
 
 void drawMap(Game *game){
-    int perso_x = game->perso->x;
-    int perso_y = game->perso->y;
-    int dep_x;
-    int dep_y;
-    static int save_dep;
+    int dep_x;  //Nombre de pixel à passer sur la gauche
+    int dep_y;  //Nombre de pixel à passer sur le haut
 
-    if (perso_x > game->wmap*32 - WINDOW_W/2){
-        dep_x = save_dep;
-
-    } else if (perso_x > WINDOW_W/2){
-        dep_x = perso_x - WINDOW_W/2;   //On affiche avec le perso au centre
-        save_dep = dep_x;
+    if (game->perso->x > WINDOW_W/2){
+        if (game->perso->x > game->wmap * 32 - WINDOW_W/2){
+            dep_x = game->wmap * 32 - WINDOW_W;
+        } else {
+            dep_x = game->perso->x - WINDOW_W/2;
+        }
     } else {
         dep_x = 0;
     }
 
-    
-    if (perso_y > WINDOW_H){
-        dep_y = perso_y - WINDOW_H/2;
-    } /*else if (perso_y < 0){  //Très experimentale
-        dep_y = perso_y + WINDOW_H/2;
-    } */else {
+    if (game->perso->y + game->perso->h > WINDOW_H){
+        dep_y = game->perso->y + game->perso->h - WINDOW_H * 0.9;
+        //0.9 est un coefficient qu'on peut modifier de 0.1 à 1
+        //Plus il est bas, plus on peut voir en dessous du personnage.
+    } else {
         dep_y = 0;
     }
 
-
-    for (int x = 0; x < WINDOW_W/32 + 1; x++){      //ATTENTION AU +1 dangereux source de crash
-        if (x + dep_x/32>= game->wmap){
-            break;
-        }
+    for (int x = 0; x < WINDOW_W/32 + 1; x++){
+        if (x + dep_x/32 >= game->wmap || x + dep_x/32 < 0)    break;
         for (int y = 0; y < WINDOW_H/32 + 1; y++){
-            if (y + dep_y/32>= game->hmap){
-                break;
-            }
+            if (y + dep_y/32>= game->hmap)    break;
             switch (game->map[x + dep_x/32][y + dep_y/32]->type){
                 case GROUND:
-                    drawImage(game->map[x + dep_x/32][y + dep_y/32]->image, x*32 - dep_x%32, y*32 - dep_y%32, game->screen->pRenderer);
+                    drawImage(game->map[x + dep_x/32][y + dep_y/32]->image,
+                                x*32 - dep_x%32,
+                                y*32 - dep_y%32,
+                                game->screen->pRenderer
+                    );
                   break;
             }
         }
     }
-    drawImage(game->perso->image, perso_x-dep_x, perso_y-dep_y, game->screen->pRenderer);
-    //printf(" Perso en %d:%d\n", perso_x, perso_y);
-
+    /*
+    *   Faudra afficer tous les objets dans cette fonction,
+    *   ou alors renvoyer les valeurs de dep_x et dep_y
+    *   et n'afficher que si c'est sur l'écran actuel
+    */
+    int frame_index = 0;
+    if (game->perso->vSpeed !=0){
+        frame_index = game->perso->nb_frame - 1;
+    } else {
+        frame_index = abs((game->perso->x/20)%(game->perso->nb_frame-1));
+    }
+    drawImage(game->perso->image[frame_index],
+                game->perso->x - dep_x,
+                game->perso->y-dep_y,
+                game->screen->pRenderer
+    );
 }
 
 void clearScreen(Screen *screen)

@@ -24,7 +24,19 @@ Perso *loadPerso(Game *game)
     fprintf(stderr, "Unable to alloc perso in loadPerso\n");
     exit(EXIT_FAILURE);
   }
-  perso->image = loadTexture("../graphics/perso.png", game->screen->pRenderer);
+  perso->nb_frame = 5;
+  perso->image = malloc(perso->nb_frame * sizeof(SDL_Texture*));
+
+  if (!perso->image){
+    fprintf(stderr, "Unable to alloc image in perso\n");
+    exit(EXIT_FAILURE);
+  }
+
+  perso->image[0] = loadTexture("../graphics/perso_1.png", game->screen->pRenderer);
+  perso->image[1] = loadTexture("../graphics/perso_2.png", game->screen->pRenderer);
+  perso->image[2] = loadTexture("../graphics/perso_3.png", game->screen->pRenderer);
+  perso->image[3] = loadTexture("../graphics/perso_4.png", game->screen->pRenderer);
+  perso->image[4] = loadTexture("../graphics/perso_5.png", game->screen->pRenderer);
   //A changer selon les maps je suppose ?
   perso->w = 32;
   perso->h = 64;
