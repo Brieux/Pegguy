@@ -76,7 +76,7 @@ void drawMap(Game *game){
         }
     }
     if (DEBUG){
-      //consol_d(game, dep_x, dep_y);
+      consol_d(game, dep_x, dep_y);
   }
 }
 
@@ -105,42 +105,36 @@ void drawHUD(Game *game)
   drawImage(game->hud->hearts, game->hud->xHearts, game->hud->yHearts, game->screen->pRenderer);
 
   SDL_FreeSurface(text_surface);
+  SDL_DestroyTexture(text_texture);
 }
 
 void consol_d(Game *game, int dep_x, int dep_y){
     char debug_text[50];
-    int y = 0;
+    int y = 0, x = 250;
+    
     static int count = 0;
+    static double save_t = 0;
+    double t = SDL_GetTicks() - save_t;
     count ++;
-    sprintf(debug_text, "   fps : %lf", count/(SDL_GetTicks()/1000.0));
-    print_line(game, 20, y+=20, debug_text);
-    print_line(game, 20, y+=20, debug_text);
+    sprintf(debug_text, "   fps : %lf", count/(t/1000.0));
+    if ((int)t%1000 == 0){
+        count = 0;
+        save_t = SDL_GetTicks();
+    }
+    print_line(game, x, y+=20, debug_text);
+    
     sprintf(debug_text, "   dep_x : %d", dep_x);
-    print_line(game, 20, y+=20, debug_text);
+    print_line(game, x, y+=20, debug_text);
     sprintf(debug_text, "   dep_y : %d", dep_y);
-    print_line(game, 20, y+=20, debug_text);
+    print_line(game, x, y+=20, debug_text);
     sprintf(debug_text, "   x : %d", game->perso->x);
-    print_line(game, 20, y+=20, debug_text);
+    print_line(game, x, y+=20, debug_text);
     sprintf(debug_text, "   y : %d", game->perso->y);
-    print_line(game, 20, y+=20, debug_text);
+    print_line(game, x, y+=20, debug_text);
     sprintf(debug_text, "   x_screen : %d", game->perso->x - dep_x);
-    print_line(game, 20, y+=20, debug_text);
+    print_line(game, x, y+=20, debug_text);
     sprintf(debug_text, "   y_screen : %d", game->perso->y - dep_y);
-    print_line(game, 20, y+=20, debug_text);
-
-
-
-    sprintf(debug_text, "   caisse_x_screen1 : %d", game->mapObj[1]->x-dep_x);
-    print_line(game, 20, y+=20, debug_text);
-    sprintf(debug_text, "   caisse_y_screen1 : %d", game->mapObj[1]->y-dep_y);
-    print_line(game, 20, y+=20, debug_text);
-
-    sprintf(debug_text, "   caisse_x_screen2 : %d", game->mapObj[0]->x-dep_x);
-    print_line(game, 20, y+=20, debug_text);
-    sprintf(debug_text, "   caisse_y_screen2 : %d", game->mapObj[0]->y-dep_y);
-    print_line(game, 20, y+=20, debug_text);
-
-
+    print_line(game, x, y+=20, debug_text);
 
 }
 
@@ -158,6 +152,7 @@ void print_line(Game *game, int x, int y, char *debug_text){
     }
     drawImage(text_texture, x, y, game->screen->pRenderer);
     SDL_FreeSurface(text_surface);
+    SDL_DestroyTexture(text_texture);
 }
 
 void clearScreen(Screen *screen)
