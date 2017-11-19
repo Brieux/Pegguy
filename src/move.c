@@ -1,5 +1,26 @@
 #include "../include/move.h"
 
+void updateGame(Game *game)
+{
+  gravite(game, game->perso);
+  graviteObj(game);
+  pickItems(game);
+
+}
+
+void pickItems(Game *game)
+{
+  for (int i=0; i<game->nbDynObj; i++)
+  {
+    if (game->mapObj[i]->type == BALL &&
+            collision(game->perso->x, game->perso->y, game->perso->w, game->perso->h,
+                  game->mapObj[i]->x, game->mapObj[i]->y, game->mapObj[i]->w, game->mapObj[i]->h))
+    {
+        game->mapObj[i]->active = false;
+    }
+  }
+}
+
 void move(Game *game, int vx, int vy)
 {
   int wPerso = game->perso->w;
@@ -16,7 +37,7 @@ void move(Game *game, int vx, int vy)
         {//si c'est une caisse
           if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
               !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h, dynObj) &&
-              game->perso->interact)
+              game->perso->interact && !i%2)
           {//si on peut la deplacer et que le perso interagit
             game->perso->x+=abs(vx)/vx;
             dynObj->x+=abs(vx)/vx;//on pousse
@@ -25,18 +46,22 @@ void move(Game *game, int vx, int vy)
       }
       else
       {
-        game->perso->x+=abs(vx)/vx;/*si le pixel suivant est vide, on fait avancer le perso*/
         if ((dynObj = collisionMapObj(game, game->perso->x - abs(vx)/vx*2, game->perso->y, wPerso, hPerso, 0)) != 0 &&
              game->perso->interact)//si caisse derriere soi
         {
           if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY)
           {
             if (!collisionMap(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h) &&
-                !collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h, dynObj))
+                !collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h, dynObj) && !i%2)
             {
+              game->perso->x+=abs(vx)/vx;
               dynObj->x+=abs(vx)/vx;//on tire la caisse
             }
           }
+        }
+        else
+        {
+          game->perso->x+=abs(vx)/vx;/*si le pixel suivant est vide, on fait avancer le perso*/
         }
       }
     }
@@ -95,23 +120,26 @@ void graviteObj(Game *game)
 {
   for (int i=0; i<game->nbDynObj; i++)
   {
-    game->mapObj[i]->vSpeed += GRAVITE;
-    if (game->mapObj[i]->vSpeed > VDOWN)
+    if (game->mapObj[i]->gravite)
     {
-      game->mapObj[i]->vSpeed = VDOWN;/*si la vitesse de chute a été dépassée, on la bloque*/
-    }
-    for (uint k=0; k<abs(game->mapObj[i]->vSpeed); k++)
-    {
-      if (collisionMap(game, game->mapObj[i]->x, game->mapObj[i]->y + abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed,
-          game->mapObj[i]->w, game->mapObj[i]->h) || //si collision avec element du decor
-          collisionMapObj(game, game->mapObj[i]->x, game->mapObj[i]->y + abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed,
-          game->mapObj[i]->w,game->mapObj[i]->h, game->mapObj[i]))//si collision avec objet dynamique
+      game->mapObj[i]->vSpeed += GRAVITE;
+      if (game->mapObj[i]->vSpeed > VDOWN)
       {
-        game->mapObj[i]->vSpeed = 0;
+        game->mapObj[i]->vSpeed = VDOWN;/*si la vitesse de chute a été dépassée, on la bloque*/
       }
-      else
+      for (uint k=0; k<abs(game->mapObj[i]->vSpeed); k++)
       {
-        game->mapObj[i]->y += abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed;//sinon on modifie la position du perso
+        if (collisionMap(game, game->mapObj[i]->x, game->mapObj[i]->y + abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed,
+            game->mapObj[i]->w, game->mapObj[i]->h) || //si collision avec element du decor
+            collisionMapObj(game, game->mapObj[i]->x, game->mapObj[i]->y + abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed,
+            game->mapObj[i]->w,game->mapObj[i]->h, game->mapObj[i]))//si collision avec objet dynamique
+        {
+          game->mapObj[i]->vSpeed = 0;
+        }
+        else
+        {
+          game->mapObj[i]->y += abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed;//sinon on modifie la position du perso
+        }
       }
     }
   }

@@ -90,7 +90,7 @@ void loadMap(Game *game)
 }
 
 DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
-                      bool active, int vSpeed, char *image)
+                      bool active, bool gravite, int vSpeed, char *image)
 {
   DynObj *dynObj = malloc(sizeof(DynObj));
   dynObj->type = type;
@@ -100,6 +100,7 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
   dynObj->h = h;
   dynObj->solid = solid;
   dynObj->active = active;
+  dynObj->gravite = gravite;
   dynObj->vSpeed = vSpeed;
   dynObj->image = loadTexture(image, game->screen->pRenderer);
 
@@ -158,13 +159,18 @@ void initMap(FILE *file, Game *game)
           game->map[x][y]->y = y*32;
           break;
         case BOX :
-          game->mapObj[i] = initDynObj(game, BOX, x, y, 64, 64, true, true, 0,
+          game->mapObj[i] = initDynObj(game, BOX, x, y, 64, 64, true, true, true, 0,
                                         "../graphics/box.png");
           i++;
           break;
         case BOX_DESTROYABLE_EMPTY :
           game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_EMPTY, x, y, 64, 64,
-                                        true, true, 0, "../graphics/box_destroyable.png");
+                                        true, true, true, 0, "../graphics/box_destroyable.png");
+          i++;
+          break;
+        case BALL :
+          game->mapObj[i] = initDynObj(game, BALL, x, y, 16, 16,
+                                        false, true, false, 0, "../graphics/ball.png");
           i++;
           break;
         default :
