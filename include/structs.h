@@ -5,7 +5,7 @@
 
 typedef unsigned int uint;
 
-enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY, BALL};
+enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY, BALL, DUMMY_LAUNCHER};
 
 typedef struct Screen
 {
@@ -19,22 +19,6 @@ typedef struct Input
   bool key[SDL_NUM_SCANCODES];
 }Input;
 
-typedef struct Perso
-{
-  int x, y ,w ,h;
-  int index, hp;
-  int hSpeed, vSpeed;
-  int hJump, vJump;
-  int hJumpAct;
-  bool letal, solid, interact;
-  char *content;
-  void *hand;
-  int nb_frame;
-  SDL_Texture **image;
-  void *equip[];
-
-}Perso;
-
 typedef struct DynObj
 {
   int x, y, w, h;
@@ -44,6 +28,23 @@ typedef struct DynObj
   SDL_Texture *image;
   struct DynObj *content;
 }DynObj;
+
+typedef struct Perso
+{
+  int x, y ,w ,h;
+  int index, hp;
+  int hSpeed, vSpeed;
+  int hJump, vJump;
+  int hJumpAct;
+  bool letal, solid, interact;
+  char *content;
+  int nb_frame;
+  SDL_Texture **image;
+  DynObj *hand;
+  int sizeEquip;
+  DynObj **equip;
+
+}Perso;
 
 typedef struct Bloc
 {

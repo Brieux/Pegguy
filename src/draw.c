@@ -64,6 +64,13 @@ void drawMap(Game *game){
                 game->perso->y-dep_y,
                 game->screen->pRenderer
     );
+    if (game->perso->hand)
+    {
+      drawImage(game->perso->hand->image,
+                  game->perso->x - dep_x,
+                  game->perso->y-dep_y,
+                  game->screen->pRenderer);
+    }
 
     int nb_obj = game->nbDynObj;
     for (int i = 0; i < nb_obj; i++){
@@ -111,7 +118,7 @@ void drawHUD(Game *game)
 void consol_d(Game *game, int dep_x, int dep_y){
     char debug_text[50];
     int y = 0, x = 250;
-    
+
     static int count = 0;
     static double save_t = 0;
     double t = SDL_GetTicks() - save_t;
@@ -122,7 +129,7 @@ void consol_d(Game *game, int dep_x, int dep_y){
         save_t = SDL_GetTicks();
     }
     print_line(game, x, y+=20, debug_text);
-    
+
     sprintf(debug_text, "   dep_x : %d", dep_x);
     print_line(game, x, y+=20, debug_text);
     sprintf(debug_text, "   dep_y : %d", dep_y);

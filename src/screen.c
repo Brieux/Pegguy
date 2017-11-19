@@ -50,6 +50,14 @@ Screen *initScreen(char *title)
   return screen;
 }
 
+void freeAll(Game *game)
+{
+  free(game->font);
+  free(game->input);
+  free(game->ground);
+  free(game->perso->image);
+}
+
 //Fonction Mr propre
 void quitSDL(Screen *screen)
 {

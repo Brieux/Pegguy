@@ -12,12 +12,26 @@ void pickItems(Game *game)
 {
   for (int i=0; i<game->nbDynObj; i++)
   {
-    if (game->mapObj[i]->type == BALL && game->mapObj[i]->active &&
+    if (game->mapObj[i]->active &&
             collision(game->perso->x, game->perso->y, game->perso->w, game->perso->h,
                   game->mapObj[i]->x, game->mapObj[i]->y, game->mapObj[i]->w, game->mapObj[i]->h))
     {
-        game->mapObj[i]->active = false;
-        game->hud->nbBalls++;
+      switch (game->mapObj[i]->type) //si collision avec bille
+      {
+        case BALL :
+          game->mapObj[i]->active = false;
+          game->hud->nbBalls++;
+          break;
+        case DUMMY_LAUNCHER : //si collision avec lance-tetine
+          game->mapObj[i]->active = false;
+          DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
+                                        false, true, false, 0, "../graphics/dummy_launcher_hand.png");
+          game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
+          game->perso->sizeEquip++;
+          game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
+          game->perso->equip[game->perso->sizeEquip-1] = dummyLauncher; //et dans l'inventaire
+          break;
+      }
     }
   }
 }

@@ -77,6 +77,9 @@ Perso *loadPerso(Game *game)
   perso->hJump = 13;
   perso->hJumpAct = 0;
   perso->interact = 0;
+  perso->hand = NULL;
+  perso->sizeEquip = 0;
+  perso->equip = malloc(perso->sizeEquip*sizeof(DynObj*));
 
   return perso;
 }
@@ -168,7 +171,7 @@ void initMap(FILE *file, Game *game)
 
         case GROUND :                   //case sol
           game->map[x][y]->solid = true;
-          game->map[x][y]->image = loadTexture("../graphics/Dirt.png", game->screen->pRenderer);
+          game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
           game->map[x][y]->w = 32;
           game->map[x][y]->h = 32;
           game->map[x][y]->x = x*32;
@@ -187,6 +190,11 @@ void initMap(FILE *file, Game *game)
         case BALL :
           game->mapObj[i] = initDynObj(game, BALL, x, y, 16, 16,
                                         false, true, false, 0, "../graphics/ball.png");
+          i++;
+          break;
+        case DUMMY_LAUNCHER :
+          game->mapObj[i] = initDynObj(game, DUMMY_LAUNCHER, x, y, 32, 32,
+                                        false, true, false, 0, "../graphics/dummy_launcher.png");
           i++;
           break;
         default :

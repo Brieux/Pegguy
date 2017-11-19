@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 
   }
 
+  freeAll(game);
   quitSDL(game->screen);//on supprime tous les renderers et on quitte SDL
 
   return EXIT_SUCCESS;
