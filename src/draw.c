@@ -128,8 +128,6 @@ void consol_d(Game *game, int dep_x, int dep_y){
     sprintf(debug_text, "   y_screen : %d", game->perso->y - dep_y);
     print_line(game, 20, y+=20, debug_text);
 
-<<<<<<< HEAD
-=======
 
 
     sprintf(debug_text, "   caisse_x_screen1 : %d", game->mapObj[1]->x-dep_x);
@@ -141,10 +139,6 @@ void consol_d(Game *game, int dep_x, int dep_y){
     print_line(game, 20, y+=20, debug_text);
     sprintf(debug_text, "   caisse_y_screen2 : %d", game->mapObj[0]->y-dep_y);
     print_line(game, 20, y+=20, debug_text);
->>>>>>> 002c708ed086a74c8125ce3afe74500bc3b777b9
-
-
-
 }
 
 void print_line(Game *game, int x, int y, char *debug_text){
