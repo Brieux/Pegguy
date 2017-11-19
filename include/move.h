@@ -11,6 +11,7 @@ bool collisionMap(Game *game, int x1, int y1, int w1, int h1);
 DynObj *collisionMapObj(Game *game, int x1, int y1, int w1, int h1,  DynObj *dynObj);
 void gravite(Game *game, Perso *perso);
 void graviteObj(Game *game);
+Projectile *updateProjectilesPosition(Game *game);
 void jump(Perso *perso);
 
 #endif

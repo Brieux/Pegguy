@@ -5,7 +5,8 @@
 
 typedef unsigned int uint;
 
-enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY, BALL, GROUND_2, DUMMY_LAUNCHER};
+enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY, BALL, GROUND_2, DUMMY_LAUNCHER, DUMMY};
+enum {RIGHT, LEFT};
 
 typedef struct Screen
 {
@@ -22,12 +23,18 @@ typedef struct Input
 typedef struct DynObj
 {
   int x, y, w, h;
-  int vSpeed;
+  int vSpeed, hSpeed;
   int type;
   bool solid, active, gravite;
   SDL_Texture *image;
   struct DynObj *content;
 }DynObj;
+
+typedef struct Projectile
+{
+  DynObj *dynObj;
+  struct Projectile *following;
+}Projectile;
 
 typedef struct Perso
 {
@@ -36,6 +43,7 @@ typedef struct Perso
   int hSpeed, vSpeed;
   int hJump, vJump;
   int hJumpAct;
+  int direction;
   bool letal, solid, interact;
   char *content;
   int nb_frame;
@@ -74,6 +82,7 @@ typedef struct Game
   Perso *perso;
   Bloc ***map;
   DynObj **mapObj;
+  Projectile *projectiles;
   TTF_Font *font;
 }Game;
 

@@ -11,6 +11,7 @@ Game *loadGame(int n_map)
   game->perso = loadPerso(game);
   game->input = generateInput();
   game->hud = initHUD(game);
+  game->projectiles = NULL;
   game->level = n_map;
   loadMap(game);
   loadFont(game);
@@ -71,6 +72,7 @@ Perso *loadPerso(Game *game)
   perso->h = 64;
   perso->x = 96;
   perso->y = 200;
+  perso->direction = RIGHT;
   perso->hSpeed = 5;
   perso->vSpeed = 0;
   perso->vJump = 13;
@@ -109,18 +111,19 @@ void loadMap(Game *game)
 }
 
 DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
-                      bool active, bool gravite, int vSpeed, char *image)
+                      bool active, bool gravite, int vSpeed, int hSpeed, char *image)
 {
   DynObj *dynObj = malloc(sizeof(DynObj));
   dynObj->type = type;
-  dynObj->x = x*32;
-  dynObj->y = y*32;
+  dynObj->x = x;
+  dynObj->y = y;
   dynObj->w = w;
   dynObj->h = h;
   dynObj->solid = solid;
   dynObj->active = active;
   dynObj->gravite = gravite;
   dynObj->vSpeed = vSpeed;
+  dynObj->hSpeed = hSpeed;
   dynObj->image = loadTexture(image, game->screen->pRenderer);
 
   return dynObj;
@@ -186,23 +189,23 @@ void initMap(FILE *file, Game *game)
           initBlocMap(game, game->map[x][y], x, y, "../graphics/bloc.png");
           break;
         case BOX :
-          game->mapObj[i] = initDynObj(game, BOX, x, y, 64, 64, true, true, true, 0,
+          game->mapObj[i] = initDynObj(game, BOX, x*32, y*32, 64, 64, true, true, true, 0, 0,
                                         "../graphics/box.png");
           i++;
           break;
         case BOX_DESTROYABLE_EMPTY :
-          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_EMPTY, x, y, 64, 64,
-                                        true, true, true, 0, "../graphics/box_destroyable.png");
+          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_EMPTY, x*32, y*32, 64, 64,
+                                        true, true, true, 0, 0, "../graphics/box_destroyable.png");
           i++;
           break;
         case BALL :
-          game->mapObj[i] = initDynObj(game, BALL, x, y, 16, 16,
-                                        false, true, false, 0, "../graphics/ball.png");
+          game->mapObj[i] = initDynObj(game, BALL, x*32, y*32, 16, 16,
+                                        false, true, false, 0, 0, "../graphics/ball.png");
           i++;
           break;
         case DUMMY_LAUNCHER :
-          game->mapObj[i] = initDynObj(game, DUMMY_LAUNCHER, x, y, 32, 32,
-                                        false, true, false, 0, "../graphics/dummy_launcher.png");
+          game->mapObj[i] = initDynObj(game, DUMMY_LAUNCHER, x*32, y*32, 32, 32,
+                                        false, true, false, 0, 0, "../graphics/dummy_launcher.png");
           i++;
           break;
         default :

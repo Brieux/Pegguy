@@ -52,7 +52,7 @@ void drawMap(Game *game){
                                 game->screen->pRenderer
                     );
                   break;
-                  
+
             }
         }
     }
@@ -90,9 +90,24 @@ void drawMap(Game *game){
                     );
         }
     }
+    game->projectiles = drawProjectiles(game, dep_x, dep_y);
     if (DEBUG){
       consol_d(game, dep_x, dep_y);
   }
+}
+
+Projectile *drawProjectiles(Game *game, int dep_x, int dep_y)
+{
+  Projectile *projectile2 = game->projectiles;
+  while (projectile2)
+  {
+    drawImage(projectile2->dynObj->image,
+                            projectile2->dynObj->x - dep_x,
+                            projectile2->dynObj->y - dep_y,
+                            game->screen->pRenderer);
+    projectile2 = projectile2->following;
+  }
+  return game->projectiles;
 }
 
 void drawHUD(Game *game)

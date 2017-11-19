@@ -4,6 +4,7 @@ void updateGame(Game *game)
 {
   gravite(game, game->perso);
   graviteObj(game);
+  game->projectiles = updateProjectilesPosition(game);
   pickItems(game);
 
 }
@@ -25,7 +26,7 @@ void pickItems(Game *game)
         case DUMMY_LAUNCHER : //si collision avec lance-tetine
           game->mapObj[i]->active = false;
           DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
-                                        false, true, false, 0, "../graphics/dummy_launcher_hand.png");
+                                        false, true, false, 0, 0, "../graphics/dummy_launcher_hand.png");
           game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
           game->perso->sizeEquip++;
           game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
@@ -201,6 +202,27 @@ void gravite(Game *game, Perso *perso)
         perso->y += abs(perso->vSpeed)/perso->vSpeed;//sinon on modifie la position du perso
       }
     }
+}
+
+Projectile *updateProjectilesPosition(Game *game)
+{
+  Projectile *projectile2 = game->projectiles;
+  while (projectile2)
+  {
+    projectile2->dynObj->vSpeed += GRAVITE*0.5;
+    projectile2->dynObj->x += projectile2->dynObj->hSpeed;
+    projectile2->dynObj->y += projectile2->dynObj->vSpeed;
+    if (collisionMap(game, projectile2->dynObj->x, projectile2->dynObj->y,
+                      projectile2->dynObj->w, projectile2->dynObj->h) ||
+        collisionMapObj(game, projectile2->dynObj->x, projectile2->dynObj->y,
+                      projectile2->dynObj->w, projectile2->dynObj->h, 0))
+    {
+      game->projectiles = deleteProjectile(game, projectile2);
+    }
+
+    projectile2 = projectile2->following;
+  }
+  return game->projectiles;
 }
 
 void jump(Perso *perso)

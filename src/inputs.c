@@ -49,6 +49,7 @@ void updateEvents(Input *input)
 
 void updateInputs(Game *game)
 {
+  //quit
   if (game->input->key[SDL_SCANCODE_ESCAPE])
   {
     game->input->quit = true;
@@ -57,14 +58,18 @@ void updateInputs(Game *game)
   //deplacement droit
   if (game->input->key[SDL_SCANCODE_D])
   {
+      game->perso->direction = RIGHT;
       move(game, game->perso->hSpeed, 0);
   }
   //deplacement gauche
   if (game->input->key[SDL_SCANCODE_A])
   {
+    game->perso->direction = LEFT;
     move(game, -game->perso->hSpeed, 0);
   }
-  if (game->input->key[SDL_SCANCODE_LEFT])
+
+  //interaction
+  if (game->input->key[SDL_SCANCODE_UP])
   {
     game->perso->interact = true;
   }
@@ -72,6 +77,17 @@ void updateInputs(Game *game)
   {
     game->perso->interact = false;
   }
+
+  //tir
+  if (game->input->key[SDL_SCANCODE_LEFT])
+  {
+    if (game->perso->hand && game->perso->hand->type == DUMMY_LAUNCHER)
+    {
+      shoot(game);
+    }
+    game->input->key[SDL_SCANCODE_LEFT] = false;
+  }
+
   //saut
   if (game->input->key[SDL_SCANCODE_W])
   {

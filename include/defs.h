@@ -20,6 +20,7 @@
 #define DEBUG 1
 
 #include "structs.h"
+#include "shoot.h"
 #include "move.h"
 #include "screen.h"
 #include "load.h"
