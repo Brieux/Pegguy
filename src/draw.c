@@ -85,7 +85,7 @@ void consol_d(Game *game, int dep_x, int dep_y){
     count ++;
     sprintf(debug_text, "   fps : %lf", count/(SDL_GetTicks()/1000.0));
     print_line(game, 20, y+=20, debug_text);
-    print_line(game, 20, y+=20, debug_text);
+    
     sprintf(debug_text, "   dep_x : %d", dep_x);
     print_line(game, 20, y+=20, debug_text);
     sprintf(debug_text, "   dep_y : %d", dep_y);
@@ -99,17 +99,6 @@ void consol_d(Game *game, int dep_x, int dep_y){
     sprintf(debug_text, "   y_screen : %d", game->perso->y - dep_y);
     print_line(game, 20, y+=20, debug_text);
 
-    
-
-    sprintf(debug_text, "   caisse_x_screen1 : %d", game->mapObj[1]->x-dep_x);
-    print_line(game, 20, y+=20, debug_text);
-    sprintf(debug_text, "   caisse_y_screen1 : %d", game->mapObj[1]->y-dep_y);
-    print_line(game, 20, y+=20, debug_text);
-
-    sprintf(debug_text, "   caisse_x_screen2 : %d", game->mapObj[0]->x-dep_x);
-    print_line(game, 20, y+=20, debug_text);
-    sprintf(debug_text, "   caisse_y_screen2 : %d", game->mapObj[0]->y-dep_y);
-    print_line(game, 20, y+=20, debug_text);
 
 
     
