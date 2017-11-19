@@ -4,7 +4,7 @@ void drawGame(Game *game)
 {
   clearScreen(game->screen);
   drawMap(game);
-  
+
 
   SDL_RenderPresent(game->screen->pRenderer);
 }
@@ -67,12 +67,13 @@ void drawMap(Game *game){
 
     int nb_obj = game->nbDynObj;
     for (int i = 0; i < nb_obj; i++){
-        printf("----- %d\n", i);
+      if (game->mapObj[i]->active){
         drawImage(game->mapObj[i]->image,
                                 game->mapObj[i]->x - dep_x,
                                 game->mapObj[i]->y - dep_y,
                                 game->screen->pRenderer
                     );
+        }
     }
     if (DEBUG){
       consol_d(game, dep_x, dep_y);
@@ -100,7 +101,7 @@ void consol_d(Game *game, int dep_x, int dep_y){
     sprintf(debug_text, "   y_screen : %d", game->perso->y - dep_y);
     print_line(game, 20, y+=20, debug_text);
 
-    
+
 
     sprintf(debug_text, "   caisse_x_screen1 : %d", game->mapObj[1]->x-dep_x);
     print_line(game, 20, y+=20, debug_text);
@@ -113,7 +114,7 @@ void consol_d(Game *game, int dep_x, int dep_y){
     print_line(game, 20, y+=20, debug_text);
 
 
-    
+
 }
 
 void print_line(Game *game, int x, int y, char *debug_text){

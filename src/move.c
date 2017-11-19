@@ -10,14 +10,14 @@ void move(Game *game, int vx, int vy)
   {
     if (!collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
     {
-      if ((dynObj = collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso)) != 0)
+      if ((dynObj = collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso, 0)) != 0)
       {
         switch (dynObj->type)
         {
           case BOX :
             if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
-                (!collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h) ||
-                  collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h) == dynObj))
+                !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h, dynObj) &&
+                game->perso->interact)
             {
               game->perso->x+=abs(vx)/vx;
               dynObj->x+=abs(vx)/vx;
@@ -29,6 +29,11 @@ void move(Game *game, int vx, int vy)
       else
       {
         game->perso->x+=abs(vx)/vx;/*si le pixel suivant est vide, on fait avancer le perso*/
+        if ((dynObj = collisionMapObj(game, game->perso->x - abs(vx)/vx*2, game->perso->y, wPerso, hPerso, 0)) != 0 &&
+             game->perso->interact)
+        {
+          dynObj->x+=abs(vx)/vx;
+        }
       }
     }
     else
@@ -63,16 +68,19 @@ bool collisionMap(Game *game, int x1, int y1, int w1, int h1)
   return false;
 }
 
-DynObj *collisionMapObj(Game *game, int x1, int y1, int w1, int h1)
+DynObj *collisionMapObj(Game *game, int x1, int y1, int w1, int h1, DynObj *dynObj)
 {
   for (int i=0; i<game->nbDynObj; i++)
   {
-    if (game->mapObj[i]->solid)
+    if (game->mapObj[i]->active && game->mapObj[i]->solid)
     {     /*on teste toutes les collisions solides des objets dyn de la map*/
       if (collision(x1, y1, w1, h1, game->mapObj[i]->x, game->mapObj[i]->y,
                                      game->mapObj[i]->w, game->mapObj[i]->h))
       {
-        return game->mapObj[i];
+        if (game->mapObj[i] != dynObj)
+        {
+          return game->mapObj[i];
+        }
       }
     }
   }
@@ -83,19 +91,17 @@ void graviteObj(Game *game)
 {
   for (int i=0; i<game->nbDynObj; i++)
   {
-    printf("%d\n", i);
     game->mapObj[i]->vSpeed += GRAVITE;
     if (game->mapObj[i]->vSpeed > VDOWN)
     {
       game->mapObj[i]->vSpeed = VDOWN;/*si la vitesse de chute a été dépassée, on la bloque*/
     }
-
-    for (uint i=0; i<abs(game->mapObj[i]->vSpeed); i++)
+    for (uint k=0; k<abs(game->mapObj[i]->vSpeed); k++)
     {
       if (collisionMap(game, game->mapObj[i]->x, game->mapObj[i]->y + abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed,
           game->mapObj[i]->w, game->mapObj[i]->h) || //si collision avec element du decor
           collisionMapObj(game, game->mapObj[i]->x, game->mapObj[i]->y + abs(game->mapObj[i]->vSpeed)/game->mapObj[i]->vSpeed,
-          game->mapObj[i]->w,game->mapObj[i]->h))//si collision avec objet dynamique
+          game->mapObj[i]->w,game->mapObj[i]->h, game->mapObj[i]))//si collision avec objet dynamique
       {
         game->mapObj[i]->vSpeed = 0;
       }
@@ -109,7 +115,7 @@ void graviteObj(Game *game)
 
 void gravite(Game *game, Perso *perso)
 {
-
+    DynObj *dynObj = NULL;
     perso->vSpeed += GRAVITE;
     if (perso->vSpeed > VDOWN)
     {
@@ -121,17 +127,26 @@ void gravite(Game *game, Perso *perso)
       if (collisionMap(game, perso->x, perso->y + abs(perso->vSpeed)/perso->vSpeed,
           game->perso->w, game->perso->h) || //si collision avec element du decor
           collisionMapObj(game, perso->x, perso->y + abs(perso->vSpeed)/perso->vSpeed,
-          game->perso->w, game->perso->h))//si collision avec objet dynamique
+          game->perso->w, game->perso->h, 0))//si collision avec objet dynamique
       {
         perso->vSpeed = 0;
         perso->hJumpAct = perso->hJump;//on stoppe
 
         if (collisionMap(game, perso->x, perso->y + 1,
             game->perso->w, game->perso->h) ||
-            collisionMapObj(game, perso->x, perso->y + 1,
-            game->perso->w, game->perso->h))//si c'etait le sol
+            (dynObj = collisionMapObj(game, perso->x, perso->y + 1,
+            game->perso->w, game->perso->h, 0)))//si c'etait le sol
         {
-          perso->hJumpAct = 0;//on remet le compteur de saut à 0
+          perso->hJumpAct = 0;//on remet le compteur de saut à
+          if (dynObj)
+          {
+            switch (dynObj->type)
+            {
+              case BOX_DESTROYABLE_EMPTY :
+                dynObj->active = false;
+                break;
+            }
+          }
         }
       }
       else

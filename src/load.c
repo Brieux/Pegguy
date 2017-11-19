@@ -129,12 +129,10 @@ void initMap(FILE *file, Game *game)
     {
       game->map[x][y]->type = fgetc(file);//on copie la grille
 
-      printf("x:%d y:%d\n", x, y);
       switch (game->map[x][y]->type)     //lue dans le fichier
       {
 
         case GROUND :                   //case sol
-          puts("ground");
           game->map[x][y]->solid = true;
           game->map[x][y]->image = loadTexture("../graphics/Dirt.png", game->screen->pRenderer);
           game->map[x][y]->w = 32;
@@ -143,14 +141,6 @@ void initMap(FILE *file, Game *game)
           game->map[x][y]->y = y*32;
           break;
         case BOX :
-          puts("box");
-          game->map[x][y]->solid = false;
-          game->map[x][y]->type = EMPTY;
-          /*game->mapObj[i]->box = malloc(sizeof(Box));
-          if (!game->mapObj[i])
-          {
-            error("Unable to malloc mapObj");
-          }*/
           game->mapObj[i] = malloc(sizeof(DynObj));
           game->mapObj[i]->solid = true;
           game->mapObj[i]->type = BOX;
@@ -159,18 +149,31 @@ void initMap(FILE *file, Game *game)
           game->mapObj[i]->y = y*32;
           game->mapObj[i]->w = 64;
           game->mapObj[i]->h = 64;
+          game->mapObj[i]->active = true;
+          game->mapObj[i]->vSpeed = 0;
           game->mapObj[i]->image = loadTexture("../graphics/box.png", game->screen->pRenderer);
           i++;
-          puts("truc");
+          break;
+        case BOX_DESTROYABLE_EMPTY :
+          game->mapObj[i] = malloc(sizeof(DynObj));
+          game->mapObj[i]->solid = true;
+          game->mapObj[i]->type = BOX_DESTROYABLE_EMPTY;
+          game->mapObj[i]->x = x*32;
+          game->mapObj[i]->x = x*32;
+          game->mapObj[i]->y = y*32;
+          game->mapObj[i]->w = 64;
+          game->mapObj[i]->h = 64;
+          game->mapObj[i]->active = true;
+          game->mapObj[i]->vSpeed = 0;
+          game->mapObj[i]->image = loadTexture("../graphics/box_destroyable.png", game->screen->pRenderer);
+          i++;
           break;
         default :
-          puts("EMPTY");
           game->map[x][y]->solid = false;
       }
     }
     jumpLine(file);
   }
-  puts("coucou2");
 }
 
 int jumpLine(FILE *file)

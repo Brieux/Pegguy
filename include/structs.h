@@ -5,7 +5,7 @@
 
 typedef unsigned int uint;
 
-enum {EMPTY=48, GROUND, BOX};
+enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY};
 
 typedef struct Screen
 {
@@ -40,8 +40,9 @@ typedef struct DynObj
   int x, y, w, h;
   int vSpeed;
   int type;
-  bool solid;
+  bool solid, active;
   SDL_Texture *image;
+  struct DynObj *content;
 }DynObj;
 
 typedef struct Bloc
