@@ -45,6 +45,14 @@ void drawMap(Game *game){
                                 game->screen->pRenderer
                     );
                   break;
+                case GROUND_2:
+                    drawImage(game->map[x + dep_x/32][y + dep_y/32]->image,
+                                x*32 - dep_x%32,
+                                y*32 - dep_y%32,
+                                game->screen->pRenderer
+                    );
+                  break;
+                  
             }
         }
     }

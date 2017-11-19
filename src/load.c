@@ -177,6 +177,14 @@ void initMap(FILE *file, Game *game)
           game->map[x][y]->x = x*32;
           game->map[x][y]->y = y*32;
           break;
+        case GROUND_2 :                   //case sol
+          game->map[x][y]->solid = true;
+          game->map[x][y]->image = loadTexture("../graphics/Dirt_2.png", game->screen->pRenderer);
+          game->map[x][y]->w = 32;
+          game->map[x][y]->h = 32;
+          game->map[x][y]->x = x*32;
+          game->map[x][y]->y = y*32;
+          break;
         case BOX :
           game->mapObj[i] = initDynObj(game, BOX, x, y, 64, 64, true, true, true, 0,
                                         "../graphics/box.png");

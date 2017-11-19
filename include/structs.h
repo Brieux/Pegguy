@@ -5,7 +5,11 @@
 
 typedef unsigned int uint;
 
+<<<<<<< HEAD
 enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY, BALL, DUMMY_LAUNCHER};
+=======
+enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY, BALL, GROUND_2};
+>>>>>>> 2f01cf8385a9eca3cbcad7fecb1c161a8c648b48
 
 typedef struct Screen
 {
