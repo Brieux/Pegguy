@@ -76,7 +76,7 @@ void drawMap(Game *game){
         }
     }
     if (DEBUG){
-      consol_d(game, dep_x, dep_y);
+      //consol_d(game, dep_x, dep_y);
   }
 }
 

@@ -9,30 +9,34 @@ void move(Game *game, int vx, int vy)
   for (uint i=0; i<abs(vx); i++)
   {
     if (!collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
-    {
+    {//si pas de decor solide
       if ((dynObj = collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso, 0)) != 0)
-      {
-        switch (dynObj->type)
-        {
-          case BOX :
-            if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
-                !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h, dynObj) &&
-                game->perso->interact)
-            {
-              game->perso->x+=abs(vx)/vx;
-              dynObj->x+=abs(vx)/vx;
-
-            }
-            break;
+      {//si collision avec objet dynamique
+        if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY)
+        {//si c'est une caisse
+          if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
+              !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h, dynObj) &&
+              game->perso->interact)
+          {//si on peut la deplacer et que le perso interagit
+            game->perso->x+=abs(vx)/vx;
+            dynObj->x+=abs(vx)/vx;//on pousse
+          }
         }
       }
       else
       {
         game->perso->x+=abs(vx)/vx;/*si le pixel suivant est vide, on fait avancer le perso*/
         if ((dynObj = collisionMapObj(game, game->perso->x - abs(vx)/vx*2, game->perso->y, wPerso, hPerso, 0)) != 0 &&
-             game->perso->interact)
+             game->perso->interact)//si caisse derriere soi
         {
-          dynObj->x+=abs(vx)/vx;
+          if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY)
+          {
+            if (!collisionMap(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h) &&
+                !collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h, dynObj))
+            {
+              dynObj->x+=abs(vx)/vx;//on tire la caisse
+            }
+          }
         }
       }
     }

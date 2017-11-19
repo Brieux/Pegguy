@@ -8,6 +8,8 @@ Perso *loadPerso(Game *game);//crée un perso
 SDL_Texture *loadTexture(char *image, SDL_Renderer *pRenderer);//charge l'image
 void loadFont(Game *game);
 void loadMap(Game *game);
+DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
+                      bool active, int vSpeed, char *image);
 void initMap(FILE *file, Game *game);
 int jumpLine(FILE *file);
 void searchLevel(FILE *file, int level);
