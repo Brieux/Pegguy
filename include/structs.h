@@ -5,7 +5,7 @@
 
 typedef unsigned int uint;
 
-enum {EMPTY=48, GROUND, BOX};
+enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY, BALL};
 
 typedef struct Screen
 {
@@ -40,8 +40,9 @@ typedef struct DynObj
   int x, y, w, h;
   int vSpeed;
   int type;
-  bool solid;
+  bool solid, active, gravite;
   SDL_Texture *image;
+  struct DynObj *content;
 }DynObj;
 
 typedef struct Bloc
@@ -52,12 +53,20 @@ typedef struct Bloc
   SDL_Texture *image;
 }Bloc;
 
+typedef struct HUD
+{
+  int nbBalls, xBall, yBall;
+  SDL_Texture *ball;
+  int xHearts, yHearts;
+  SDL_Texture *hearts;
+}HUD;
 
 typedef struct Game
 {
   int wmap, hmap;
   int level;
   int nbDynObj;
+  HUD *hud;
   Screen *screen;
   SDL_Texture *ground;
   Input *input;

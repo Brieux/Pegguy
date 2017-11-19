@@ -9,13 +9,13 @@ int main(int argc, char *argv[])
   if (argc == 2){
   	  map_selected = atoi(argv[1]);
   }
-  
+
   Game *game = loadGame(map_selected);
 
   while (!game->input->quit)//boucle principale
   {
     inputs(game);
-    gravite(game, game->perso);
+    updateGame(game);
     drawGame(game);
 
   }

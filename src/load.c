@@ -10,11 +10,27 @@ Game *loadGame(int n_map)
   game->screen = initScreen("Peggy");
   game->perso = loadPerso(game);
   game->input = generateInput();
+  game->hud = initHUD(game);
   game->level = n_map;
   loadMap(game);
   loadFont(game);
 
   return game;
+}
+
+HUD *initHUD(Game *game)
+{
+  HUD *hud = malloc(sizeof(HUD));
+  hud->ball = loadTexture("../graphics/ball.png", game->screen->pRenderer);
+  hud->nbBalls = 0;
+  hud->xBall = 200;
+  hud->yBall = 40;
+
+  hud->hearts = loadTexture("../graphics/hearts.png", game->screen->pRenderer);
+  hud->xHearts = 40;
+  hud->yHearts = 40;
+
+  return hud;
 }
 
 void loadFont(Game *game){
@@ -89,6 +105,24 @@ void loadMap(Game *game)
 
 }
 
+DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
+                      bool active, bool gravite, int vSpeed, char *image)
+{
+  DynObj *dynObj = malloc(sizeof(DynObj));
+  dynObj->type = type;
+  dynObj->x = x*32;
+  dynObj->y = y*32;
+  dynObj->w = w;
+  dynObj->h = h;
+  dynObj->solid = solid;
+  dynObj->active = active;
+  dynObj->gravite = gravite;
+  dynObj->vSpeed = vSpeed;
+  dynObj->image = loadTexture(image, game->screen->pRenderer);
+
+  return dynObj;
+}
+
 void initMap(FILE *file, Game *game)
 {
   fscanf(file, "x:%d y:%d", &game->wmap, &game->hmap);//on recupere la taille de la grille
@@ -141,22 +175,18 @@ void initMap(FILE *file, Game *game)
           game->map[x][y]->y = y*32;
           break;
         case BOX :
-          game->map[x][y]->solid = false;
-          game->map[x][y]->type = EMPTY;
-          /*game->mapObj[i]->box = malloc(sizeof(Box));
-          if (!game->mapObj[i])
-          {
-            error("Unable to malloc mapObj");
-          }*/
-          game->mapObj[i] = malloc(sizeof(DynObj));
-          game->mapObj[i]->solid = true;
-          game->mapObj[i]->type = BOX;
-          game->mapObj[i]->x = x*32;
-          game->mapObj[i]->x = x*32;
-          game->mapObj[i]->y = y*32;
-          game->mapObj[i]->w = 64;
-          game->mapObj[i]->h = 64;
-          game->mapObj[i]->image = loadTexture("../graphics/box.png", game->screen->pRenderer);
+          game->mapObj[i] = initDynObj(game, BOX, x, y, 64, 64, true, true, true, 0,
+                                        "../graphics/box.png");
+          i++;
+          break;
+        case BOX_DESTROYABLE_EMPTY :
+          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_EMPTY, x, y, 64, 64,
+                                        true, true, true, 0, "../graphics/box_destroyable.png");
+          i++;
+          break;
+        case BALL :
+          game->mapObj[i] = initDynObj(game, BALL, x, y, 16, 16,
+                                        false, true, false, 0, "../graphics/ball.png");
           i++;
           break;
         default :
