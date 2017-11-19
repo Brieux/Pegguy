@@ -4,6 +4,7 @@
 #include "defs.h"
 
 Game *loadGame(int n_map);//crée une partie
+HUD *initHUD(Game *game);
 Perso *loadPerso(Game *game);//crée un perso
 SDL_Texture *loadTexture(char *image, SDL_Renderer *pRenderer);//charge l'image
 void loadFont(Game *game);

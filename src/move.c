@@ -12,11 +12,12 @@ void pickItems(Game *game)
 {
   for (int i=0; i<game->nbDynObj; i++)
   {
-    if (game->mapObj[i]->type == BALL &&
+    if (game->mapObj[i]->type == BALL && game->mapObj[i]->active &&
             collision(game->perso->x, game->perso->y, game->perso->w, game->perso->h,
                   game->mapObj[i]->x, game->mapObj[i]->y, game->mapObj[i]->w, game->mapObj[i]->h))
     {
         game->mapObj[i]->active = false;
+        game->hud->nbBalls++;
     }
   }
 }

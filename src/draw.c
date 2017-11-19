@@ -4,7 +4,7 @@ void drawGame(Game *game)
 {
   clearScreen(game->screen);
   drawMap(game);
-
+  drawHUD(game);
 
   SDL_RenderPresent(game->screen->pRenderer);
 }
@@ -78,6 +78,33 @@ void drawMap(Game *game){
     if (DEBUG){
       //consol_d(game, dep_x, dep_y);
   }
+}
+
+void drawHUD(Game *game)
+{
+  SDL_Color color_text = {255, 255, 255, 255};
+
+  //affiche le nombre de billes
+  char text[3];
+  sprintf(text, "%d", game->hud->nbBalls);
+  SDL_Surface *text_surface = TTF_RenderText_Solid(game->font, text, color_text);
+  if (!text_surface)
+  {
+      fprintf(stderr, "drawHUD error: Can't create surface\n");
+      return;
+  }
+  SDL_Texture *text_texture = SDL_CreateTextureFromSurface(game->screen->pRenderer, text_surface);
+  if (!text_texture)
+  {
+      fprintf(stderr, "drawHUD error: Can't create texure\n");
+      return;
+  }
+  drawImage(text_texture, game->hud->xBall + 30, game->hud->yBall - 2, game->screen->pRenderer);
+  drawImage(game->hud->ball, game->hud->xBall, game->hud->yBall, game->screen->pRenderer);
+
+  drawImage(game->hud->hearts, game->hud->xHearts, game->hud->yHearts, game->screen->pRenderer);
+
+  SDL_FreeSurface(text_surface);
 }
 
 void consol_d(Game *game, int dep_x, int dep_y){

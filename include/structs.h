@@ -53,12 +53,20 @@ typedef struct Bloc
   SDL_Texture *image;
 }Bloc;
 
+typedef struct HUD
+{
+  int nbBalls, xBall, yBall;
+  SDL_Texture *ball;
+  int xHearts, yHearts;
+  SDL_Texture *hearts;
+}HUD;
 
 typedef struct Game
 {
   int wmap, hmap;
   int level;
   int nbDynObj;
+  HUD *hud;
   Screen *screen;
   SDL_Texture *ground;
   Input *input;
