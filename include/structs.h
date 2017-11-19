@@ -5,7 +5,7 @@
 
 typedef unsigned int uint;
 
-enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY, BALL};
+enum {EMPTY=48, GROUND, BOX, BOX_DESTROYABLE_EMPTY, BALL, GROUND_2};
 
 typedef struct Screen
 {
