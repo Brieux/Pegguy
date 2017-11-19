@@ -126,6 +126,16 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
   return dynObj;
 }
 
+void initBlocMap(Game *game, Bloc *bloc, int x, int y, char *image)
+{
+  bloc->solid = true;
+  bloc->image = loadTexture(image, game->screen->pRenderer);
+  bloc->w = 32;
+  bloc->h = 32;
+  bloc->x = x*32;
+  bloc->y = y*32;
+}
+
 void initMap(FILE *file, Game *game)
 {
   fscanf(file, "x:%d y:%d", &game->wmap, &game->hmap);//on recupere la taille de la grille
@@ -170,20 +180,10 @@ void initMap(FILE *file, Game *game)
       {
 
         case GROUND :                   //case sol
-          game->map[x][y]->solid = true;
-          game->map[x][y]->image = loadTexture("../graphics/bloc.png", game->screen->pRenderer);
-          game->map[x][y]->w = 32;
-          game->map[x][y]->h = 32;
-          game->map[x][y]->x = x*32;
-          game->map[x][y]->y = y*32;
+          initBlocMap(game, game->map[x][y], x, y, "../graphics/Dirt.png");
           break;
         case GROUND_2 :                   //case sol
-          game->map[x][y]->solid = true;
-          game->map[x][y]->image = loadTexture("../graphics/Dirt_2.png", game->screen->pRenderer);
-          game->map[x][y]->w = 32;
-          game->map[x][y]->h = 32;
-          game->map[x][y]->x = x*32;
-          game->map[x][y]->y = y*32;
+          initBlocMap(game, game->map[x][y], x, y, "../graphics/bloc.png");
           break;
         case BOX :
           game->mapObj[i] = initDynObj(game, BOX, x, y, 64, 64, true, true, true, 0,
