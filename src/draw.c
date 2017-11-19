@@ -99,7 +99,7 @@ void drawHUD(Game *game)
       fprintf(stderr, "drawHUD error: Can't create texure\n");
       return;
   }
-  drawImage(text_texture, game->hud->xBall + 30, game->hud->yBall - 2, game->screen->pRenderer);
+  drawImage(text_texture, game->hud->xBall + 40, game->hud->yBall - 2, game->screen->pRenderer);
   drawImage(game->hud->ball, game->hud->xBall, game->hud->yBall, game->screen->pRenderer);
 
   drawImage(game->hud->hearts, game->hud->xHearts, game->hud->yHearts, game->screen->pRenderer);

@@ -21,12 +21,12 @@ Game *loadGame(int n_map)
 HUD *initHUD(Game *game)
 {
   HUD *hud = malloc(sizeof(HUD));
-  hud->ball = loadTexture("../graphics/ball.png", game->screen->pRenderer);
+  hud->ball = loadTexture("../graphics/bille.xcf", game->screen->pRenderer);
   hud->nbBalls = 0;
   hud->xBall = 200;
   hud->yBall = 40;
 
-  hud->hearts = loadTexture("../graphics/hearts.png", game->screen->pRenderer);
+  hud->hearts = loadTexture("../graphics/Heart.xcf", game->screen->pRenderer);
   hud->xHearts = 40;
   hud->yHearts = 40;
 
