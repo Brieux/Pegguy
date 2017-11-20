@@ -53,6 +53,8 @@ void move(Game *game, int vx, int vy)
         {//si c'est une caisse
           if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
               !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h, dynObj) &&
+              !collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y,
+                game->perso->w, game->perso->h, dynObj) &&
               game->perso->interact && !i%2)
           {//si on peut la deplacer et que le perso interagit
             game->perso->x+=abs(vx)/vx;
