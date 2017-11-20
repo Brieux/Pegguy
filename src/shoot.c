@@ -1,5 +1,8 @@
 #include "../include/shoot.h"
 
+
+//listes chainees basiques, d'ailleurs faudrait les rendre universelles et pas
+//focalisees sur les projectiles
 void shoot(Game *game)
 {
   game->projectiles = addProjectile(game, game->projectiles);

@@ -58,6 +58,12 @@ void freeAll(Game *game)
   free(game->perso->image);
 }
 
+void freeDynObj(DynObj *dynObj)
+{
+  dynObj->link = NULL;
+  free(dynObj);
+}
+
 //Fonction Mr propre
 void quitSDL(Screen *screen)
 {

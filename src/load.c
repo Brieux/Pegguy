@@ -200,6 +200,16 @@ void initMap(FILE *file, Game *game)
                                         true, true, true, 0, 0, "../graphics/box_destroyable.png");
           i++;
           break;
+        case BOX_DESTROYABLE_BALL :
+          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_BALL, x*32, y*32, 64, 64,
+                                        true, true, true, 0, 0, "../graphics/box_destroyable.png");
+          i++;
+          break;
+        case BOX_DESTROYABLE_DUMMY_LAUNCHER :
+          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_DUMMY_LAUNCHER, x*32, y*32, 64, 64,
+                                        true, true, true, 0, 0, "../graphics/box_destroyable.png");
+          i++;
+          break;
         case BALL :
           game->mapObj[i] = initDynObj(game, BALL, x*32, y*32, 16, 16,
                                         false, true, false, 0, 0, "../graphics/bille.png");
@@ -226,17 +236,17 @@ void initMap(FILE *file, Game *game)
     }
     jumpLine(file);
   }
-  for (int i=0; i<game->nbDynObj; i++)
+  for (int i=0; i<game->nbDynObj; i++)//on va chercher les cibles parmi tous les objets
   {
-    if (game->mapObj[i] && game->mapObj[i]->type == TARGET)
+    if (game->mapObj[i] && game->mapObj[i]->type == TARGET)//dès qu'on trouve
     for (int k=0; k<game->nbDynObj; k++)
     {
-      if (game->mapObj[k] && game->mapObj[k]->type == DOOR)
-      {
-        game->mapObj[i]->link = game->mapObj[k];
-        game->mapObj[k]->count++;
-        k = game->nbDynObj;
-      }
+      if (game->mapObj[k] && game->mapObj[k]->type == DOOR)//on cherche LA SEULE PORTE
+      {                                                   //de la map (va falloir changer ça
+        game->mapObj[i]->link = game->mapObj[k];          //avec l'éditeur)
+        game->mapObj[k]->count++;               //on la lie avec la cible et on augmente
+        k = game->nbDynObj;                     //son compteur (par exemple s'il y a trois cibles
+      }                                        //le compteur s'incrémente trois fois)
     }
   }
 }

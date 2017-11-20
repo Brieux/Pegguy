@@ -71,7 +71,7 @@ void drawMap(Game *game){
                     );
         }
     }
-    
+
     int frame_index = 0;
     if (game->perso->vSpeed !=0){
         frame_index = game->perso->nb_frame - 1;

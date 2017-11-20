@@ -5,8 +5,8 @@ void updateGame(Game *game)
   gravite(game, game->perso);
   graviteObj(game);
   game->projectiles = updateProjectilesPosition(game);
-  for (int i=0; i<game->nbDynObj; i++)
-  {
+  for (int i=0; i<game->nbDynObj; i++)//gestion des liens, à mettre dans une fonction
+  {                                   //quand on aura l'editeur
     if (game->mapObj[i]->type == DOOR && game->mapObj[i]->count == 0)
     {
       game->mapObj[i]->active = false;
@@ -56,7 +56,8 @@ void move(Game *game, int vx, int vy)
     {//si pas de decor solide
       if ((dynObj = collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso, 0)) != 0)
       {//si collision avec objet dynamique
-        if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY)
+        if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY ||
+            dynObj->type == BOX_DESTROYABLE_BALL || dynObj->type == BOX_DESTROYABLE_DUMMY_LAUNCHER)
         {//si c'est une caisse
           if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
               !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h, dynObj) &&
@@ -74,7 +75,8 @@ void move(Game *game, int vx, int vy)
         if ((dynObj = collisionMapObj(game, game->perso->x - abs(vx)/vx*2, game->perso->y, wPerso, hPerso, 0)) != 0 &&
              game->perso->interact)//si caisse derriere soi
         {
-          if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY)
+          if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY ||
+              dynObj->type == BOX_DESTROYABLE_BALL || dynObj->type == BOX_DESTROYABLE_DUMMY_LAUNCHER)
           {
             if (!collisionMap(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h) &&
                 !collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h, dynObj) && !i%2)
@@ -146,7 +148,7 @@ DynObj *collisionMapObjNoSolid(Game *game, int x1, int y1, int w1, int h1, DynOb
   for (int i=0; i<game->nbDynObj; i++)
   {
     if (game->mapObj[i]->active)
-    {     /*on teste toutes les collisions solides des objets dyn de la map*/
+    {     /*on teste toutes les collisions non solides des objets dyn de la map*/
       if (collision(x1, y1, w1, h1, game->mapObj[i]->x, game->mapObj[i]->y,
                                      game->mapObj[i]->w, game->mapObj[i]->h))
       {
@@ -217,10 +219,23 @@ void gravite(Game *game, Perso *perso)
           perso->hJumpAct = 0;//on remet le compteur de saut à
           if (dynObj)
           {
+            int x = dynObj->x;
+            int y = dynObj->y;
             switch (dynObj->type)
             {
               case BOX_DESTROYABLE_EMPTY :
                 dynObj->active = false;
+                break;
+              case BOX_DESTROYABLE_BALL :
+                freeDynObj(dynObj);
+                dynObj = initDynObj(game, BALL, x+16, y+32, 32, 32,
+                          false, true, false, 0, 0, "../graphics/bille.png");
+                break;
+              case BOX_DESTROYABLE_DUMMY_LAUNCHER :
+                freeDynObj(dynObj);
+                dynObj = initDynObj(game, DUMMY_LAUNCHER, x+16, y+32, 32, 32,
+                            false, true, false, 0, 0, "../graphics/dummy_launcher.png");
+
                 break;
             }
           }
