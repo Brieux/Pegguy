@@ -267,8 +267,10 @@ void destroyBox(Game *game, DynObj *dynObj)
 Projectile *updateProjectilesPosition(Game *game)
 {
   Projectile *projectile2 = game->projectiles;
+  Projectile *projectileAfter = NULL;
   while (projectile2)
   {
+    projectileAfter = projectile2->following;
     projectile2->dynObj->vSpeed += GRAVITE*0.5;
     if (projectile2->dynObj->vSpeed > VDOWN)
     {
@@ -292,8 +294,7 @@ Projectile *updateProjectilesPosition(Game *game)
       game->projectiles = deleteProjectile(game, projectile2);
       if (dynObj) {destroyBox(game, dynObj);}
     }
-
-    projectile2 = projectile2->following;
+    projectile2 = projectileAfter;
   }
   return game->projectiles;
 }
