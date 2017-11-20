@@ -22,12 +22,12 @@ Game *loadGame(int n_map)
 HUD *initHUD(Game *game)
 {
   HUD *hud = malloc(sizeof(HUD));
-  hud->ball = loadTexture("../graphics/bille.xcf", game->screen->pRenderer);
+  hud->ball = loadTexture("../graphics/bille.png", game->screen->pRenderer);
   hud->nbBalls = 0;
   hud->xBall = 200;
   hud->yBall = 40;
 
-  hud->hearts = loadTexture("../graphics/Heart.xcf", game->screen->pRenderer);
+  hud->hearts = loadTexture("../graphics/Heart.png", game->screen->pRenderer);
   hud->xHearts = 40;
   hud->yHearts = 40;
 
@@ -200,7 +200,7 @@ void initMap(FILE *file, Game *game)
           break;
         case BALL :
           game->mapObj[i] = initDynObj(game, BALL, x*32, y*32, 16, 16,
-                                        false, true, false, 0, 0, "../graphics/ball.png");
+                                        false, true, false, 0, 0, "../graphics/bille.png");
           i++;
           break;
         case DUMMY_LAUNCHER :
