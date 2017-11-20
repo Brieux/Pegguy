@@ -13,7 +13,18 @@ void updateGame(Game *game)
     }
   }
   pickItems(game);
+  interactionNPC(game);
 
+}
+
+void interactionNPC(Game *game)
+{
+  DynObj *npc = NULL;
+  if ((npc = collisionMapObjNoSolid(game, game->perso->x, game->perso->y,
+                game->perso->w, game->perso->h, 0)) && npc->type == NPC1 && game->perso->interact)
+  {
+    npc->count = 50;
+  }
 }
 
 void pickItems(Game *game)
@@ -259,6 +270,10 @@ Projectile *updateProjectilesPosition(Game *game)
   while (projectile2)
   {
     projectile2->dynObj->vSpeed += GRAVITE*0.5;
+    if (projectile2->dynObj->vSpeed > VDOWN)
+    {
+      projectile2->dynObj->vSpeed = VDOWN;
+    }
     projectile2->dynObj->x += projectile2->dynObj->hSpeed;
     projectile2->dynObj->y += projectile2->dynObj->vSpeed;
     DynObj *dynObj = NULL;

@@ -7,7 +7,7 @@ typedef unsigned int uint;
 
 enum {EMPTY=48/*0*/, GROUND/*1*/, BOX/*2*/, BOX_DESTROYABLE_EMPTY/*3*/, BALL/*4*/,
       GROUND_2/*5*/, DUMMY_LAUNCHER/*6*/, DUMMY/*7*/, TARGET/*8*/, DOOR/*9*/,
-      BOX_DESTROYABLE_BALL=65/*A*/, BOX_DESTROYABLE_DUMMY_LAUNCHER/*B*/};
+      BOX_DESTROYABLE_BALL=65/*A*/, BOX_DESTROYABLE_DUMMY_LAUNCHER/*B*/, NPC1/*C*/};
 enum {RIGHT, LEFT, UP, DOWN};
 
 typedef struct Screen
@@ -28,6 +28,7 @@ typedef struct DynObj
   int vSpeed, hSpeed;
   int type, count;
   bool solid, active, gravite;
+  char *content;
   SDL_Texture *image;
   struct DynObj *link;
 }DynObj;

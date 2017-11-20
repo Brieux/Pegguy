@@ -6,6 +6,7 @@
 void print_line(Game *game, int x, int y, char *debug_text);
 void consol_d(Game *game, int dep_x, int dep_y);
 void drawGame(Game *game);//affiche tous les sprites du jeu game
+void drawDialogueNPCs(Game *game, int dep_x, int dep_y);
 void drawMap(Game *game);
 Projectile *drawProjectiles(Game *game, int dep_x, int dep_y);
 void drawHUD(Game *game);

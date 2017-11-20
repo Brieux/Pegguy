@@ -4,6 +4,7 @@
 #include "defs.h"
 
 void updateGame(Game *game);
+void interactionNPC(Game *game);
 void pickItems(Game *game);
 void move(Game *game, int vx, int vy);
 bool collision(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);

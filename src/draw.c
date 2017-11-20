@@ -92,10 +92,23 @@ void drawMap(Game *game){
                   game->perso->y-dep_y,
                   game->screen->pRenderer);
     }
-
+    drawDialogueNPCs(game, dep_x, dep_y);
     game->projectiles = drawProjectiles(game, dep_x, dep_y);
     if (DEBUG){
       consol_d(game, dep_x, dep_y);
+  }
+}
+
+void drawDialogueNPCs(Game *game, int dep_x, int dep_y)
+{
+  for (int i=0; i<game->nbDynObj; i++)
+  {
+    if (game->mapObj[i]->type == NPC1 && game->mapObj[i]->count>0)
+    {
+      game->mapObj[i]->count--;
+      print_line(game, game->mapObj[i]->x-50-dep_x, game->mapObj[i]->y-40-dep_y,
+                  game->mapObj[i]->content);
+    }
   }
 }
 

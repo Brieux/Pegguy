@@ -231,6 +231,12 @@ void initMap(FILE *file, Game *game)
                                         true, true, false, 0, 0, "../graphics/door.png");
           i++;
           break;
+        case NPC1 :
+          game->mapObj[i] = initDynObj(game, NPC1, x*32, y*32, 32, 64,
+                                        false, true, true, 0, 0, "../graphics/npc.png");
+          game->mapObj[i]->content = "Bien le bonjour";
+          i++;
+          break;
         default :
           game->map[x][y]->solid = false;
       }
