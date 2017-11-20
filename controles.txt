@@ -1,0 +1,5 @@
+q/d : déplacement gauche/droite
+z : saut
+flèches :
+    gauche : tir
+    haut : interaction
