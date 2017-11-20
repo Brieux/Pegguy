@@ -216,28 +216,10 @@ void gravite(Game *game, Perso *perso)
             (dynObj = collisionMapObj(game, perso->x, perso->y + 1,
             game->perso->w, game->perso->h, 0)))//si c'etait le sol
         {
-          perso->hJumpAct = 0;//on remet le compteur de saut à
+          perso->hJumpAct = 0;//on remet le compteur de saut à 0
           if (dynObj)
           {
-            int x = dynObj->x;
-            int y = dynObj->y;
-            switch (dynObj->type)
-            {
-              case BOX_DESTROYABLE_EMPTY :
-                dynObj->active = false;
-                break;
-              case BOX_DESTROYABLE_BALL :
-                freeDynObj(dynObj);
-                dynObj = initDynObj(game, BALL, x+16, y+32, 32, 32,
-                          false, true, false, 0, 0, "../graphics/bille.png");
-                break;
-              case BOX_DESTROYABLE_DUMMY_LAUNCHER :
-                freeDynObj(dynObj);
-                dynObj = initDynObj(game, DUMMY_LAUNCHER, x+16, y+32, 32, 32,
-                            false, true, false, 0, 0, "../graphics/dummy_launcher.png");
-
-                break;
-            }
+            destroyBox(game, dynObj);
           }
         }
       }
@@ -246,6 +228,29 @@ void gravite(Game *game, Perso *perso)
         perso->y += abs(perso->vSpeed)/perso->vSpeed;//sinon on modifie la position du perso
       }
     }
+}
+
+void destroyBox(Game *game, DynObj *dynObj)
+{
+  int x = dynObj->x;
+  int y = dynObj->y;
+  switch (dynObj->type)
+  {
+    case BOX_DESTROYABLE_EMPTY :
+      dynObj->active = false;
+      break;
+    case BOX_DESTROYABLE_BALL :
+      freeDynObj(dynObj);
+      dynObj = initDynObj(game, BALL, x+16, y+32, 32, 32,
+                false, true, false, 0, 0, "../graphics/bille.png");
+      break;
+    case BOX_DESTROYABLE_DUMMY_LAUNCHER :
+      freeDynObj(dynObj);
+      dynObj = initDynObj(game, DUMMY_LAUNCHER, x+16, y+32, 32, 32,
+                  false, true, false, 0, 0, "../graphics/dummy_launcher.png");
+
+      break;
+  }
 }
 
 Projectile *updateProjectilesPosition(Game *game)
@@ -266,10 +271,11 @@ Projectile *updateProjectilesPosition(Game *game)
     }
     if (collisionMap(game, projectile2->dynObj->x, projectile2->dynObj->y,
                       projectile2->dynObj->w, projectile2->dynObj->h) ||
-        collisionMapObj(game, projectile2->dynObj->x, projectile2->dynObj->y,
-                      projectile2->dynObj->w, projectile2->dynObj->h, 0))
+        (dynObj = collisionMapObj(game, projectile2->dynObj->x, projectile2->dynObj->y,
+                      projectile2->dynObj->w, projectile2->dynObj->h, 0)))
     {
       game->projectiles = deleteProjectile(game, projectile2);
+      if (dynObj) {destroyBox(game, dynObj);}
     }
 
     projectile2 = projectile2->following;
