@@ -61,6 +61,17 @@ void drawMap(Game *game){
     *   ou alors renvoyer les valeurs de dep_x et dep_y
     *   et n'afficher que si c'est sur l'écran actuel
     */
+    int nb_obj = game->nbDynObj;
+    for (int i = 0; i < nb_obj; i++){
+      if (game->mapObj[i]->active){
+        drawImage(game->mapObj[i]->image,
+                                game->mapObj[i]->x - dep_x,
+                                game->mapObj[i]->y - dep_y,
+                                game->screen->pRenderer
+                    );
+        }
+    }
+    
     int frame_index = 0;
     if (game->perso->vSpeed !=0){
         frame_index = game->perso->nb_frame - 1;
@@ -80,16 +91,6 @@ void drawMap(Game *game){
                   game->screen->pRenderer);
     }
 
-    int nb_obj = game->nbDynObj;
-    for (int i = 0; i < nb_obj; i++){
-      if (game->mapObj[i]->active){
-        drawImage(game->mapObj[i]->image,
-                                game->mapObj[i]->x - dep_x,
-                                game->mapObj[i]->y - dep_y,
-                                game->screen->pRenderer
-                    );
-        }
-    }
     game->projectiles = drawProjectiles(game, dep_x, dep_y);
     if (DEBUG){
       consol_d(game, dep_x, dep_y);

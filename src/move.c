@@ -5,6 +5,13 @@ void updateGame(Game *game)
   gravite(game, game->perso);
   graviteObj(game);
   game->projectiles = updateProjectilesPosition(game);
+  for (int i=0; i<game->nbDynObj; i++)
+  {
+    if (game->mapObj[i]->type == DOOR && game->mapObj[i]->count == 0)
+    {
+      game->mapObj[i]->active = false;
+    }
+  }
   pickItems(game);
 
 }
@@ -134,6 +141,26 @@ DynObj *collisionMapObj(Game *game, int x1, int y1, int w1, int h1, DynObj *dynO
   return 0;
 }
 
+DynObj *collisionMapObjNoSolid(Game *game, int x1, int y1, int w1, int h1, DynObj *dynObj)
+{
+  for (int i=0; i<game->nbDynObj; i++)
+  {
+    if (game->mapObj[i]->active)
+    {     /*on teste toutes les collisions solides des objets dyn de la map*/
+      if (collision(x1, y1, w1, h1, game->mapObj[i]->x, game->mapObj[i]->y,
+                                     game->mapObj[i]->w, game->mapObj[i]->h))
+      {
+        if (game->mapObj[i] != dynObj)
+        {
+          return game->mapObj[i];
+        }
+      }
+    }
+  }
+  return 0;
+  puts("coucou");
+}
+
 void graviteObj(Game *game)
 {
   for (int i=0; i<game->nbDynObj; i++)
@@ -214,6 +241,14 @@ Projectile *updateProjectilesPosition(Game *game)
     projectile2->dynObj->vSpeed += GRAVITE*0.5;
     projectile2->dynObj->x += projectile2->dynObj->hSpeed;
     projectile2->dynObj->y += projectile2->dynObj->vSpeed;
+    DynObj *dynObj = NULL;
+    if ((dynObj = collisionMapObjNoSolid(game, projectile2->dynObj->x, projectile2->dynObj->y,
+                  projectile2->dynObj->w, projectile2->dynObj->h, 0)) && dynObj->type == TARGET)
+    {
+
+      dynObj->link->count--;
+      dynObj->active = false;
+    }
     if (collisionMap(game, projectile2->dynObj->x, projectile2->dynObj->y,
                       projectile2->dynObj->w, projectile2->dynObj->h) ||
         collisionMapObj(game, projectile2->dynObj->x, projectile2->dynObj->y,

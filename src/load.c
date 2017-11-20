@@ -125,6 +125,8 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
   dynObj->vSpeed = vSpeed;
   dynObj->hSpeed = hSpeed;
   dynObj->image = loadTexture(image, game->screen->pRenderer);
+  dynObj->link = NULL;
+  dynObj->count = 0;
 
   return dynObj;
 }
@@ -146,7 +148,7 @@ void initMap(FILE *file, Game *game)
   fscanf(file, "nbDynObj:%d", &game->nbDynObj);//on recupere le nombre d'objets dynamiques
   jumpLine(file);//puis on passe à la ligne suivante
 
-  game->mapObj = malloc(game->nbDynObj*sizeof(DynObj));//alloue tableau objets dynamiques
+  game->mapObj = calloc(game->nbDynObj, sizeof(DynObj));//alloue tableau objets dynamiques
   if (!game->mapObj)
   {
     error("Unable to malloc map");
@@ -208,11 +210,34 @@ void initMap(FILE *file, Game *game)
                                         false, true, false, 0, 0, "../graphics/dummy_launcher.png");
           i++;
           break;
+        case TARGET :
+          game->mapObj[i] = initDynObj(game, TARGET, x*32, y*32, 32, 32,
+                                        false, true, false, 0, 0, "../graphics/target.png");
+          i++;
+          break;
+        case DOOR :
+          game->mapObj[i] = initDynObj(game, DOOR, x*32, y*32, 32, 64,
+                                        true, true, false, 0, 0, "../graphics/door.png");
+          i++;
+          break;
         default :
           game->map[x][y]->solid = false;
       }
     }
     jumpLine(file);
+  }
+  for (int i=0; i<game->nbDynObj; i++)
+  {
+    if (game->mapObj[i] && game->mapObj[i]->type == TARGET)
+    for (int k=0; k<game->nbDynObj; k++)
+    {
+      if (game->mapObj[k] && game->mapObj[k]->type == DOOR)
+      {
+        game->mapObj[i]->link = game->mapObj[k];
+        game->mapObj[k]->count++;
+        k = game->nbDynObj;
+      }
+    }
   }
 }
 
