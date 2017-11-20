@@ -13,6 +13,7 @@ Game *loadGame(int n_map)
   game->hud = initHUD(game);
   game->projectiles = NULL;
   game->level = n_map;
+  game->background = loadTexture("../graphics/background.png", game->screen->pRenderer);
   loadMap(game);
   loadFont(game);
 

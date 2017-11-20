@@ -79,7 +79,7 @@ typedef struct Game
   int nbDynObj;
   HUD *hud;
   Screen *screen;
-  SDL_Texture *ground;
+  SDL_Texture *background;
   Input *input;
   Perso *perso;
   Bloc ***map;

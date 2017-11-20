@@ -54,8 +54,6 @@ void freeAll(Game *game)
 {
   free(game->font);
   free(game->input);
-  free(game->ground);
-  free(game->perso->image);
 }
 
 void freeDynObj(DynObj *dynObj)

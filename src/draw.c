@@ -33,6 +33,8 @@ void drawMap(Game *game){
         dep_y = 0;
     }
 
+    drawImage(game->background, -dep_x/SCROLLING_BACKGROUND_X, -dep_y/SCROLLING_BACKGROUND_Y, game->screen->pRenderer);
+
     for (int x = 0; x < WINDOW_W/32 + 1; x++){
         if (x + dep_x/32 >= game->wmap || x + dep_x/32 < 0)    break;
         for (int y = 0; y < WINDOW_H/32 + 1; y++){
