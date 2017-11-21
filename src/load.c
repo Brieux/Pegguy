@@ -62,7 +62,7 @@ Perso *loadPerso(Game *game)
     fprintf(stderr, "Unable to alloc image in perso\n");
     exit(EXIT_FAILURE);
   }
-
+  //Chargement des textures
   perso->image[0] = loadTexture("../graphics/perso_1.png", game->screen->pRenderer);
   perso->image[1] = loadTexture("../graphics/perso_2.png", game->screen->pRenderer);
   perso->image[2] = loadTexture("../graphics/perso_3.png", game->screen->pRenderer);
