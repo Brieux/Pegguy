@@ -1,3 +1,5 @@
+lvlEditor.o: lvlEditor.c /usr/include/stdc-predef.h \
+ ../include/lvlEditor.h
 screen.o: screen.c /usr/include/stdc-predef.h ../include/screen.h \
  ../include/defs.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
