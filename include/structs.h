@@ -47,6 +47,7 @@ typedef struct Perso
   int hJump, vJump;
   int hJumpAct;
   int direction;
+  int waitShoot;
   bool letal, solid, interact;
   char *content;
   int nb_frame;
