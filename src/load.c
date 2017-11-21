@@ -73,6 +73,7 @@ Perso *loadPerso(Game *game)
   perso->h = 64;
   perso->x = 96;
   perso->y = 200;
+  perso->waitShoot = 0;
   perso->direction = RIGHT;
   perso->hSpeed = 5;
   perso->vSpeed = 0;

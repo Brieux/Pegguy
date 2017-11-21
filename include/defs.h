@@ -20,6 +20,7 @@
 #define DEBUG 1
 #define SCROLLING_BACKGROUND_X 3
 #define SCROLLING_BACKGROUND_Y 2
+#define DELAY_SHOOT_DUMMY 10
 
 #include "structs.h"
 #include "shoot.h"

@@ -15,8 +15,29 @@ ________________________________________________________________________________
                           tire direction as you wish (AyW)
                           si touché avec arme de chasseur de fantôme -> disparition
 
-      - Fantôme violet : similaire au bleu + loot quand meurt
+      - Fantôme violet : similaire au bleu + loot piece quand meurt
 
       - Fantôme orange : pattern AyW
                           enlève une vie quand touche perso
                           invincible -> à éviter
+
+________________________________________________________________________________
+- Levels :
+
+	- Planche PEGI 16 et PEGI 18
+	- Planche lvldesign tout lvl
+
+________________________________________________________________________________
+- Sound design : 
+
+	- 5 musiques pour les 5 niveaux
+	- 1 musiaue pour les boss
+
+________________________________________________________________________________
+- Scenario Graphisme :
+
+	- Sprite des différentes armes & perso
+	- Coloration et bg des niveaux
+
+	- Péripétie de Pegguy
+	- Ligne de dialogue

@@ -5,7 +5,11 @@
 //focalisees sur les projectiles
 void shoot(Game *game)
 {
-  game->projectiles = addProjectile(game, game->projectiles);
+  if (game->perso->waitShoot==0)
+  {
+    game->projectiles = addProjectile(game, game->projectiles);
+    game->perso->waitShoot = DELAY_SHOOT_DUMMY;
+  }
 }
 
 Projectile *addProjectile(Game *game, Projectile *projectile)

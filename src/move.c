@@ -14,6 +14,10 @@ void updateGame(Game *game)
   }
   pickItems(game);
   interactionNPC(game);
+  if (game->perso->waitShoot!=0)
+  {
+    game->perso->waitShoot--;
+  }
 
 }
 
