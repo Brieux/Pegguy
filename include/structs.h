@@ -18,8 +18,10 @@ typedef struct Screen
 
 typedef struct Input
 {
+  int xCursor, yCursor;
   bool quit;
   bool key[SDL_NUM_SCANCODES];
+  bool mouse[5];
 }Input;
 
 typedef struct DynObj
@@ -89,5 +91,17 @@ typedef struct Game
   Projectile *projectiles;
   TTF_Font *font;
 }Game;
+
+typedef struct Editor
+{
+  int wmap, hmap;
+  int nbDynObj;
+  int nbBlocs;
+  int typeAct;
+  DynObj **blocs;
+  DynObj ***map;
+  Screen *screen;
+  Input *input;
+}Editor;
 
 #endif
