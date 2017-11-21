@@ -15,8 +15,9 @@ void drawMap(Game *game){
     int dep_x;  //Nombre de pixel à passer sur la gauche
     int dep_y;  //Nombre de pixel à passer sur le haut
 
-    if (game->perso->x > WINDOW_W/2){
-        if (game->perso->x > game->wmap * 32 - WINDOW_W/2){
+    //Gestion du scroll horizontal
+    if (game->perso->x > WINDOW_W/2){   //WINDOW_W/2 -> Début du scroll horizontal
+        if (game->perso->x > game->wmap * 32 - WINDOW_W/2){//Fin du scroll
             dep_x = game->wmap * 32 - WINDOW_W;
         } else {
             dep_x = game->perso->x - WINDOW_W/2;
@@ -25,6 +26,7 @@ void drawMap(Game *game){
         dep_x = 0;
     }
 
+    //gestion du scroll vertical
     if (game->perso->y + game->perso->h > WINDOW_H){
         dep_y = game->perso->y + game->perso->h - WINDOW_H * 0.9;
         //0.9 est un coefficient qu'on peut modifier de 0.1 à 1
@@ -33,12 +35,15 @@ void drawMap(Game *game){
         dep_y = 0;
     }
 
+    //Background
     drawImage(game->background, -dep_x/SCROLLING_BACKGROUND_X, -dep_y/SCROLLING_BACKGROUND_Y, game->screen->pRenderer);
 
+    //On dessine la map
     for (int x = 0; x < WINDOW_W/32 + 1; x++){
-        if (x + dep_x/32 >= game->wmap || x + dep_x/32 < 0)    break;
+        if (x + dep_x/32 >= game->wmap || x + dep_x/32 < 0)    break;   //Ne pas toucher
+
         for (int y = 0; y < WINDOW_H/32 + 1; y++){
-            if (y + dep_y/32>= game->hmap)    break;
+            if (y + dep_y/32>= game->hmap)    break;                    //Ne pas toucher
             switch (game->map[x + dep_x/32][y + dep_y/32]->type){
                 case GROUND:
                     drawImage(game->map[x + dep_x/32][y + dep_y/32]->image,
@@ -63,6 +68,7 @@ void drawMap(Game *game){
     *   ou alors renvoyer les valeurs de dep_x et dep_y
     *   et n'afficher que si c'est sur l'écran actuel
     */
+    //Dessin de tous les objets dynamiques
     int nb_obj = game->nbDynObj;
     for (int i = 0; i < nb_obj; i++){
       if (game->mapObj[i]->active){
@@ -74,10 +80,12 @@ void drawMap(Game *game){
         }
     }
 
+    //Dessin des animations
     int frame_index = 0;
-    if (game->perso->vSpeed !=0){
+    if (game->perso->vSpeed !=0){                       //Image quand le personnage saute
         frame_index = game->perso->nb_frame - 1;
     } else {
+        //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement
         frame_index = abs((game->perso->x/20)%(game->perso->nb_frame-1));
     }
     drawImage(game->perso->image[frame_index],
@@ -85,6 +93,8 @@ void drawMap(Game *game){
                 game->perso->y-dep_y,
                 game->screen->pRenderer
     );
+    //Dessine ce que le personnage tient dans la main.
+    //Il faudra appliquer le principe des frames
     if (game->perso->hand)
     {
       drawImage(game->perso->hand->image,
@@ -93,13 +103,14 @@ void drawMap(Game *game){
                   game->screen->pRenderer);
     }
     drawDialogueNPCs(game, dep_x, dep_y);
-    game->projectiles = drawProjectiles(game, dep_x, dep_y);
+    drawProjectiles(game, dep_x, dep_y);
     if (DEBUG){
       consol_d(game, dep_x, dep_y);
   }
 }
 
 void drawDialogueNPCs(Game *game, int dep_x, int dep_y)
+//Fonction pour dessiner les dialogues des pnj
 {
   for (int i=0; i<game->nbDynObj; i++)
   {
@@ -112,7 +123,7 @@ void drawDialogueNPCs(Game *game, int dep_x, int dep_y)
   }
 }
 
-Projectile *drawProjectiles(Game *game, int dep_x, int dep_y)
+void drawProjectiles(Game *game, int dep_x, int dep_y)
 {
   Projectile *projectile2 = game->projectiles;
   while (projectile2)
@@ -123,7 +134,6 @@ Projectile *drawProjectiles(Game *game, int dep_x, int dep_y)
                             game->screen->pRenderer);
     projectile2 = projectile2->following;
   }
-  return game->projectiles;
 }
 
 void drawHUD(Game *game)
