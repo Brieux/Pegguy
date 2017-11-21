@@ -1,0 +1,22 @@
+- Editeur de niveau
+________________________________________________________________________________
+- Ennemis :
+
+      - Bébé : déplacement rectiligne, collision avec mur -> changement de sens
+                enlève une vie quand touche perso
+                si touché avec tétine -> devient inoffensif
+
+      - Fantôme bleu : déplacement rectiligne, collision avec mur -> changement de sens
+                        enlève une vie quand touche perso
+                        si touché avec arme de chasseur de fantôme -> disparition
+
+      - Fantôme rouge : pattern as you wish
+                          enlève une vie quand touche perso
+                          tire direction as you wish (AyW)
+                          si touché avec arme de chasseur de fantôme -> disparition
+
+      - Fantôme violet : similaire au bleu + loot quand meurt
+
+      - Fantôme orange : pattern AyW
+                          enlève une vie quand touche perso
+                          invincible -> à éviter
