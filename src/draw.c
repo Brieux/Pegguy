@@ -93,6 +93,8 @@ void drawMap(Game *game){
                 game->perso->y-dep_y,
                 game->screen->pRenderer
     );
+    //Dessine ce que le personnage tient dans la main.
+    //Il faudra appliquer le principe des frames
     if (game->perso->hand)
     {
       drawImage(game->perso->hand->image,
@@ -101,13 +103,14 @@ void drawMap(Game *game){
                   game->screen->pRenderer);
     }
     drawDialogueNPCs(game, dep_x, dep_y);
-    game->projectiles = drawProjectiles(game, dep_x, dep_y);
+    drawProjectiles(game, dep_x, dep_y);
     if (DEBUG){
       consol_d(game, dep_x, dep_y);
   }
 }
 
 void drawDialogueNPCs(Game *game, int dep_x, int dep_y)
+//Fonction pour dessiner les dialogues des pnj
 {
   for (int i=0; i<game->nbDynObj; i++)
   {
@@ -120,7 +123,7 @@ void drawDialogueNPCs(Game *game, int dep_x, int dep_y)
   }
 }
 
-Projectile *drawProjectiles(Game *game, int dep_x, int dep_y)
+void drawProjectiles(Game *game, int dep_x, int dep_y)
 {
   Projectile *projectile2 = game->projectiles;
   while (projectile2)
@@ -131,7 +134,6 @@ Projectile *drawProjectiles(Game *game, int dep_x, int dep_y)
                             game->screen->pRenderer);
     projectile2 = projectile2->following;
   }
-  return game->projectiles;
 }
 
 void drawHUD(Game *game)
