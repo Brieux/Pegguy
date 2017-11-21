@@ -3,7 +3,6 @@
 
 #include "defs.h"
 
-
 typedef struct{
     int x, Vx;
     int y, Vy;
@@ -21,7 +20,7 @@ typedef struct mob{
     mob_type type;
     Coord_t *coord;
     bool can_jump;
-    int h_jump, v_jump;
+    int h_jump, act_jump;
     mob_w *weapon;
     int contact;
     bool solid;
@@ -29,5 +28,9 @@ typedef struct mob{
     SDL_Texture *image;
     struct mob *mob_next;
 }mob;
+
+void mob_test(int, void*);
+mob *init_monster(Game*, mob*, mob_type, int, int);
+void B1_fun(mob*, Game*);
 
 #endif
