@@ -76,7 +76,7 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
     }
     if (previous){
         previous->mob_next = creature;
-        return creature;
+        return game->first_mob; //A décommenter quand le champ sera ajouter dans la structure game
     } else {
         return creature;
     }
@@ -84,12 +84,19 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
 
 }
 
+void mob_gestion(Game *game){
+
+}
 
 void B1_fun(mob* mob, Game* game){
     int x_enemy = game->perso->x;
     if (x_enemy > mob->coord->x){
-        mob->coord->x += mob->coord->Vx;
+        if (!collisionMap(game, mob->coord->x + 1, mob->coord->y, mob->coord->w, mob->coord->h)){
+            mob->coord->x += mob->coord->Vx;
+        }
     } else {
-        mob->coord->x -= mob->coord->Vx;
+        if (!collisionMap(game, mob->coord->x - 1, mob->coord->y, mob->coord->w, mob->coord->h)){
+            mob->coord->x -= mob->coord->Vx;
+        }
     }
 }

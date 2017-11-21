@@ -87,6 +87,7 @@ typedef struct Game
   Bloc ***map;
   DynObj **mapObj;
   Projectile *projectiles;
+  struct mob *first_mob;
   TTF_Font *font;
 }Game;
 
