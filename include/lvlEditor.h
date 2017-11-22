@@ -11,11 +11,16 @@ Editor *loadEditor();
 void loadEmptyMap(Editor *editor);
 void drawEditor(Editor *editor);
 void drawMapEditor(Editor *editor);
+void drawGrid(Editor *editor);
 void drawBlocsEditor(Editor *editor);
-DynObj *initBlocEditor(Editor *editor, int x, int y, int w, int h, int type);
-bool collisionBlocEditor(Editor *editor);
+DynObj *initBlocEditor(Editor *editor, int x, int y, int type);
+DynObj *collisionBlocEditor(Editor *editor, int x, int y, int w, int h);
 void  placeBloc(Editor *editor);
 void inputsEditor(Editor *editor);
+void deleteBlocsAround(Editor *editor, DynObj *bloc);
+void deleteBloc(Editor *editor);
 void updateInputsEditor(Editor *editor);
+void saveMap(Editor *editor);
+void nbDynObjDecrease(Editor *editor, int type);
 
 #endif
