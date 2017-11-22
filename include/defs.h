@@ -23,6 +23,7 @@
 #define DELAY_SHOOT_DUMMY 10
 
 #include "structs.h"
+#include "lvlEditor.h"
 #include "shoot.h"
 #include "move.h"
 #include "screen.h"
