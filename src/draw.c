@@ -27,10 +27,8 @@ void drawMap(Game *game){
     }
 
     //gestion du scroll vertical
-    if (game->perso->y + game->perso->h > WINDOW_H){
-        dep_y = game->perso->y + game->perso->h - WINDOW_H * 0.9;
-        //0.9 est un coefficient qu'on peut modifier de 0.1 à 1
-        //Plus il est bas, plus on peut voir en dessous du personnage.
+    if (game->perso->y  > WINDOW_H/2){
+        dep_y = game->perso->y - WINDOW_H/2;
     } else {
         dep_y = 0;
     }
@@ -105,7 +103,8 @@ void drawMap(Game *game){
     drawDialogueNPCs(game, dep_x, dep_y);
     drawProjectiles(game, dep_x, dep_y);
     if (DEBUG){
-      consol_d(game, dep_x, dep_y);
+        //Console de debug
+        consol_d(game, dep_x, dep_y);
   }
 }
 
@@ -116,8 +115,9 @@ void drawDialogueNPCs(Game *game, int dep_x, int dep_y)
   {
     if (game->mapObj[i]->type == NPC1 && game->mapObj[i]->count>0)
     {
-      game->mapObj[i]->count--;
-      print_line(game, game->mapObj[i]->x-50-dep_x, game->mapObj[i]->y-40-dep_y,
+        //Count est le temps d'affichage du dialogue
+        game->mapObj[i]->count--;
+        print_line(game, game->mapObj[i]->x-50-dep_x, game->mapObj[i]->y-40-dep_y,
                   game->mapObj[i]->content);
     }
   }

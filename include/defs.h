@@ -30,5 +30,6 @@
 #include "load.h"
 #include "inputs.h"
 #include "draw.h"
+#include "ia.h"
 
 #endif
