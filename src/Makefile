@@ -22,4 +22,4 @@ include depends.txt
 .PHONY : clean apocalypse
 
 clean :
-	rm *.o $(EXEC) depends.txt
+	rm *.o $(EXEC) $(EXEC_EDITOR) depends.txt
