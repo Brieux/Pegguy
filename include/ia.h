@@ -19,13 +19,15 @@ typedef struct mob{
     void (*p_mob_fun) (struct mob*, Game*);                    //Pointeur sur la fonction du mob
     mob_type type;
     Coord_t *coord;
+    int life;
     bool can_jump;
     int h_jump, act_jump;
     mob_w *weapon;
     int contact;
     bool solid;
     bool gravite;
-    SDL_Texture *image;
+    int nb_frame;
+    SDL_Texture **image;
     struct mob *mob_next;
 }mob;
 

@@ -27,10 +27,8 @@ void drawMap(Game *game){
     }
 
     //gestion du scroll vertical
-    if (game->perso->y + game->perso->h > WINDOW_H){
-        dep_y = game->perso->y + game->perso->h - WINDOW_H * 0.9;
-        //0.9 est un coefficient qu'on peut modifier de 0.1 à 1
-        //Plus il est bas, plus on peut voir en dessous du personnage.
+    if (game->perso->y  > WINDOW_H/2){
+        dep_y = game->perso->y - WINDOW_H/2;
     } else {
         dep_y = 0;
     }

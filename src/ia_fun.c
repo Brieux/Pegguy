@@ -6,8 +6,10 @@ void mob_test(int line, void *p){
         exit(EXIT_FAILURE);
     }
 }
-
 void mob_gravite(Game *game, mob *mob){
+    if (!mob->gravite){
+        return;
+    }
     DynObj *dynObj = NULL;
     mob->coord->Vy += GRAVITE;
 
@@ -56,6 +58,7 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
     creature->type = type;
     switch (type){
         case B1:
+            creature->life = 3;
             creature->coord->h = 32;
             creature->coord->w = 32;
             creature->coord->Vx = 2;
@@ -64,9 +67,10 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
             creature->weapon = NULL;
             creature->solid = true;
             creature->gravite = true;
-            creature->image = NULL; //A dessiner
+            creature->nb_frame = 2;
+            creature->image = malloc(creature->nb_frame * sizeof(SDL_Texture *)); //A dessiner
             creature->mob_next = NULL;
-            creature->p_mob_fun = &B1_fun;
+            creature->p_mob_fun = B1_fun;
         break;
 
         default:
@@ -106,7 +110,7 @@ void draw_mob(Game *game, mob *mob){
     int y_act = mob->coord->y - dep_y;
     if (x_act > dep_x && x_act < WINDOW_W + dep_x){ //Formule a tester
         if (y_act > dep_y && y_act < WINDOW_H + dep_y){
-            drawImage(mob->image, x_act, y_act, game->screen->pRenderer);
+            drawImage(mob->image[0], x_act, y_act, game->screen->pRenderer);
         }
     }
     
@@ -117,7 +121,7 @@ void mob_gestion(Game *game){
     while (p_mob){
         mob_gravite(game, p_mob);
         draw_mob(game, p_mob);
-        //LANCER LES FONCTION !
+        p_mob->p_mob_fun(p_mob, game);
         p_mob = p_mob->mob_next;
     }
 }
