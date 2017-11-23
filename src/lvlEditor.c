@@ -47,6 +47,7 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
   dynObj->y = y;
   dynObj->w = 32;
   dynObj->h = 32;
+  dynObj->link = NULL;
   if (dynObj->type > 50)
   {
     editor->nbDynObj++;
@@ -318,6 +319,19 @@ void updateInputsEditor(Editor *editor)
     saveMap(editor);
   }
 
+  if (editor->input->key[SDL_SCANCODE_Q])
+  {
+    editor->input->key[SDL_SCANCODE_Q] = false;
+    for (int x=0; x<editor->wmap; x++)
+    {
+      for (int y=0; y<editor->hmap; y++)
+      {
+        if (editor->map[x][y]->link)
+        printf("bloc[%d][%d]type:%d link:%d\n", x, y, editor->map[x][y]->type, editor->map[x][y]->link->type);
+      }
+    }
+  }
+
   //scrolling grille
   if (editor->input->key[SDL_SCANCODE_LEFT])
   {
@@ -339,9 +353,17 @@ void updateInputsEditor(Editor *editor)
 
   if (editor->input->mouse[SDL_BUTTON_LEFT])
   {
-    collisionBlocEditor(editor, editor->input->xCursor,
-      editor->input->yCursor, 0, 0);
-    placeBloc(editor);
+    if (!editor->input->key[SDL_SCANCODE_L])
+    {
+      collisionBlocEditor(editor, editor->input->xCursor,
+        editor->input->yCursor, 0, 0);
+      placeBloc(editor);
+    }
+    else
+    {
+      editor->input->mouse[SDL_BUTTON_LEFT] = false;
+      linker(editor);
+    }
   }
 
   if (editor->input->mouse[SDL_BUTTON_RIGHT])
@@ -435,6 +457,37 @@ void deleteBloc(Editor *editor)
         deleteBlocsAround(editor, editor->map[x][y]);
         y = editor->hmap;
         x = editor->wmap;
+      }
+    }
+  }
+}
+
+void linker(Editor *editor)
+{
+  for (int x=0; x<editor->wmap; x++)
+  {
+    for (int y=0; y<editor->hmap; y++)
+    {
+      if (collision(editor->input->xCursor, editor->input->yCursor, 0, 0,
+                editor->map[x][y]->x - editor->dep_x, editor->map[x][y]->y - editor->dep_y, 32, 32))
+      {
+        if (!editor->link)
+        {
+          if (editor->map[x][y]->link)
+          {
+            editor->map[x][y]->link = NULL;
+          }
+          else
+          {
+            editor->linker = editor->map[x][y];
+            editor->link = true;
+          }
+        }
+        else
+        {
+          editor->linker->link = editor->map[x][y];
+          editor->link = false;
+        }
       }
     }
   }

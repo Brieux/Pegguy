@@ -19,6 +19,7 @@ void drawGrid(Editor *editor);
 void drawBlocsEditor(Editor *editor);
 DynObj *initBlocEditor(Editor *editor, int x, int y, int type);
 DynObj *collisionBlocEditor(Editor *editor, int x, int y, int w, int h);
+void linker(Editor *editor);
 void  placeBloc(Editor *editor);
 void inputsEditor(Editor *editor);
 void deleteBlocsAround(Editor *editor, DynObj *bloc);

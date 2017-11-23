@@ -101,6 +101,8 @@ typedef struct Editor
   int nbBlocs;
   int typeAct;
   int level;
+  bool link;
+  DynObj *linker;
   DynObj **blocs;
   DynObj ***map;
   Screen *screen;
