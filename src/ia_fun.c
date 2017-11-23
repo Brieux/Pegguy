@@ -1,4 +1,4 @@
-#include "../include/ia.h"//Penser à mettre ça dans defs.h
+#include "../include/ia.h"
 
 void mob_test(int line, void *p){
     if (!p){
@@ -67,8 +67,9 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
             creature->weapon = NULL;
             creature->solid = true;
             creature->gravite = true;
-            creature->nb_frame = 2;
+            creature->nb_frame = 1;
             creature->image = malloc(creature->nb_frame * sizeof(SDL_Texture *)); //A dessiner
+            creature->image[0] = loadTexture("../graphics/B1_1.png", game->screen->pRenderer);
             creature->mob_next = NULL;
             creature->p_mob_fun = B1_fun;
         break;
