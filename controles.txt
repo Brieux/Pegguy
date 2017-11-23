@@ -1,5 +1,22 @@
+JEU :
+
 q/d : déplacement gauche/droite
 z : saut
 flèches :
     gauche : tir
     haut : interaction
+échap : quitter
+
+Pour lancer le jeu, make puis ./peggy x avec x le niveau voulu.
+
+
+
+
+EDITEUR :
+
+s : sauvegarder
+flèches directionnelles : déplacer la grille
+échap : quitter
+
+Pour lancer l'éditeur, make editor puis ./editor x avec le x niveau que vous
+  voulez éditer.
