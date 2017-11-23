@@ -130,7 +130,7 @@ bool collisionProjectil(Game *game, mob *mob){
 }
 
 void destroy_mob(Game *game, mob *mob){
-    mob_test(__LINE__, mob);
+    mob_test(__LINE__,mob);
     struct mob *p_mob = game->first_mob;
     while (p_mob->mob_next && p_mob->mob_next != mob){
         p_mob = p_mob->mob_next;
