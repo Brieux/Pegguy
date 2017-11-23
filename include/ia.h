@@ -35,6 +35,7 @@ void mob_test(int, void*);
 mob *init_monster(Game*, mob*, mob_type, int, int);
 void mob_gravite(Game *game, mob *mob);
 void mob_gestion(Game *game);
+void draw_mob(Game *game, mob *mob);
 void B1_fun(mob*, Game*);
 
 #endif
