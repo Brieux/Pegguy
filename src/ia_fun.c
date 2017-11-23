@@ -113,8 +113,49 @@ void mob_gestion(Game *game){
         p_mob = p_mob->mob_next;
     }
 }
+bool collisionProjectil(Game *game, mob *mob){
+    Projectile *p_projectile = game->projectiles;
+    while (p_projectile){   //Si toucher détruire projectile
+        if (collision(p_projectile->dynObj->x, p_projectile->dynObj->y,
+                        p_projectile->dynObj->w, p_projectile->dynObj->h,
+                        mob->coord->x, mob->coord->y, mob->coord->w, mob->coord->h)){
+            p_projectile = deleteProjectile(game, p_projectile);
+            
+            return true;
+            continue;
+        }
+        p_projectile = p_projectile->following;
+    }
+    return false;
+}
 
+void destroy_mob(Game *game, mob *mob){
+    mob_test(__LINE__, mob);
+    struct mob *p_mob = game->first_mob;
+    while (p_mob->mob_next && p_mob->mob_next != mob){
+        p_mob = p_mob->mob_next;
+    }
+    if (p_mob == mob){
+        free(mob);
+        game->first_mob = NULL;
+    } else {
+        if (mob->mob_next){
+            p_mob->mob_next = mob->mob_next;
+            free(mob);
+        } else {
+            free(mob);
+        }
+    }
+}
+
+//Faire focntion de destruction de mob
 void B1_fun(mob* mob, Game* game){
+    if (collisionProjectil(game, mob)){
+        mob->life--;
+    }
+    if (mob->life <= 0){
+        destroy_mob(game, mob);
+    }
     int x_enemy = game->perso->x;
     if (x_enemy > mob->coord->x){
         if (!collisionMap(game, mob->coord->x + 1, mob->coord->y, mob->coord->w, mob->coord->h)){
@@ -131,3 +172,5 @@ void B1_fun(mob* mob, Game* game){
         //Faire collision avec le joueur
     }
 }
+
+
