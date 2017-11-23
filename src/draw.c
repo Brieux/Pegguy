@@ -6,7 +6,7 @@ void drawGame(Game *game)
   drawMap(game);
   drawHUD(game);
   //Car dans le dessin des mobs
-  //SDL_RenderPresent(game->screen->pRenderer);
+  SDL_RenderPresent(game->screen->pRenderer);
 }
 
 //Affichage de ce que l'on voit à l'écran seulement
@@ -102,6 +102,14 @@ void drawMap(Game *game){
     }
     drawDialogueNPCs(game, dep_x, dep_y);
     drawProjectiles(game, dep_x, dep_y);
+
+    //Gérer les frames !
+    mob *p_mob = game->first_mob;
+    while (p_mob){
+        draw_mob(game, p_mob);
+        p_mob = p_mob->mob_next;
+    }
+
     if (DEBUG){
         //Console de debug
         consol_d(game, dep_x, dep_y);
