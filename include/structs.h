@@ -5,8 +5,8 @@
 
 typedef unsigned int uint;
 
-enum {EMPTY=48/*0*/, GROUND/*1*/, BOX/*2*/, BOX_DESTROYABLE_EMPTY/*3*/, BALL/*4*/,
-      GROUND_2/*5*/, DUMMY_LAUNCHER/*6*/, DUMMY/*7*/, TARGET/*8*/, DOOR/*9*/,
+enum {EMPTY=48/*0*/, GROUND/*1*/, GROUND_2/*2*/, BOX_DESTROYABLE_EMPTY/*3*/, BALL/*4*/,
+      BOX/*5*/, DUMMY_LAUNCHER/*6*/, DUMMY/*7*/, TARGET/*8*/, DOOR/*9*/,
       BOX_DESTROYABLE_BALL=65/*A*/, BOX_DESTROYABLE_DUMMY_LAUNCHER/*B*/, NPC1/*C*/};
 enum {RIGHT, LEFT, UP, DOWN};
 
@@ -99,9 +99,11 @@ typedef struct Editor
   int nbDynObj;
   int nbBlocs;
   int typeAct;
+  int level;
   DynObj **blocs;
   DynObj ***map;
   Screen *screen;
+  SDL_Texture *background;
   Input *input;
 }Editor;
 

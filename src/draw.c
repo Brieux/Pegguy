@@ -84,7 +84,7 @@ void drawMap(Game *game){
         frame_index = game->perso->nb_frame - 1;
     } else {
         //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement
-        frame_index = abs((game->perso->x/20)%(game->perso->nb_frame-1));
+        frame_index = abs((game->perso->x/40)%(game->perso->nb_frame-1));
     }
     drawImage(game->perso->image[frame_index],
                 game->perso->x - dep_x,

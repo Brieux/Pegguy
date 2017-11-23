@@ -70,7 +70,7 @@ Perso *loadPerso(Game *game)
   perso->image[4] = loadTexture("../graphics/perso_5.png", game->screen->pRenderer);
   //A changer selon les maps je suppose ?
   perso->w = 32;
-  perso->h = 64;
+  perso->h = 32;
   perso->x = 96;
   perso->y = 200;
   perso->waitShoot = 0;
@@ -99,7 +99,7 @@ SDL_Texture *loadTexture(char *image, SDL_Renderer *pRenderer)
 
 void loadMap(Game *game)
 {
-  FILE *file = fopen("../texts/levels.txt", "r");
+  FILE *file = fopen("../texts/level1.txt", "r");
   if (!file)
   {
     error("Unable to open levels.txt");

@@ -10,20 +10,27 @@ Editor *loadEditor()
   editor->screen = initScreen("Editor");
   editor->input = generateInput();
   editor->typeAct = EMPTY;
+  editor->level = 1;
+  editor->nbDynObj = 0;
+  editor->background = loadTexture("../graphics/background.png", editor->screen->pRenderer);
   loadEmptyMap(editor);
   SDL_ShowCursor(SDL_ENABLE);
 
   return editor;
 }
 
-DynObj *initBlocEditor(Editor *editor, int x, int y, int w, int h, int type)
+DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
 {
   DynObj *dynObj = malloc(sizeof(DynObj));
   dynObj->type = type;
   dynObj->x = x;
   dynObj->y = y;
-  dynObj->w = w;
-  dynObj->h = h;
+  dynObj->w = 32;
+  dynObj->h = 32;
+  if (dynObj->type > 50)
+  {
+    editor->nbDynObj++;
+  }
   char *image;
   switch (dynObj->type)
   {
@@ -38,24 +45,34 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int w, int h, int type)
       break;
     case BOX :
       image = "../graphics/box.png";
+      dynObj->w = 64;
+      dynObj->h = 64;
       break;
     case BOX_DESTROYABLE_EMPTY :
       image = "../graphics/box_destroyable.png";
+      dynObj->w = 64;
+      dynObj->h = 64;
       break;
     case BOX_DESTROYABLE_BALL :
       image = "../graphics/box_destroyable.png";
+      dynObj->w = 64;
+      dynObj->h = 64;
       break;
     case BOX_DESTROYABLE_DUMMY_LAUNCHER :
       image = "../graphics/box_destroyable.png";
+      dynObj->w = 64;
+      dynObj->h = 64;
       break;
     case TARGET :
       image = "../graphics/target.png";
       break;
     case DOOR :
       image = "../graphics/door.png";
+      dynObj->h = 64;
       break;
     case NPC1 :
       image = "../graphics/npc.png";
+      dynObj->h = 64;
       break;
   }
   dynObj->image = loadTexture(image, editor->screen->pRenderer);
@@ -99,47 +116,46 @@ void loadEmptyMap(Editor *editor)
   editor->blocs = malloc(editor->nbBlocs*sizeof(DynObj*));
   for (int i=0; i<editor->nbBlocs; i++)
   {
+    if (i>1)
+    {
+      editor->nbDynObj--;
+    }
     switch (i)
     {
       case 0 :
-        editor->blocs[i] = initBlocEditor(editor, 0, 0, 32, 32,
-                              GROUND);
+        editor->blocs[i] = initBlocEditor(editor, 0, 0, GROUND);
         break;
       case 1 :
-        editor->blocs[i] = initBlocEditor(editor, i*32, 0, 32, 32,
-                              GROUND_2);
+        editor->blocs[i] = initBlocEditor(editor, i*32, 0, GROUND_2);
         break;
       case 2 :
-        editor->blocs[i] = initBlocEditor(editor, i*32, 0, 64, 64,
-                              BOX);
+        editor->blocs[i] = initBlocEditor(editor, i*32, 0, BOX);
         break;
       case 3 :
-        editor->blocs[i] = initBlocEditor(editor, i*32+32, 0, 64, 64,
-                                BOX_DESTROYABLE_EMPTY);
+        editor->blocs[i] = initBlocEditor(editor, i*32+32, 0, BOX_DESTROYABLE_EMPTY);
         break;
       case 4 :
         editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                  0, 64, 64, BOX_DESTROYABLE_BALL);
+                  0, BOX_DESTROYABLE_BALL);
         break;
       case 5 :
         editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, 64, 64, BOX_DESTROYABLE_DUMMY_LAUNCHER);
+                0, BOX_DESTROYABLE_DUMMY_LAUNCHER);
         break;
       case 6 :
         editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, 32, 32, TARGET);
+                0,TARGET);
         break;
       case 7 :
       editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, 32, 64, DOOR);
+                0, DOOR);
         break;
       case 8 :
       editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, 32, 32, NPC1);
+                0, NPC1);
         break;
     }
   }
-  print(editor);
 }
 
 void print(Editor *editor)
@@ -154,6 +170,8 @@ void print(Editor *editor)
 void drawEditor(Editor *editor)
 {
   clearScreen(editor->screen);
+  drawImage(editor->background, 0, 0, editor->screen->pRenderer);
+  drawGrid(editor);
   drawMapEditor(editor);
   drawBlocsEditor(editor);
   drawImage(editor->blocs[6]->image, editor->input->xCursor, editor->input->yCursor, editor->screen->pRenderer);
@@ -168,8 +186,26 @@ void drawMapEditor(Editor *editor)
   {
     for (int y=0; y<editor->hmap; y++)
     {
+      if (editor->map[x][y]->type != EMPTY)
+      {
         drawImage(editor->map[x][y]->image, x*32 + DEP_MAP_X, y*32 + DEP_MAP_Y,
                     editor->screen->pRenderer);
+      }
+    }
+  }
+}
+
+void drawGrid(Editor *editor)
+{
+  for (int x=0; x<editor->wmap; x++)
+  {
+    for (int y=0; y<editor->hmap; y++)
+    {
+      if (editor->map[x][y]->type == EMPTY)
+      {
+        drawImage(editor->map[x][y]->image, x*32 + DEP_MAP_X, y*32 + DEP_MAP_Y,
+                    editor->screen->pRenderer);
+      }
     }
   }
 }
@@ -202,33 +238,56 @@ void updateInputsEditor(Editor *editor)
     editor->input->quit = true;
   }
 
+  if (editor->input->key[SDL_SCANCODE_S])
+  {
+    saveMap(editor);
+  }
+
   if (editor->input->mouse[SDL_BUTTON_LEFT])
   {
-    collisionBlocEditor(editor);
+    collisionBlocEditor(editor, editor->input->xCursor, editor->input->yCursor, 0, 0);
     placeBloc(editor);
-    editor->input->mouse[SDL_BUTTON_LEFT] = false;
   }
 
   if (editor->input->mouse[SDL_BUTTON_RIGHT])
   {
-    editor->input->mouse[SDL_BUTTON_RIGHT] = false;
+    collisionBlocEditor(editor, editor->input->xCursor, editor->input->yCursor, 0, 0);
+    deleteBloc(editor);
   }
 }
 
-bool collisionBlocEditor(Editor *editor)
+DynObj *collisionBlocEditor(Editor *editor, int x, int y, int w, int h)
 {
   for (int i=0; i<editor->nbBlocs; i++)
   {
-    if (collision(editor->input->xCursor, editor->input->yCursor, 0, 0,
+    if ((collision(x, y, w, h,
               editor->blocs[i]->x, editor->blocs[i]->y, editor->blocs[i]->w,
-                                editor->blocs[i]->h))
+                                editor->blocs[i]->h)))
     {
       editor->typeAct = editor->blocs[i]->type;
-      printf("%d\n", editor->typeAct);
-      return true;
+      return editor->blocs[i];
     }
   }
-  return false;
+  return 0;
+}
+
+void deleteBlocsAround(Editor *editor, DynObj *bloc)
+{
+  for (int x=0; x<editor->wmap; x++)
+  {
+    for (int y=0; y<editor->hmap; y++)
+    {
+      if (editor->map[x][y] != bloc && collision(bloc->x, bloc->y, bloc->w, bloc->h,
+                editor->map[x][y]->x, editor->map[x][y]->y, editor->map[x][y]->w,
+                editor->map[x][y]->h))
+      {
+        nbDynObjDecrease(editor, editor->map[x][y]->type);
+        freeDynObj(editor->map[x][y]);
+        editor->map[x][y] = initBlocEditor(editor, x*32+DEP_MAP_X, y*32+DEP_MAP_Y,
+                              EMPTY);
+      }
+    }
+  }
 }
 
 void  placeBloc(Editor *editor)
@@ -238,16 +297,70 @@ void  placeBloc(Editor *editor)
     for (int y=0; y<editor->hmap; y++)
     {
       if (collision(editor->input->xCursor, editor->input->yCursor, 0, 0,
-                editor->map[x][y]->x, editor->map[x][y]->y, editor->map[x][y]->w,
-                                  editor->map[x][y]->h))
+                editor->map[x][y]->x, editor->map[x][y]->y, 32, 32))
       {
+        nbDynObjDecrease(editor, editor->map[x][y]->type);
         freeDynObj(editor->map[x][y]);
-        editor->map[x][y] = initBlocEditor(editor, 0, 0, 32, 32,
+        editor->map[x][y] = initBlocEditor(editor, x*32+DEP_MAP_X, y*32+DEP_MAP_Y,
                               editor->typeAct);
-        puts("coucou");
+        deleteBlocsAround(editor, editor->map[x][y]);
+        y = editor->hmap;
+        x = editor->wmap;
       }
     }
   }
+}
+
+void nbDynObjDecrease(Editor *editor, int type)
+{
+  if (type > 50)
+  {
+    editor->nbDynObj--;
+  }
+}
+
+void deleteBloc(Editor *editor)
+{
+  for (int x=0; x<editor->wmap; x++)
+  {
+    for (int y=0; y<editor->hmap; y++)
+    {
+      if (collision(editor->input->xCursor, editor->input->yCursor, 0, 0,
+                editor->map[x][y]->x, editor->map[x][y]->y, 32, 32))
+      {
+        nbDynObjDecrease(editor, editor->map[x][y]->type);
+        freeDynObj(editor->map[x][y]);
+        editor->map[x][y] = initBlocEditor(editor, x*32+DEP_MAP_X, y*32+DEP_MAP_Y,
+                              EMPTY);
+        deleteBlocsAround(editor, editor->map[x][y]);
+        y = editor->hmap;
+        x = editor->wmap;
+      }
+    }
+  }
+}
+
+void saveMap(Editor *editor)
+{
+  FILE *file = fopen("../texts/level1.txt", "w");
+  if (!file)
+  {
+    error("Unable to open levels.txt");
+  }
+
+  fprintf(file, "Lvl:%d\n", editor->level);
+  fprintf(file, "x:%d y:%d\n", editor->wmap, editor->hmap);
+  fprintf(file, "nbDynObj:%d\n", editor->nbDynObj);
+  for (int y=0; y<editor->hmap; y++)
+  {
+    for (int x=0; x<editor->wmap; x++)
+    {
+      fputc(editor->map[x][y]->type, file);
+    }
+    fputc('\n', file);
+  }
+
+  fclose(file);
 }
 
 
@@ -259,7 +372,6 @@ int main(int argc, char *argv[])
   {
     inputsEditor(editor);
     drawEditor(editor);
-
   }
 
   quitSDL(editor->screen);//on supprime tous les renderers et on quitte SDL
