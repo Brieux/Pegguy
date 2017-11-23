@@ -105,6 +105,7 @@ typedef struct Editor
   DynObj ***map;
   Screen *screen;
   SDL_Texture *background;
+  SDL_Texture *cursorImage;
   Input *input;
 }Editor;
 

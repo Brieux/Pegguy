@@ -13,6 +13,7 @@ bool searchLevelEditor(FILE *file, int level);
 void loadMapEditor(Editor *editor, FILE *file);
 void loadBlocsEditor(Editor *editor);
 void drawEditor(Editor *editor);
+void drawBlocCursor(Editor *editor);
 void drawMapEditor(Editor *editor);
 void drawGrid(Editor *editor);
 void drawBlocsEditor(Editor *editor);

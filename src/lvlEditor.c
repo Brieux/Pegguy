@@ -235,6 +235,12 @@ void print(Editor *editor)
   }
 }
 
+void drawBlocCursor(Editor *editor)
+{
+  if (editor->typeAct != EMPTY)
+    drawImage(editor->cursorImage, editor->input->xCursor, editor->input->yCursor, editor->screen->pRenderer);
+}
+
 void drawEditor(Editor *editor)
 {
   clearScreen(editor->screen);
@@ -242,7 +248,7 @@ void drawEditor(Editor *editor)
   drawGrid(editor);
   drawMapEditor(editor);
   drawBlocsEditor(editor);
-  drawImage(editor->blocs[6]->image, editor->input->xCursor, editor->input->yCursor, editor->screen->pRenderer);
+  drawBlocCursor(editor);
 
 
   SDL_RenderPresent(editor->screen->pRenderer);
@@ -355,6 +361,7 @@ DynObj *collisionBlocEditor(Editor *editor, int x, int y, int w, int h)
                                 editor->blocs[i]->h)))
     {
       editor->typeAct = editor->blocs[i]->type;
+      editor->cursorImage = editor->blocs[i]->image;
       return editor->blocs[i];
     }
   }
