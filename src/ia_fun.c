@@ -118,11 +118,15 @@ void B1_fun(mob* mob, Game* game){
     int x_enemy = game->perso->x;
     if (x_enemy > mob->coord->x){
         if (!collisionMap(game, mob->coord->x + 1, mob->coord->y, mob->coord->w, mob->coord->h)){
-            mob->coord->x += mob->coord->Vx;
+            if (!collisionMapObj(game, mob->coord->x + 1, mob->coord->y, mob->coord->w, mob->coord->h, NULL)){
+                mob->coord->x += mob->coord->Vx;
+            }
         }
     } else {
         if (!collisionMap(game, mob->coord->x - 1, mob->coord->y, mob->coord->w, mob->coord->h)){
-            mob->coord->x -= mob->coord->Vx;
+            if (!collisionMapObj(game, mob->coord->x - 1, mob->coord->y, mob->coord->w, mob->coord->h, NULL)){
+                mob->coord->x -= mob->coord->Vx;
+            }
         }
         //Faire collision avec le joueur
     }
