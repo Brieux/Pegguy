@@ -7,8 +7,11 @@
 #define DEP_MAP_Y 96
 
 void print(Editor *editor);
-Editor *loadEditor();
+Editor *loadEditor(int map_selected);
 void loadEmptyMap(Editor *editor);
+bool searchLevelEditor(FILE *file, int level);
+void loadMapEditor(Editor *editor, FILE *file);
+void loadBlocsEditor(Editor *editor);
 void drawEditor(Editor *editor);
 void drawMapEditor(Editor *editor);
 void drawGrid(Editor *editor);

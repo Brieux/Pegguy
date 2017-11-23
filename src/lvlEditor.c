@@ -1,6 +1,6 @@
 #include "../include/lvlEditor.h"
 
-Editor *loadEditor()
+Editor *loadEditor(int map_selected)
 {
   Editor *editor = malloc(sizeof(Editor));
   if (!editor)
@@ -10,12 +10,30 @@ Editor *loadEditor()
   editor->screen = initScreen("Editor");
   editor->input = generateInput();
   editor->typeAct = EMPTY;
-  editor->level = 1;
+  editor->level = map_selected;
   editor->dep_x = 0;
   editor->dep_y = 0;
   editor->nbDynObj = 0;
   editor->background = loadTexture("../graphics/background.png", editor->screen->pRenderer);
-  loadEmptyMap(editor);
+  FILE *file = fopen("../texts/level1.txt", "r");
+  if (!file)
+  {
+    loadEmptyMap(editor);
+  }
+  else
+  {
+    if (!searchLevelEditor(file, editor->level))
+    {
+      fclose(file);
+      loadEmptyMap(editor);
+    }
+    else
+    {
+      jumpLine(file);
+      loadMapEditor(editor, file);
+    }
+  }
+  loadBlocsEditor(editor);
   SDL_ShowCursor(SDL_ENABLE);
 
   return editor;
@@ -104,16 +122,64 @@ void loadEmptyMap(Editor *editor)
   {
     for (int y=0; y<editor->hmap; y++)
     {
-      editor->map[x][y] = malloc(sizeof(DynObj));
-      editor->map[x][y]->type = EMPTY;
-      editor->map[x][y]->x = x*32 + DEP_MAP_X;
-      editor->map[x][y]->y = y*32 + DEP_MAP_Y;
-      editor->map[x][y]->w = 32;
-      editor->map[x][y]->h = 32;
-      editor->map[x][y]->image = loadTexture("../graphics/grid.png", editor->screen->pRenderer);
+      editor->map[x][y] = initBlocEditor(editor, x*32 + DEP_MAP_X, y*32 + DEP_MAP_Y, EMPTY);
+    }
+  }
+}
+
+bool searchLevelEditor(FILE *file, int level)
+{
+  //on cherche le niveau correspondant
+  int lvl_actu=0;
+  while (lvl_actu!=level)
+  {
+    fscanf(file, "Lvl:%d", &lvl_actu);
+    if (lvl_actu==level) {return true;}
+    //tan qu'on ne trouve pas on saute une ligne
+    if (jumpLine(file)==-1)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+void loadMapEditor(Editor *editor, FILE *file)
+{
+  int nbDynObj = 0;
+  fscanf(file, "x:%d y:%d", &editor->wmap, &editor->hmap);//on recupere la taille de la grille
+  jumpLine(file);//puis on passe à la ligne suivante
+  fscanf(file, "nbDynObj:%d", &nbDynObj);//on recupere le nombre d'objets dynamiques
+  jumpLine(file);//puis on passe à la ligne suivante
+
+  editor->map = calloc(editor->wmap, sizeof(DynObj*));
+  if (!editor->map)
+  {
+    error("Unable to calloc map");
+  }
+
+  for (int i=0; i<editor->wmap; i++)
+  {
+    editor->map[i] = malloc(editor->hmap*sizeof(DynObj*));
+    if (!editor->map[i])
+    {
+      error("Unable to calloc map");
     }
   }
 
+  for (int y=0; y<editor->hmap; y++)
+  {
+    for (int x=0; x<editor->wmap; x++)
+    {
+      editor->map[x][y] = initBlocEditor(editor, x*32 + DEP_MAP_X, y*32 + DEP_MAP_Y, fgetc(file));
+    }
+    jumpLine(file);
+  }
+  editor->nbDynObj = nbDynObj;
+}
+
+void loadBlocsEditor(Editor *editor)
+{
   editor->nbBlocs = 9;
   editor->blocs = malloc(editor->nbBlocs*sizeof(DynObj*));
   for (int i=0; i<editor->nbBlocs; i++)
@@ -242,6 +308,7 @@ void updateInputsEditor(Editor *editor)
 
   if (editor->input->key[SDL_SCANCODE_S])
   {
+    editor->input->key[SDL_SCANCODE_S] = false;
     saveMap(editor);
   }
 
@@ -391,10 +458,22 @@ void scrollEditor(Editor *editor, int direction)
 
 void saveMap(Editor *editor)
 {
-  FILE *file = fopen("../texts/level1.txt", "w");
+  FILE *file = fopen("../texts/level1.txt", "r+");
   if (!file)
   {
-    error("Unable to open levels.txt");
+    file = fopen("../texts/level1.txt", "w");
+  }
+  else
+  {
+    if (!searchLevelEditor(file, editor->level))
+    {
+      fclose(file);
+      file = fopen("../texts/level1.txt", "a");
+    }
+    else
+    {
+      fseek(file, -5, SEEK_CUR);
+    }
   }
 
   fprintf(file, "Lvl:%d\n", editor->level);
@@ -415,7 +494,12 @@ void saveMap(Editor *editor)
 
 int main(int argc, char *argv[])
 {
-  Editor *editor = loadEditor();
+  int map_selected = 1;//selection du niveau en argument
+  if (argc == 2){
+  	  map_selected = atoi(argv[1]);
+  }
+
+  Editor *editor = loadEditor(map_selected);
 
   while (!editor->input->quit)//boucle principale
   {
