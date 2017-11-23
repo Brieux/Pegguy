@@ -426,7 +426,7 @@ void deleteBloc(Editor *editor)
     for (int y=0; y<editor->hmap; y++)
     {
       if (collision(editor->input->xCursor, editor->input->yCursor, 0, 0,
-                editor->map[x][y]->x, editor->map[x][y]->y, 32, 32))
+                editor->map[x][y]->x - editor->dep_x, editor->map[x][y]->y - editor->dep_y, 32, 32))
       {
         nbDynObjDecrease(editor, editor->map[x][y]->type);
         freeDynObj(editor->map[x][y]);
