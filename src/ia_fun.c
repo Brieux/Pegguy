@@ -93,8 +93,8 @@ void draw_mob(Game *game, mob *mob){
     int dep_x;  
     int dep_y;
 
-    if (game->perso->x > WINDOW_W/2){   
-        if (game->perso->x > game->wmap * 32 - WINDOW_W/2){
+    if (game->perso->x > WINDOW_W/2){   //WINDOW_W/2 -> Début du scroll horizontal
+        if (game->perso->x > game->wmap * 32 - WINDOW_W/2){//Fin du scroll
             dep_x = game->wmap * 32 - WINDOW_W;
         } else {
             dep_x = game->perso->x - WINDOW_W/2;
@@ -102,18 +102,19 @@ void draw_mob(Game *game, mob *mob){
     } else {
         dep_x = 0;
     }
-    if (game->perso->y + game->perso->h > WINDOW_H){
-        dep_y = game->perso->y + game->perso->h - WINDOW_H * 0.9;
+
+    //gestion du scroll vertical
+    if (game->perso->y  > WINDOW_H/2){
+        dep_y = game->perso->y - WINDOW_H/2;
     } else {
         dep_y = 0;
     }
-    int x_act = mob->coord->x - dep_x;
-    int y_act = mob->coord->y - dep_y;
-    if (x_act > dep_x && x_act < WINDOW_W + dep_x){ //Formule a tester
-        if (y_act > dep_y && y_act < WINDOW_H + dep_y){
-            drawImage(mob->image[0], x_act, y_act, game->screen->pRenderer);
+   if (mob->coord->x > dep_x && mob->coord->x + mob->coord->w < WINDOW_W + dep_x){ //Formule a tester
+        if (mob->coord->y + mob->coord->h > dep_y && mob->coord->y < WINDOW_H + dep_y){
+            drawImage(mob->image[0], mob->coord->x - dep_x, mob->coord->y - dep_y, game->screen->pRenderer);
         }
     }
+    
     
 }
 
@@ -121,10 +122,12 @@ void mob_gestion(Game *game){
     mob *p_mob = game->first_mob;
     while (p_mob){
         mob_gravite(game, p_mob);
-        draw_mob(game, p_mob);
+        
         p_mob->p_mob_fun(p_mob, game);
+        draw_mob(game, p_mob);
         p_mob = p_mob->mob_next;
     }
+    SDL_RenderPresent(game->screen->pRenderer);
 }
 
 void B1_fun(mob* mob, Game* game){

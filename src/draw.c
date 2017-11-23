@@ -5,8 +5,8 @@ void drawGame(Game *game)
   clearScreen(game->screen);
   drawMap(game);
   drawHUD(game);
-
-  SDL_RenderPresent(game->screen->pRenderer);
+  //Car dans le dessin des mobs
+  //SDL_RenderPresent(game->screen->pRenderer);
 }
 
 //Affichage de ce que l'on voit à l'écran seulement
