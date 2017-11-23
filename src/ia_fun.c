@@ -93,22 +93,8 @@ void draw_mob(Game *game, mob *mob){
     int dep_x;
     int dep_y;
 
-    if (game->perso->x > WINDOW_W/2){   //WINDOW_W/2 -> Début du scroll horizontal
-        if (game->perso->x > game->wmap * 32 - WINDOW_W/2){//Fin du scroll
-            dep_x = game->wmap * 32 - WINDOW_W;
-        } else {
-            dep_x = game->perso->x - WINDOW_W/2;
-        }
-    } else {
-        dep_x = 0;
-    }
-
-    //gestion du scroll vertical
-    if (game->perso->y  > WINDOW_H/2){
-        dep_y = game->perso->y - WINDOW_H/2;
-    } else {
-        dep_y = 0;
-    }
+    calcul_dep(&dep_x, &dep_y, game);
+    
    if (mob->coord->x > dep_x && mob->coord->x + mob->coord->w < WINDOW_W + dep_x){ //Formule a tester
         if (mob->coord->y + mob->coord->h > dep_y && mob->coord->y < WINDOW_H + dep_y){
             drawImage(mob->image[0], mob->coord->x - dep_x, mob->coord->y - dep_y, game->screen->pRenderer);
