@@ -96,6 +96,7 @@ typedef struct Game
 typedef struct Editor
 {
   int wmap, hmap;
+  int dep_x, dep_y;
   int nbDynObj;
   int nbBlocs;
   int typeAct;

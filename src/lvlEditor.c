@@ -11,6 +11,8 @@ Editor *loadEditor()
   editor->input = generateInput();
   editor->typeAct = EMPTY;
   editor->level = 1;
+  editor->dep_x = 0;
+  editor->dep_y = 0;
   editor->nbDynObj = 0;
   editor->background = loadTexture("../graphics/background.png", editor->screen->pRenderer);
   loadEmptyMap(editor);
@@ -186,10 +188,10 @@ void drawMapEditor(Editor *editor)
   {
     for (int y=0; y<editor->hmap; y++)
     {
-      if (editor->map[x][y]->type != EMPTY)
+      if (editor->map[x][y]->type != EMPTY && editor->map[x][y]->y>=editor->dep_y+DEP_MAP_Y)
       {
-        drawImage(editor->map[x][y]->image, x*32 + DEP_MAP_X, y*32 + DEP_MAP_Y,
-                    editor->screen->pRenderer);
+        drawImage(editor->map[x][y]->image, x*32 + DEP_MAP_X - editor->dep_x,
+           y*32 + DEP_MAP_Y - editor->dep_y, editor->screen->pRenderer);
       }
     }
   }
@@ -201,10 +203,10 @@ void drawGrid(Editor *editor)
   {
     for (int y=0; y<editor->hmap; y++)
     {
-      if (editor->map[x][y]->type == EMPTY)
+      if (editor->map[x][y]->type == EMPTY && editor->map[x][y]->y>=editor->dep_y+DEP_MAP_Y)
       {
-        drawImage(editor->map[x][y]->image, x*32 + DEP_MAP_X, y*32 + DEP_MAP_Y,
-                    editor->screen->pRenderer);
+        drawImage(editor->map[x][y]->image, x*32 + DEP_MAP_X - editor->dep_x,
+          y*32 + DEP_MAP_Y - editor->dep_y, editor->screen->pRenderer);
       }
     }
   }
@@ -215,8 +217,8 @@ void drawBlocsEditor(Editor *editor)
   for (int i=0; i<editor->nbBlocs; i++)
   {
 
-    drawImage(editor->blocs[i]->image, editor->blocs[i]->x, editor->blocs[i]->y,
-              editor->screen->pRenderer);
+    drawImage(editor->blocs[i]->image, editor->blocs[i]->x,
+      editor->blocs[i]->y, editor->screen->pRenderer);
   }
 }
 
@@ -243,15 +245,36 @@ void updateInputsEditor(Editor *editor)
     saveMap(editor);
   }
 
+  //scrolling grille
+  if (editor->input->key[SDL_SCANCODE_LEFT])
+  {
+    scrollEditor(editor, LEFT);
+  }
+  if (editor->input->key[SDL_SCANCODE_RIGHT])
+  {
+    scrollEditor(editor, RIGHT);
+  }
+  if (editor->input->key[SDL_SCANCODE_UP])
+  {
+    scrollEditor(editor, UP);
+  }
+
+  if (editor->input->key[SDL_SCANCODE_DOWN])
+  {
+    scrollEditor(editor, DOWN);
+  }
+
   if (editor->input->mouse[SDL_BUTTON_LEFT])
   {
-    collisionBlocEditor(editor, editor->input->xCursor, editor->input->yCursor, 0, 0);
+    collisionBlocEditor(editor, editor->input->xCursor,
+      editor->input->yCursor, 0, 0);
     placeBloc(editor);
   }
 
   if (editor->input->mouse[SDL_BUTTON_RIGHT])
   {
-    collisionBlocEditor(editor, editor->input->xCursor, editor->input->yCursor, 0, 0);
+    collisionBlocEditor(editor, editor->input->xCursor,
+      editor->input->yCursor, 0, 0);
     deleteBloc(editor);
   }
 }
@@ -277,9 +300,9 @@ void deleteBlocsAround(Editor *editor, DynObj *bloc)
   {
     for (int y=0; y<editor->hmap; y++)
     {
-      if (editor->map[x][y] != bloc && collision(bloc->x, bloc->y, bloc->w, bloc->h,
-                editor->map[x][y]->x, editor->map[x][y]->y, editor->map[x][y]->w,
-                editor->map[x][y]->h))
+      if (editor->map[x][y] != bloc && collision(bloc->x - editor->dep_x, bloc->y - editor->dep_y, bloc->w, bloc->h,
+                editor->map[x][y]->x - editor->dep_x, editor->map[x][y]->y - editor->dep_y,
+                editor->map[x][y]->w, editor->map[x][y]->h))
       {
         nbDynObjDecrease(editor, editor->map[x][y]->type);
         freeDynObj(editor->map[x][y]);
@@ -292,20 +315,23 @@ void deleteBlocsAround(Editor *editor, DynObj *bloc)
 
 void  placeBloc(Editor *editor)
 {
-  for (int x=0; x<editor->wmap; x++)
+  if (editor->input->yCursor >= DEP_MAP_Y)
   {
-    for (int y=0; y<editor->hmap; y++)
+    for (int x=0; x<editor->wmap; x++)
     {
-      if (collision(editor->input->xCursor, editor->input->yCursor, 0, 0,
-                editor->map[x][y]->x, editor->map[x][y]->y, 32, 32))
+      for (int y=0; y<editor->hmap; y++)
       {
-        nbDynObjDecrease(editor, editor->map[x][y]->type);
-        freeDynObj(editor->map[x][y]);
-        editor->map[x][y] = initBlocEditor(editor, x*32+DEP_MAP_X, y*32+DEP_MAP_Y,
-                              editor->typeAct);
-        deleteBlocsAround(editor, editor->map[x][y]);
-        y = editor->hmap;
-        x = editor->wmap;
+        if (collision(editor->input->xCursor, editor->input->yCursor, 0, 0,
+                  editor->map[x][y]->x - editor->dep_x, editor->map[x][y]->y - editor->dep_y, 32, 32))
+        {
+          nbDynObjDecrease(editor, editor->map[x][y]->type);
+          freeDynObj(editor->map[x][y]);
+          editor->map[x][y] = initBlocEditor(editor, x*32+DEP_MAP_X, y*32+DEP_MAP_Y,
+                                editor->typeAct);
+          deleteBlocsAround(editor, editor->map[x][y]);
+          y = editor->hmap;
+          x = editor->wmap;
+        }
       }
     }
   }
@@ -337,6 +363,29 @@ void deleteBloc(Editor *editor)
         x = editor->wmap;
       }
     }
+  }
+}
+
+void scrollEditor(Editor *editor, int direction)
+{
+  switch (direction)
+  {
+    case LEFT:
+      for (int i=0; i<5 && editor->dep_x>0; i++)
+        editor->dep_x--;
+      break;
+    case RIGHT:
+      for (int i=0; i<5 && editor->dep_x + WINDOW_W<editor->wmap*32; i++)
+        editor->dep_x++;
+      break;
+    case UP:
+      for (int i=0; i<5 && editor->dep_y>0; i++)
+        editor->dep_y--;
+      break;
+    case DOWN:
+      for (int i=0; i<5 && editor->dep_y + WINDOW_H<editor->hmap*32; i++)
+        editor->dep_y++;
+      break;
   }
 }
 

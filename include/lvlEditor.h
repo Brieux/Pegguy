@@ -21,6 +21,7 @@ void deleteBlocsAround(Editor *editor, DynObj *bloc);
 void deleteBloc(Editor *editor);
 void updateInputsEditor(Editor *editor);
 void saveMap(Editor *editor);
+void scrollEditor(Editor *editor, int direction);
 void nbDynObjDecrease(Editor *editor, int type);
 
 #endif

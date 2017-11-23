@@ -28,7 +28,7 @@ void mob_gravite(Game *game, mob *mob){
             if (mob->can_jump){
                 mob->act_jump = mob->h_jump;
             }
-            
+
 
             if (collisionMap(game, mob->coord->x, mob->coord->y + 1,
                 mob->coord->w, mob->coord->h) ||
@@ -81,7 +81,7 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
     }
     if (previous){
         previous->mob_next = creature;
-        return game->first_mob; 
+        return game->first_mob;
     } else {
         return creature;
     }
@@ -90,7 +90,7 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
 }
 
 void draw_mob(Game *game, mob *mob){
-    int dep_x;  
+    int dep_x;
     int dep_y;
 
     if (game->perso->x > WINDOW_W/2){   //WINDOW_W/2 -> Début du scroll horizontal
@@ -114,15 +114,15 @@ void draw_mob(Game *game, mob *mob){
             drawImage(mob->image[0], mob->coord->x - dep_x, mob->coord->y - dep_y, game->screen->pRenderer);
         }
     }
-    
-    
+
+
 }
 
 void mob_gestion(Game *game){
     mob *p_mob = game->first_mob;
     while (p_mob){
         mob_gravite(game, p_mob);
-        
+
         p_mob->p_mob_fun(p_mob, game);
         draw_mob(game, p_mob);
         p_mob = p_mob->mob_next;
