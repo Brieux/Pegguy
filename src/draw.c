@@ -9,30 +9,35 @@ void drawGame(Game *game)
   SDL_RenderPresent(game->screen->pRenderer);
 }
 
-//Affichage de ce que l'on voit à l'écran seulement
 
-void drawMap(Game *game){
-    int dep_x;  //Nombre de pixel à passer sur la gauche
-    int dep_y;  //Nombre de pixel à passer sur le haut
-
-    //Gestion du scroll horizontal
+void calcul_dep(int *dep_x, int *dep_y, Game *game){
     if (game->perso->x > WINDOW_W/2){   //WINDOW_W/2 -> Début du scroll horizontal
         if (game->perso->x > game->wmap * 32 - WINDOW_W/2){//Fin du scroll
-            dep_x = game->wmap * 32 - WINDOW_W;
+            *dep_x = game->wmap * 32 - WINDOW_W;
         } else {
-            dep_x = game->perso->x - WINDOW_W/2;
+            *dep_x = game->perso->x - WINDOW_W/2;
         }
     } else {
-        dep_x = 0;
+        *dep_x = 0;
     }
 
     //gestion du scroll vertical
     if (game->perso->y  > WINDOW_H/2){
-        dep_y = game->perso->y - WINDOW_H/2;
+        *dep_y = game->perso->y - WINDOW_H/2;
     } else {
-        dep_y = 0;
+        *dep_y = 0;
     }
+}
 
+//Affichage de ce que l'on voit à l'écran seulement
+
+void drawMap(Game *game){
+    int dep_x = 0;  //Nombre de pixel à passer sur la gauche
+    int dep_y = 0;  //Nombre de pixel à passer sur le haut
+
+    calcul_dep(&dep_x, &dep_y, game);
+
+    //Gestion du scroll horizontal
     //Background
     drawImage(game->background, -dep_x/SCROLLING_BACKGROUND_X, -dep_y/SCROLLING_BACKGROUND_Y, game->screen->pRenderer);
 
