@@ -15,12 +15,13 @@ void shoot(Game *game)
 void addProjectile(Game *game){
     if (!game->projectiles){
       game->projectiles = initProjectile(game);
+    } else {
+        Projectile *p_projectile = malloc(sizeof(Projectile));
+        p_projectile = game->projectiles;
+        
+        game->projectiles = initProjectile(game);
+        game->projectiles->following = p_projectile;
     }
-    Projectile *p_projectile = malloc(sizeof(Projectile));
-    *p_projectile = *game->projectiles;
-    
-    game->projectiles = initProjectile(game);
-    game->projectiles->following = p_projectile;
 }
 
 Projectile *initProjectile(Game *game)

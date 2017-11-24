@@ -14,7 +14,7 @@ DynObj *collisionMapObjNoSolid(Game *game, int x1, int y1, int w1, int h1, DynOb
 void gravite(Game *game, Perso *perso);
 void graviteObj(Game *game);
 void destroyBox(Game *game, DynObj *dynObj);
-Projectile *updateProjectilesPosition(Game *game);
+void updateProjectilesPosition(Game *game);
 void jump(Perso *perso);
 
 #endif

@@ -4,7 +4,7 @@ void updateGame(Game *game)
 {
   gravite(game, game->perso);
   graviteObj(game);
-  game->projectiles = updateProjectilesPosition(game);
+  updateProjectilesPosition(game);
   for (int i=0; i<game->nbDynObj; i++)//gestion des liens, à mettre dans une fonction
   {                                   //quand on aura l'editeur
     if (game->mapObj[i]->type == DOOR && game->mapObj[i]->count == 0)
@@ -175,7 +175,6 @@ DynObj *collisionMapObjNoSolid(Game *game, int x1, int y1, int w1, int h1, DynOb
     }
   }
   return 0;
-  puts("coucou");
 }
 
 void graviteObj(Game *game)
@@ -268,39 +267,47 @@ void destroyBox(Game *game, DynObj *dynObj)
   }
 }
 
-Projectile *updateProjectilesPosition(Game *game)
-{
-  Projectile *projectile2 = game->projectiles;
-  Projectile *projectileAfter = NULL;
-  while (projectile2)
-  {
-    projectileAfter = projectile2->following;
-    projectile2->dynObj->vSpeed += GRAVITE*0.5;
-    if (projectile2->dynObj->vSpeed > VDOWN)
-    {
-      projectile2->dynObj->vSpeed = VDOWN;
+void updateProjectilesPosition(Game *game){
+    if (!game->projectiles){
+        return;
     }
-    projectile2->dynObj->x += projectile2->dynObj->hSpeed;
-    projectile2->dynObj->y += projectile2->dynObj->vSpeed;
-    DynObj *dynObj = NULL;
-    if ((dynObj = collisionMapObjNoSolid(game, projectile2->dynObj->x, projectile2->dynObj->y,
-                  projectile2->dynObj->w, projectile2->dynObj->h, 0)) && dynObj->type == TARGET)
-    {
+    
+    Projectile *p_projectile = NULL;
+    p_projectile = game->projectiles;
+    do{
+        if (p_projectile->dynObj->x < 0 || p_projectile->dynObj->x > game->wmap*32){
+            if (p_projectile->dynObj->y < 100 || p_projectile->dynObj->y > game->hmap*32){
+                deleteProjectile(game, p_projectile);
+            }
+        } else {
+          if (p_projectile->dynObj->vSpeed >= VDOWN){
+              p_projectile->dynObj->vSpeed = VDOWN;
+          } else {
+              p_projectile->dynObj->vSpeed += GRAVITE/2;
+          }
+          p_projectile->dynObj->x += p_projectile->dynObj->hSpeed;
+          p_projectile->dynObj->y += p_projectile->dynObj->vSpeed;
 
-      dynObj->link->count--;
-      dynObj->active = false;
-    }
-    if (collisionMap(game, projectile2->dynObj->x, projectile2->dynObj->y,
-                      projectile2->dynObj->w, projectile2->dynObj->h) ||
-        (dynObj = collisionMapObj(game, projectile2->dynObj->x, projectile2->dynObj->y,
-                      projectile2->dynObj->w, projectile2->dynObj->h, 0)))
-    {
-      deleteProjectile(game, projectile2);
-      if (dynObj) {destroyBox(game, dynObj);}
-    }
-    projectile2 = projectileAfter;
-  }
-  return game->projectiles;
+          DynObj * dynObj;
+          if ((dynObj = collisionMapObjNoSolid(game, p_projectile->dynObj->x, p_projectile->dynObj->y,
+                        p_projectile->dynObj->w, p_projectile->dynObj->h, 0)) && dynObj->type == TARGET){
+              dynObj->link->count--;
+              dynObj->active = false;
+              p_projectile = p_projectile->following;
+          } else if (collisionMap(game, p_projectile->dynObj->x, p_projectile->dynObj->y,
+                            p_projectile->dynObj->w, p_projectile->dynObj->h) ||
+              (dynObj = collisionMapObj(game, p_projectile->dynObj->x, p_projectile->dynObj->y,
+                            p_projectile->dynObj->w, p_projectile->dynObj->h, 0))){
+              if (dynObj) {
+                  destroyBox(game, dynObj);
+              }
+              deleteProjectile(game, p_projectile);
+        } 
+        
+        
+      }
+      p_projectile = p_projectile->following;
+    }while(p_projectile);
 }
 
 void jump(Perso *perso)
