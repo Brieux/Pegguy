@@ -5,13 +5,7 @@ void updateGame(Game *game)
   gravite(game, game->perso);
   graviteObj(game);
   updateProjectilesPosition(game);
-  for (int i=0; i<game->nbDynObj; i++)//gestion des liens, à mettre dans une fonction
-  {                                   //quand on aura l'editeur
-    if (game->mapObj[i]->type == DOOR && game->mapObj[i]->count == 0)
-    {
-      game->mapObj[i]->active = false;
-    }
-  }
+  updateLinks(game);
   pickItems(game);
   interactionNPC(game);
   if (game->perso->waitShoot!=0)
@@ -19,6 +13,22 @@ void updateGame(Game *game)
     game->perso->waitShoot--;
   }
 
+}
+
+void updateLinks(Game *game)
+{
+  for (int i=0; i<game->nbDynObj; i++)//gestion des liens, à mettre dans une fonction
+  {                                   //quand on aura l'editeur
+    if (game->mapObj[i]->linked && game->mapObj[i]->count == 0)
+    {
+      switch (game->mapObj[i]->type)
+      {
+        case DOOR:
+          game->mapObj[i]->active = false;
+          break;
+      }
+    }
+  }
 }
 
 void interactionNPC(Game *game)
@@ -271,7 +281,7 @@ void updateProjectilesPosition(Game *game){
     if (!game->projectiles){
         return;
     }
-    
+
     Projectile *p_projectile = NULL;
     p_projectile = game->projectiles;
     do{
@@ -302,9 +312,9 @@ void updateProjectilesPosition(Game *game){
                   destroyBox(game, dynObj);
               }
               deleteProjectile(game, p_projectile);
-        } 
-        
-        
+        }
+
+
       }
       if (p_projectile){
           p_projectile = p_projectile->following;

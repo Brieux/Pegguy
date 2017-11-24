@@ -13,6 +13,7 @@ Editor *loadEditor(int map_selected)
   editor->level = map_selected;
   editor->dep_x = 0;
   editor->dep_y = 0;
+  editor->linkImage = loadTexture("../graphics/link.png", editor->screen->pRenderer);
   editor->nbDynObj = 0;
   editor->background = loadTexture("../graphics/background.png", editor->screen->pRenderer);
   FILE *file = fopen("../texts/level1.txt", "r");
@@ -168,13 +169,28 @@ void loadMapEditor(Editor *editor, FILE *file)
     }
   }
 
+  int xLink, yLink;
   for (int y=0; y<editor->hmap; y++)
   {
     for (int x=0; x<editor->wmap; x++)
     {
       editor->map[x][y] = initBlocEditor(editor, x*32 + DEP_MAP_X, y*32 + DEP_MAP_Y, fgetc(file));
+      fscanf(file, ",x:%dy:%d/", &xLink, &yLink);
+      editor->map[x][y]->xLink = xLink;
+      editor->map[x][y]->yLink = yLink;
     }
     jumpLine(file);
+  }
+  for (int y=0; y<editor->hmap; y++)
+  {
+    for (int x=0; x<editor->wmap; x++)
+    {
+      if (editor->map[x][y]->xLink != -1 && editor->map[x][y]->yLink != -1)
+      {
+        editor->map[x][y]->link = editor->map[editor->map[x][y]->xLink][editor->map[x][y]->yLink];
+        printf("%d %d\n", editor->map[x][y]->xLink, editor->map[x][y]->yLink);
+      }
+    }
   }
   editor->nbDynObj = nbDynObj;
 }
@@ -265,6 +281,23 @@ void drawMapEditor(Editor *editor)
       {
         drawImage(editor->map[x][y]->image, x*32 + DEP_MAP_X - editor->dep_x,
            y*32 + DEP_MAP_Y - editor->dep_y, editor->screen->pRenderer);
+      }
+    }
+  }
+  for (int x=0; x<editor->wmap; x++)
+  {
+    for (int y=0; y<editor->hmap; y++)
+    {
+      if (editor->map[x][y]->type != EMPTY && editor->map[x][y]->y>=editor->dep_y+DEP_MAP_Y)
+      {
+        if (editor->map[x][y]->link)
+        {
+          drawImage(editor->linkImage, x*32 + DEP_MAP_X - editor->dep_x,
+             y*32 + DEP_MAP_Y - editor->dep_y, editor->screen->pRenderer);
+          if (editor->map[x][y]->link->y>=editor->dep_y+DEP_MAP_Y)
+           drawImage(editor->linkImage,editor->map[x][y]->link->x - editor->dep_x,
+              editor->map[x][y]->link->y - editor->dep_y, editor->screen->pRenderer);
+        }
       }
     }
   }
@@ -468,25 +501,29 @@ void linker(Editor *editor)
   {
     for (int y=0; y<editor->hmap; y++)
     {
-      if (collision(editor->input->xCursor, editor->input->yCursor, 0, 0,
-                editor->map[x][y]->x - editor->dep_x, editor->map[x][y]->y - editor->dep_y, 32, 32))
+      if (editor->map[x][y]->type != EMPTY)
       {
-        if (!editor->link)
+        if (collision(editor->input->xCursor, editor->input->yCursor, 0, 0,
+                  editor->map[x][y]->x - editor->dep_x, editor->map[x][y]->y - editor->dep_y,
+                  editor->map[x][y]->w, editor->map[x][y]->h))
         {
-          if (editor->map[x][y]->link)
+          if (!editor->link)
           {
-            editor->map[x][y]->link = NULL;
+            if (editor->map[x][y]->link)
+            {
+              editor->map[x][y]->link = NULL;
+            }
+            else
+            {
+              editor->linker = editor->map[x][y];
+              editor->link = true;
+            }
           }
           else
           {
-            editor->linker = editor->map[x][y];
-            editor->link = true;
+            editor->linker->link = editor->map[x][y];
+            editor->link = false;
           }
-        }
-        else
-        {
-          editor->linker->link = editor->map[x][y];
-          editor->link = false;
         }
       }
     }
@@ -544,6 +581,15 @@ void saveMap(Editor *editor)
     for (int x=0; x<editor->wmap; x++)
     {
       fputc(editor->map[x][y]->type, file);
+      if (editor->map[x][y]->link)
+      {
+        fprintf(file, ",x:%dy:%d/", (editor->map[x][y]->link->x-DEP_MAP_X)/32,
+                (editor->map[x][y]->link->y-DEP_MAP_Y)/32);
+      }
+      else
+      {
+        fprintf(file, ",x:%dy:%d/", -1, -1);
+      }
     }
     fputc('\n', file);
   }

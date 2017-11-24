@@ -32,6 +32,8 @@ typedef struct DynObj
   bool solid, active, gravite;
   char *content;
   SDL_Texture *image;
+  int xLink, yLink;
+  bool linked;
   struct DynObj *link;
 }DynObj;
 
@@ -108,6 +110,7 @@ typedef struct Editor
   Screen *screen;
   SDL_Texture *background;
   SDL_Texture *cursorImage;
+  SDL_Texture *linkImage;
   Input *input;
 }Editor;
 

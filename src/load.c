@@ -122,6 +122,7 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
   dynObj->w = w;
   dynObj->h = h;
   dynObj->solid = solid;
+  dynObj->linked = false;
   dynObj->active = active;
   dynObj->gravite = gravite;
   dynObj->vSpeed = vSpeed;
@@ -176,12 +177,14 @@ void initMap(FILE *file, Game *game)
     }
   }
 
+  int xLink, yLink;
   int i = 0;
   for (int y=0; y<game->hmap; y++)
   {
     for (int x=0; x<game->wmap; x++)
     {
       game->map[x][y]->type = fgetc(file);//on copie la grille
+      fscanf(file, ",x:%dy:%d/", &xLink, &yLink);
 
       switch (game->map[x][y]->type)     //lue dans le fichier
       {
@@ -195,46 +198,64 @@ void initMap(FILE *file, Game *game)
         case BOX :
           game->mapObj[i] = initDynObj(game, BOX, x*32, y*32, 64, 64, true, true, true, 0, 0,
                                         "../graphics/box.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
           i++;
           break;
         case BOX_DESTROYABLE_EMPTY :
           game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_EMPTY, x*32, y*32, 64, 64,
                                         true, true, true, 0, 0, "../graphics/box_destroyable.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
           i++;
           break;
         case BOX_DESTROYABLE_BALL :
           game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_BALL, x*32, y*32, 64, 64,
                                         true, true, true, 0, 0, "../graphics/box_destroyable.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
           i++;
           break;
         case BOX_DESTROYABLE_DUMMY_LAUNCHER :
           game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_DUMMY_LAUNCHER, x*32, y*32, 64, 64,
                                         true, true, true, 0, 0, "../graphics/box_destroyable.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
           i++;
           break;
         case BALL :
           game->mapObj[i] = initDynObj(game, BALL, x*32, y*32, 16, 16,
                                         false, true, false, 0, 0, "../graphics/bille.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
           i++;
           break;
         case DUMMY_LAUNCHER :
           game->mapObj[i] = initDynObj(game, DUMMY_LAUNCHER, x*32, y*32, 32, 32,
                                         false, true, false, 0, 0, "../graphics/dummy_launcher.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
           i++;
           break;
         case TARGET :
           game->mapObj[i] = initDynObj(game, TARGET, x*32, y*32, 32, 32,
                                         false, true, false, 0, 0, "../graphics/target.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
           i++;
           break;
         case DOOR :
           game->mapObj[i] = initDynObj(game, DOOR, x*32, y*32, 32, 64,
                                         true, true, false, 0, 0, "../graphics/door.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
           i++;
           break;
         case NPC1 :
           game->mapObj[i] = initDynObj(game, NPC1, x*32, y*32, 32, 64,
                                         false, true, true, 0, 0, "../graphics/npc.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
           game->mapObj[i]->content = "Bien le bonjour";
           i++;
           break;
@@ -244,7 +265,23 @@ void initMap(FILE *file, Game *game)
     }
     jumpLine(file);
   }
-  for (int i=0; i<game->nbDynObj; i++)//on va chercher les cibles parmi tous les objets
+  for (int i=0; i<game->nbDynObj; i++)
+  {
+    if (game->mapObj[i]->xLink != -1 && game->mapObj[i]->yLink != -1)
+    {
+      for (int k=0; k<game->nbDynObj; k++)
+      {
+        if (game->mapObj[k]->x == game->mapObj[i]->xLink*32 && game->mapObj[k]->y == game->mapObj[i]->yLink*32)
+        {
+          game->mapObj[i]->link = game->mapObj[k];
+          game->mapObj[k]->count++;
+          game->mapObj[k]->linked = true;
+        }
+      }
+    }
+  }
+
+  /*for (int i=0; i<game->nbDynObj; i++)//on va chercher les cibles parmi tous les objets
   {
     if (game->mapObj[i] && game->mapObj[i]->type == TARGET)//dès qu'on trouve
     for (int k=0; k<game->nbDynObj; k++)
@@ -256,7 +293,7 @@ void initMap(FILE *file, Game *game)
         k = game->nbDynObj;                     //son compteur (par exemple s'il y a trois cibles
       }                                        //le compteur s'incrémente trois fois)
     }
-  }
+  }*/
 }
 
 int jumpLine(FILE *file)
