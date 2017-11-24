@@ -188,7 +188,6 @@ void loadMapEditor(Editor *editor, FILE *file)
       if (editor->map[x][y]->xLink != -1 && editor->map[x][y]->yLink != -1)
       {
         editor->map[x][y]->link = editor->map[editor->map[x][y]->xLink][editor->map[x][y]->yLink];
-        printf("%d %d\n", editor->map[x][y]->xLink, editor->map[x][y]->yLink);
       }
     }
   }

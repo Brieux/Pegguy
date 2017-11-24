@@ -280,20 +280,6 @@ void initMap(FILE *file, Game *game)
       }
     }
   }
-
-  /*for (int i=0; i<game->nbDynObj; i++)//on va chercher les cibles parmi tous les objets
-  {
-    if (game->mapObj[i] && game->mapObj[i]->type == TARGET)//dès qu'on trouve
-    for (int k=0; k<game->nbDynObj; k++)
-    {
-      if (game->mapObj[k] && game->mapObj[k]->type == DOOR)//on cherche LA SEULE PORTE
-      {                                                   //de la map (va falloir changer ça
-        game->mapObj[i]->link = game->mapObj[k];          //avec l'éditeur)
-        game->mapObj[k]->count++;               //on la lie avec la cible et on augmente
-        k = game->nbDynObj;                     //son compteur (par exemple s'il y a trois cibles
-      }                                        //le compteur s'incrémente trois fois)
-    }
-  }*/
 }
 
 int jumpLine(FILE *file)

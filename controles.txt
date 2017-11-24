@@ -17,6 +17,13 @@ EDITEUR :
 s : sauvegarder
 flèches directionnelles : déplacer la grille
 échap : quitter
+clic gauche : poser bloc
+clic droit : supprimer bloc
+l + clic gauche : linker
+        -> 1er clic : rien n'apparaît, le premier objet est linké
+        -> 2nd clic : les deux objets linkés sont indiqués
+        Pour supprimer un lien, l + clic gauche sur le premier objet linké
+          ou supprimer l'objet
 
 Pour lancer l'éditeur, make editor puis ./editor x avec le x niveau que vous
   voulez éditer.
