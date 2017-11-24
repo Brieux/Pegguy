@@ -68,37 +68,6 @@ void deleteProjectile(Game *game, Projectile *projectile){
     
     free(projectile->dynObj);
     free(projectile);
-    
-
-
-    
-    /*Projectile *p_projectile = game->projectiles;
-    if (p_projectile == projectile){
-        if (projectile->following){
-            p_projectile = projectile->following;
-        }
-        free(projectile->dynObj);
-        projectile->dynObj = NULL;
-        free(projectile);
-        projectile = NULL;
-        return;
-    } 
-    while(p_projectile->following && p_projectile->following != projectile){
-        printf("4 %p\n", p_projectile->following);
-        p_projectile = p_projectile->following;
-    }
-    
-    if (p_projectile && p_projectile->following){
-        p_projectile->following = projectile->following;
-    }
-    
-    free(projectile->dynObj);
-    projectile->dynObj = NULL;
-    free(projectile);
-    projectile = NULL;
-
-    printf("projectile detruit ! %p\n", game->projectiles);
-    */
 }
 
 
