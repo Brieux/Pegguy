@@ -306,7 +306,9 @@ void updateProjectilesPosition(Game *game){
         
         
       }
-      p_projectile = p_projectile->following;
+      if (p_projectile){
+          p_projectile = p_projectile->following;
+      }
     }while(p_projectile);
 }
 

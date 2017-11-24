@@ -54,7 +54,10 @@ void deleteProjectile(Game *game, Projectile *projectile){
     }
 
     if (projectile == game->projectiles){
+        free(projectile->dynObj);
+        free(projectile);
         game->projectiles = NULL;
+        return;
     }
 
     if (projectile->following){
