@@ -5,7 +5,6 @@ void drawGame(Game *game)
   clearScreen(game->screen);
   drawMap(game);
   drawHUD(game);
-  //Car dans le dessin des mobs
   SDL_RenderPresent(game->screen->pRenderer);
 }
 
@@ -114,6 +113,7 @@ void drawMap(Game *game){
         draw_mob(game, p_mob);
         p_mob = p_mob->mob_next;
     }
+    
 
     if (DEBUG){
         //Console de debug

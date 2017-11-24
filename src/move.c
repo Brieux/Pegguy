@@ -295,7 +295,7 @@ Projectile *updateProjectilesPosition(Game *game)
         (dynObj = collisionMapObj(game, projectile2->dynObj->x, projectile2->dynObj->y,
                       projectile2->dynObj->w, projectile2->dynObj->h, 0)))
     {
-      game->projectiles = deleteProjectile(game, projectile2);
+      deleteProjectile(game, projectile2);
       if (dynObj) {destroyBox(game, dynObj);}
     }
     projectile2 = projectileAfter;

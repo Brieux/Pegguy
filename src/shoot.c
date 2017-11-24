@@ -7,30 +7,20 @@ void shoot(Game *game)
 {
   if (game->perso->waitShoot==0)
   {
-    game->projectiles = addProjectile(game, game->projectiles);
+    addProjectile(game);
     game->perso->waitShoot = DELAY_SHOOT_DUMMY;
   }
 }
 
-Projectile *addProjectile(Game *game, Projectile *projectile)
-{
-  if (!projectile)
-  {
-    projectile = initProjectile(game);
-    return projectile;
-  }
-
-  Projectile *projectile2 = projectile;
-
-  int i = 0;
-  while (projectile->following)
-  {
-    i++;
-    projectile = projectile->following;
-  }
-  projectile->following = initProjectile(game);
-
-  return projectile2;
+void addProjectile(Game *game){
+    if (!game->projectiles){
+      game->projectiles = initProjectile(game);
+    }
+    Projectile *p_projectile = malloc(sizeof(Projectile));
+    *p_projectile = *game->projectiles;
+    
+    game->projectiles = initProjectile(game);
+    game->projectiles->following = p_projectile;
 }
 
 Projectile *initProjectile(Game *game)
@@ -53,23 +43,58 @@ Projectile *initProjectile(Game *game)
   return projectile;
 }
 
-Projectile *deleteProjectile(Game *game, Projectile *projectile)
-{
-  Projectile *projectile2 = game->projectiles;
-  if (projectile2 == projectile)
-  {
-    projectile = projectile2->following;
-    free(projectile2->dynObj);
-    free(projectile2);
-    return projectile;
-  }
-  while (projectile2->following != projectile)
-  {
-    projectile2 = projectile2->following;
-  }
-  projectile2->following = projectile->following;
-  free(projectile->dynObj);
-  free(projectile);
+void deleteProjectile(Game *game, Projectile *projectile){
+    if (!projectile || !game->projectiles){
+        return;
+    }
+    Projectile *p_projectile = game->projectiles;
+    while(p_projectile->following && p_projectile->following != projectile){
+       p_projectile = p_projectile->following;
+    }
 
-  return game->projectiles;
+    if (projectile == game->projectiles){
+        game->projectiles = NULL;
+    }
+
+    if (projectile->following){
+        p_projectile->following = projectile->following;
+    } else {
+        p_projectile->following = NULL;
+    }
+    
+    free(projectile->dynObj);
+    free(projectile);
+    
+
+
+    
+    /*Projectile *p_projectile = game->projectiles;
+    if (p_projectile == projectile){
+        if (projectile->following){
+            p_projectile = projectile->following;
+        }
+        free(projectile->dynObj);
+        projectile->dynObj = NULL;
+        free(projectile);
+        projectile = NULL;
+        return;
+    } 
+    while(p_projectile->following && p_projectile->following != projectile){
+        printf("4 %p\n", p_projectile->following);
+        p_projectile = p_projectile->following;
+    }
+    
+    if (p_projectile && p_projectile->following){
+        p_projectile->following = projectile->following;
+    }
+    
+    free(projectile->dynObj);
+    projectile->dynObj = NULL;
+    free(projectile);
+    projectile = NULL;
+
+    printf("projectile detruit ! %p\n", game->projectiles);
+    */
 }
+
+

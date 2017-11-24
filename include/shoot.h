@@ -4,8 +4,8 @@
 #include "defs.h"
 
 void shoot(Game *game);
-Projectile *addProjectile(Game *game, Projectile *projectile);
+void addProjectile(Game *game);
 Projectile *initProjectile(Game *game);
-Projectile *deleteProjectile(Game *game, Projectile *projectile);
+void deleteProjectile(Game *game, Projectile *projectile);
 
 #endif

@@ -119,10 +119,8 @@ bool collisionProjectil(Game *game, mob *mob){
         if (collision(p_projectile->dynObj->x, p_projectile->dynObj->y,
                         p_projectile->dynObj->w, p_projectile->dynObj->h,
                         mob->coord->x, mob->coord->y, mob->coord->w, mob->coord->h)){
-            p_projectile = deleteProjectile(game, p_projectile);
-            
+            deleteProjectile(game, p_projectile);
             return true;
-            continue;
         }
         p_projectile = p_projectile->following;
     }
