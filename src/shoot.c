@@ -52,22 +52,23 @@ void deleteProjectile(Game *game, Projectile *projectile){
     while(p_projectile->following && p_projectile->following != projectile){
        p_projectile = p_projectile->following;
     }
-
-    if (projectile == game->projectiles){
+    
+    if (projectile == game->projectiles && !game->projectiles->following){
         free(projectile->dynObj);
         free(projectile);
         game->projectiles = NULL;
-        return;
-    }
-
-    if (projectile->following){
-        p_projectile->following = projectile->following;
+    } else if (projectile == game->projectiles && game->projectiles->following){
+        game->projectiles = game->projectiles->following;
     } else {
-        p_projectile->following = NULL;
-    }
+        if (projectile->following){
+            p_projectile->following = projectile->following;
+        } else {
+            p_projectile->following = NULL;
+        }
     
-    free(projectile->dynObj);
-    free(projectile);
+        free(projectile->dynObj);
+        free(projectile);
+    }
 }
 
 
