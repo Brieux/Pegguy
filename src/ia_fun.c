@@ -69,7 +69,7 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
             creature->gravite = true;
             creature->nb_frame = 1;
             creature->image = malloc(creature->nb_frame * sizeof(SDL_Texture *)); //A dessiner
-            creature->image[0] = loadTexture("../graphics/B1_1.png", game->screen->pRenderer);
+            creature->image[0] = loadTexture("../graphics/ghost.png", game->screen->pRenderer);
             creature->mob_next = NULL;
             creature->p_mob_fun = B1_fun;
         break;
@@ -94,7 +94,7 @@ void draw_mob(Game *game, mob *mob){
     int dep_y;
 
     calcul_dep(&dep_x, &dep_y, game);
-    
+
    if (mob->coord->x > dep_x && mob->coord->x + mob->coord->w < WINDOW_W + dep_x){ //Formule a tester
         if (mob->coord->y + mob->coord->h > dep_y && mob->coord->y < WINDOW_H + dep_y){
             drawImage(mob->image[0], mob->coord->x - dep_x, mob->coord->y - dep_y, game->screen->pRenderer);
@@ -170,5 +170,3 @@ void B1_fun(mob* mob, Game* game){
         //Faire collision avec le joueur
     }
 }
-
-

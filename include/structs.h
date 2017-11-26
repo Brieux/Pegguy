@@ -112,6 +112,7 @@ typedef struct Editor
   SDL_Texture *cursorImage;
   SDL_Texture *linkImage;
   Input *input;
+  TTF_Font *font;
 }Editor;
 
 #endif

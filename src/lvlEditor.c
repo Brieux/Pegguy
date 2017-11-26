@@ -13,6 +13,7 @@ Editor *loadEditor(int map_selected)
   editor->level = map_selected;
   editor->dep_x = 0;
   editor->dep_y = 0;
+  loadFontEditor(editor);
   editor->linkImage = loadTexture("../graphics/link.png", editor->screen->pRenderer);
   editor->nbDynObj = 0;
   editor->background = loadTexture("../graphics/background.png", editor->screen->pRenderer);
@@ -146,6 +147,22 @@ bool searchLevelEditor(FILE *file, int level)
   return true;
 }
 
+void loadFontEditor(Editor *editor)
+{
+  if(TTF_Init()==-1)
+  {
+    printf("TTF_Init: %s\n", TTF_GetError());
+    exit(EXIT_FAILURE);
+  }
+  editor->font = malloc(sizeof(TTF_Font *));
+  editor->font = TTF_OpenFont("../graphics/HACKED.ttf", 20);
+  if (!editor->font)
+  {
+    fprintf(stderr, "Unable to load font: %s\n", SDL_GetError());
+    exit(EXIT_FAILURE);
+  }
+}
+
 void loadMapEditor(Editor *editor, FILE *file)
 {
   int nbDynObj = 0;
@@ -257,6 +274,39 @@ void drawBlocCursor(Editor *editor)
     drawImage(editor->cursorImage, editor->input->xCursor, editor->input->yCursor, editor->screen->pRenderer);
 }
 
+void drawInfosEditor(Editor *editor)
+{
+  char text[40];
+  sprintf(text, "LEVEL: %d", editor->level);
+  printLineEditor(editor, WINDOW_W - 200, 20,
+            text);
+  sprintf(text, "x: %d y: %d", editor->wmap, editor->hmap);
+  printLineEditor(editor, WINDOW_W - 100, 20,
+            text);
+  sprintf(text, "Curseur:    x: %d y: %d", (editor->input->xCursor + editor->dep_x - DEP_MAP_X)/32,
+                                        (editor->input->yCursor + editor->dep_y - DEP_MAP_Y)/32);
+  printLineEditor(editor, WINDOW_W - 195, 50,
+            text);
+}
+
+void printLineEditor(Editor *editor, int x, int y, char *text)
+{
+    SDL_Color color_text = {0, 0, 0, 255};
+    SDL_Surface *text_surface = TTF_RenderText_Solid(editor->font, text, color_text);
+    if (!text_surface){
+        fprintf(stderr, "consol_d error: Can't create surface\n");
+        return;
+    }
+    SDL_Texture *text_texture = SDL_CreateTextureFromSurface(editor->screen->pRenderer, text_surface);
+    if (!text_texture){
+        fprintf(stderr, "consol_d error: Can't create texure\n");
+        return;
+    }
+    drawImage(text_texture, x, y, editor->screen->pRenderer);
+    SDL_FreeSurface(text_surface);
+    SDL_DestroyTexture(text_texture);
+}
+
 void drawEditor(Editor *editor)
 {
   clearScreen(editor->screen);
@@ -264,6 +314,7 @@ void drawEditor(Editor *editor)
   drawGrid(editor);
   drawMapEditor(editor);
   drawBlocsEditor(editor);
+  drawInfosEditor(editor);
   drawBlocCursor(editor);
 
 
@@ -365,22 +416,54 @@ void updateInputsEditor(Editor *editor)
   }
 
   //scrolling grille
-  if (editor->input->key[SDL_SCANCODE_LEFT])
-  {
-    scrollEditor(editor, LEFT);
-  }
   if (editor->input->key[SDL_SCANCODE_RIGHT])
   {
-    scrollEditor(editor, RIGHT);
+    if (editor->input->key[SDL_SCANCODE_R])
+    {
+      editor->input->key[SDL_SCANCODE_RIGHT] = false;
+      resizeGrid(editor, RIGHT);
+    }
+    else
+    {
+      scrollEditor(editor, RIGHT);
+    }
+  }
+  if (editor->input->key[SDL_SCANCODE_LEFT])
+  {
+    if (editor->input->key[SDL_SCANCODE_R])
+    {
+      editor->input->key[SDL_SCANCODE_LEFT] = false;
+      resizeGrid(editor, LEFT);
+    }
+    else
+    {
+      scrollEditor(editor, LEFT);
+    }
   }
   if (editor->input->key[SDL_SCANCODE_UP])
   {
-    scrollEditor(editor, UP);
+    if (editor->input->key[SDL_SCANCODE_R])
+    {
+      editor->input->key[SDL_SCANCODE_UP] = false;
+      resizeGrid(editor, UP);
+    }
+    else
+    {
+      scrollEditor(editor, UP);
+    }
   }
 
   if (editor->input->key[SDL_SCANCODE_DOWN])
   {
-    scrollEditor(editor, DOWN);
+    if (editor->input->key[SDL_SCANCODE_R])
+    {
+      editor->input->key[SDL_SCANCODE_DOWN] = false;
+      resizeGrid(editor, DOWN);
+    }
+    else
+    {
+      scrollEditor(editor, DOWN);
+    }
   }
 
   if (editor->input->mouse[SDL_BUTTON_LEFT])
@@ -465,6 +548,69 @@ void  placeBloc(Editor *editor)
   }
 }
 
+void resizeGrid(Editor *editor, int direction)
+{
+  switch (direction)
+  {
+    case RIGHT:
+      editor->wmap++;
+      editor->map = realloc(editor->map, editor->wmap*sizeof(DynObj*));
+      if (!editor->map)
+      {
+        error("Unable to calloc map");
+      }
+      editor->map[editor->wmap-1] = malloc(editor->hmap*sizeof(DynObj*));
+      if (!editor->map[editor->wmap-1])
+      {
+        error("Unable to malloc map");
+      }
+      for (int y=0; y<editor->hmap; y++)
+      {
+        editor->map[editor->wmap-1][y] = initBlocEditor(editor, (editor->wmap-1)*32 + DEP_MAP_X, y*32 + DEP_MAP_Y, EMPTY);
+      }
+      break;
+
+    case DOWN:
+      editor->hmap++;
+      for (int x=0; x<editor->wmap; x++)
+      {
+        editor->map[x] = realloc(editor->map[x], editor->hmap*sizeof(DynObj*));
+        if (!editor->map[x])
+        {
+          error("Unable to malloc map");
+        }
+        editor->map[x][editor->hmap-1] = initBlocEditor(editor, x*32 + DEP_MAP_X,
+                                                      (editor->hmap-1)*32 + DEP_MAP_Y, EMPTY);
+      }
+      break;
+
+    case LEFT:
+      if (editor->wmap > 1)
+      {
+        for (int y=0; y<editor->hmap; y++)
+        {
+          freeDynObj(editor->map[editor->wmap-1][y]);
+        }
+        free(editor->map[editor->wmap-1]);
+        editor->wmap--;
+        editor->map = realloc(editor->map, editor->wmap*sizeof(DynObj*));
+      }
+      break;
+
+    case UP:
+      if (editor->hmap > 1)
+      {
+        for (int x=0; x<editor->wmap; x++)
+        {
+          freeDynObj(editor->map[x][editor->hmap-1]);
+          editor->map[x] = realloc(editor->map[x], (editor->hmap-1)*sizeof(DynObj*));
+        }
+        editor->hmap--;
+      }
+      break;
+  }
+}
+
 void nbDynObjDecrease(Editor *editor, int type)
 {
   if (type > 50)
@@ -534,19 +680,19 @@ void scrollEditor(Editor *editor, int direction)
   switch (direction)
   {
     case LEFT:
-      for (int i=0; i<5 && editor->dep_x>0; i++)
+      for (int i=0; i<10 && editor->dep_x>0; i++)
         editor->dep_x--;
       break;
     case RIGHT:
-      for (int i=0; i<5 && editor->dep_x + WINDOW_W<editor->wmap*32; i++)
+      for (int i=0; i<10 && editor->dep_x + WINDOW_W - DEP_MAP_X < editor->wmap*32; i++)
         editor->dep_x++;
       break;
     case UP:
-      for (int i=0; i<5 && editor->dep_y>0; i++)
+      for (int i=0; i<10 && editor->dep_y>0; i++)
         editor->dep_y--;
       break;
     case DOWN:
-      for (int i=0; i<5 && editor->dep_y + WINDOW_H<editor->hmap*32; i++)
+      for (int i=0; i<10 && editor->dep_y + WINDOW_H - DEP_MAP_Y < editor->hmap*32; i++)
         editor->dep_y++;
       break;
   }
