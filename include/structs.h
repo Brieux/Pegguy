@@ -8,7 +8,10 @@ typedef unsigned int uint;
 enum {EMPTY=48/*0*/, GROUND/*1*/, GROUND_2/*2*/, BOX_DESTROYABLE_EMPTY/*3*/, BALL/*4*/,
       BOX/*5*/, DUMMY_LAUNCHER/*6*/, DUMMY/*7*/, TARGET/*8*/, DOOR/*9*/,
       BOX_DESTROYABLE_BALL=65/*A*/, BOX_DESTROYABLE_DUMMY_LAUNCHER/*B*/, NPC1/*C*/};
+
 enum {RIGHT, LEFT, UP, DOWN};
+
+enum {CHOICE_PREVIOUS, CHOICE_NEXT, NEXT};
 
 typedef struct Screen
 {
@@ -29,7 +32,7 @@ typedef struct DynObj
   int x, y, w, h;
   int vSpeed, hSpeed;
   int type, count;
-  bool solid, active, gravite;
+  bool solid, active, gravite, dialogue;
   char *content;
   SDL_Texture *image;
   int xLink, yLink;
@@ -83,6 +86,10 @@ typedef struct Game
   int wmap, hmap;
   int level;
   int nbDynObj;
+  int numDialogue;
+  int choice, nbChoices;
+  bool dialogue, endDialogue;
+  SDL_Texture *menuPointer;
   HUD *hud;
   Screen *screen;
   SDL_Texture *background;

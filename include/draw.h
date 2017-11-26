@@ -7,7 +7,6 @@ void calcul_dep(int *dep_x, int *dep_y, Game *game);
 void print_line(Game *game, int x, int y, char *debug_text);
 void consol_d(Game *game, int dep_x, int dep_y);
 void drawGame(Game *game);//affiche tous les sprites du jeu game
-void drawDialogueNPCs(Game *game, int dep_x, int dep_y);
 void drawMap(Game *game);
 void drawProjectiles(Game *game, int dep_x, int dep_y);
 void drawHUD(Game *game);

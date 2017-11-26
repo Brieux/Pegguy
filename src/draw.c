@@ -5,6 +5,16 @@ void drawGame(Game *game)
   clearScreen(game->screen);
   drawMap(game);
   drawHUD(game);
+  /*dialogue(game, "Bonjour, je s'appelle Groot\n"
+                  "Je suis ici pour vous guider\n"
+                  "Etes-vous d'accord ?\\3"
+                    "Et puis quoi encore ?\n"
+                    "Hey ! Listen !\n"
+                    "Ca me va, je suis un assiste\\"
+                  "Bien, votre choix est fait\n"
+                  "Enfin, il me semble ?\\2"
+                    "Oui\n"
+                    "Non\0", DEP_DIALOGUE_X, DEP_DIALOGUE_Y);*/
   SDL_RenderPresent(game->screen->pRenderer);
 }
 
@@ -121,21 +131,6 @@ void drawMap(Game *game){
   }
 }
 
-void drawDialogueNPCs(Game *game, int dep_x, int dep_y)
-//Fonction pour dessiner les dialogues des pnj
-{
-  for (int i=0; i<game->nbDynObj; i++)
-  {
-    if (game->mapObj[i]->type == NPC1 && game->mapObj[i]->count>0)
-    {
-        //Count est le temps d'affichage du dialogue
-        game->mapObj[i]->count--;
-        print_line(game, game->mapObj[i]->x-50-dep_x, game->mapObj[i]->y-40-dep_y,
-                  game->mapObj[i]->content);
-    }
-  }
-}
-
 void drawProjectiles(Game *game, int dep_x, int dep_y)
 {
   Projectile *projectile2 = game->projectiles;
@@ -208,7 +203,7 @@ void consol_d(Game *game, int dep_x, int dep_y){
 }
 
 void print_line(Game *game, int x, int y, char *debug_text){
-    SDL_Color color_text = {255, 255, 255, 255};
+    SDL_Color color_text = {0, 0, 0, 255};
     SDL_Surface *text_surface = TTF_RenderText_Solid(game->font, debug_text, color_text);
     if (!text_surface){
         fprintf(stderr, "consol_d error: Can't create surface\n");

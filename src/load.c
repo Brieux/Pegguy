@@ -13,7 +13,13 @@ Game *loadGame(int n_map)
   game->hud = initHUD(game);
   game->projectiles = NULL;
   game->level = n_map;
+  game->numDialogue = 0;
+  game->dialogue = false;
+  game->endDialogue = false;
+  game->choice = 0;
+  game->nbChoices = 0;
   game->background = loadTexture("../graphics/background.png", game->screen->pRenderer);
+  game->menuPointer = loadTexture("../graphics/menuPointer.png", game->screen->pRenderer);
   loadMap(game);
   loadFont(game);
 
@@ -130,6 +136,7 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
   dynObj->image = loadTexture(image, game->screen->pRenderer);
   dynObj->link = NULL;
   dynObj->count = 0;
+  dynObj->dialogue = false;
 
   return dynObj;
 }
@@ -256,7 +263,16 @@ void initMap(FILE *file, Game *game)
                                         false, true, true, 0, 0, "../graphics/npc.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;
-          game->mapObj[i]->content = "Bien le bonjour";
+          game->mapObj[i]->content = "Bonjour, je s'appelle Groot\n"
+                                      "Je suis ici pour vous guider\n"
+                                      "Etes-vous d'accord ?\\3"
+                                        "Et puis quoi encore ?\n"
+                                        "Hey ! Listen !\n"
+                                        "Ca me va, je suis un assiste\\"
+                                      "Bien, votre choix est fait\n"
+                                      "Enfin, il me semble ?\\2"
+                                        "Oui\n"
+                                        "Non\0";
           i++;
           break;
         default :

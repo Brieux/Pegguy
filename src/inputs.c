@@ -74,46 +74,83 @@ void updateInputs(Game *game)
   //deplacement droit
   if (game->input->key[SDL_SCANCODE_D])
   {
+    if (!game->dialogue)
+    {
       game->perso->direction = RIGHT;
       move(game, game->perso->hSpeed, 0);
+    }
   }
   //deplacement gauche
   if (game->input->key[SDL_SCANCODE_A])
   {
-    game->perso->direction = LEFT;
-    move(game, -game->perso->hSpeed, 0);
+    if (!game->dialogue)
+    {
+      game->perso->direction = LEFT;
+      move(game, -game->perso->hSpeed, 0);
+    }
   }
 
   //interaction
   if (game->input->key[SDL_SCANCODE_UP])
   {
-    game->perso->interact = true;
+    if (game->dialogue)
+    {
+      gestionDialogues(game, CHOICE_PREVIOUS);
+      game->input->key[SDL_SCANCODE_UP] = false;
+    }
+    else
+    {
+      game->perso->interact = true;
+    }
   }
   else
   {
     game->perso->interact = false;
   }
+  if (game->input->key[SDL_SCANCODE_DOWN])
+  {
+    if (game->dialogue)
+    {
+      gestionDialogues(game, CHOICE_NEXT);
+      game->input->key[SDL_SCANCODE_DOWN] = false;
+    }
+  }
 
   //tir
   if (game->input->key[SDL_SCANCODE_LEFT])
   {
-    if (game->perso->hand && game->perso->hand->type == DUMMY_LAUNCHER)
+    if (!game->dialogue)
     {
-      shoot(game);
+      if (game->perso->hand && game->perso->hand->type == DUMMY_LAUNCHER)
+      {
+        shoot(game);
+      }
+      game->input->key[SDL_SCANCODE_LEFT] = false;
     }
-    game->input->key[SDL_SCANCODE_LEFT] = false;
+  }
+
+  if (game->input->key[SDL_SCANCODE_RIGHT])
+  {
+    if (game->dialogue)
+    {
+      gestionDialogues(game, NEXT);
+      game->input->key[SDL_SCANCODE_RIGHT] = false;
+    }
   }
 
   //saut
   if (game->input->key[SDL_SCANCODE_W])
   {
-    if (game->perso->hJumpAct < game->perso->hJump)//si le perso n'a pas dépassé
-    {                                                //la hauteur de saut max
-      jump(game->perso);
-    }
-    else
+    if (!game->dialogue)
     {
-      game->input->key[SDL_SCANCODE_W] = false;
+      if (game->perso->hJumpAct < game->perso->hJump)//si le perso n'a pas dépassé
+      {                                                //la hauteur de saut max
+        jump(game->perso);
+      }
+      else
+      {
+        game->input->key[SDL_SCANCODE_W] = false;
+      }
     }
   }
   else

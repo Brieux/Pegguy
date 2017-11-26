@@ -4,7 +4,6 @@
 #include "defs.h"
 
 void updateGame(Game *game);
-void interactionNPC(Game *game);
 void pickItems(Game *game);
 void updateLinks(Game *game);
 void move(Game *game, int vx, int vy);

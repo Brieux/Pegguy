@@ -31,16 +31,6 @@ void updateLinks(Game *game)
   }
 }
 
-void interactionNPC(Game *game)
-{
-  DynObj *npc = NULL;
-  if ((npc = collisionMapObjNoSolid(game, game->perso->x, game->perso->y,
-                game->perso->w, game->perso->h, 0)) && npc->type == NPC1 && game->perso->interact)
-  {
-    npc->count = 50;
-  }
-}
-
 void pickItems(Game *game)
 {
   for (int i=0; i<game->nbDynObj; i++)

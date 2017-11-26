@@ -22,8 +22,12 @@
 #define SCROLLING_BACKGROUND_Y 2
 #define DELAY_SHOOT_DUMMY 10
 
+#define DEP_DIALOGUE_X 700
+#define DEP_DIALOGUE_Y 20
+
 #include "structs.h"
 #include "lvlEditor.h"
+#include "dialogues.h"
 #include "shoot.h"
 #include "move.h"
 #include "screen.h"
