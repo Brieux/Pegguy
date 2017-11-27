@@ -191,6 +191,13 @@ bool collision_mob(Game* game, mob *monstre, int diff_x){
     }
     return false;
 }
+
+void hurt_perso(Game *game, int deg){
+    if (!game->perso->invincible){
+            game->perso->hp -= deg;
+            game->perso->invincible = 100;
+    }
+}
 /*
 **************************************************
 *   Fonctions des mobs !                         *
@@ -204,10 +211,7 @@ void B1_fun(mob* mob, Game* game){
         destroy_mob(game, mob);
     }
     if (collision_perso(game, mob)){
-        if (!game->perso->invincible){
-            game->perso->hp--;
-            game->perso->invincible = 100;
-        }
+        hurt_perso(game, 1);
     }
     int x_enemy = game->perso->x;
     if (x_enemy > mob->coord->x){

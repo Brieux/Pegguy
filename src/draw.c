@@ -209,6 +209,8 @@ void consol_d(Game *game, int dep_x, int dep_y){
     print_line(game, x, y+=20, debug_text);
     sprintf(debug_text, "   y_screen : %d", game->perso->y - dep_y);
     print_line(game, x, y+=20, debug_text);
+    sprintf(debug_text, "   life : %d", game->perso->hp);
+    print_line(game, x, y+=20, debug_text);
 
 }
 

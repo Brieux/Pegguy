@@ -92,6 +92,7 @@ Perso *loadPerso(Game *game)
   perso->sizeEquip = 0;
   perso->equip = malloc(perso->sizeEquip*sizeof(DynObj*));
   perso->invincible = 0;
+  perso->hp = 3;
   return perso;
 }
 

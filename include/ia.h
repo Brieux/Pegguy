@@ -40,6 +40,7 @@ void draw_mob(Game *game, mob *mob);
 bool collisionProjectil(Game *game, mob *mob);
 bool collision_perso(Game* game, mob *mob);
 bool collision_mob(Game* game, mob *monstre, int diff_x);
+void hurt_perso(Game *game, int deg);
 void B1_fun(mob*, Game*);
 
 #endif
