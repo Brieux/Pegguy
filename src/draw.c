@@ -91,33 +91,38 @@ void drawMap(Game *game){
                     );
         }
     }
-
-    //Dessin des animations
-    int frame_index = 0;
-    if (game->perso->vSpeed !=0){                       //Image quand le personnage saute
-        frame_index = game->perso->nb_frame - 1;
-    } else {
-        //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement
-        frame_index = abs((game->perso->x/20)%(game->perso->nb_frame-1));
-    }
-    //Gestion du tems d'invincibilité du personnage
+    bool cooldown = false;
     if(game->perso->invincible > 0){
         game->perso->invincible--;
+        cooldown = true;
     }
+    
+    if (!cooldown || game->perso->invincible % 8 == 0){
+        //Dessin des animations
+        int frame_index = 0;
+        if (game->perso->vSpeed !=0){                       //Image quand le personnage saute
+            frame_index = game->perso->nb_frame - 1;
+        } else {
+            //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement
+            frame_index = abs((game->perso->x/20)%(game->perso->nb_frame-1));
+        }
+        //Gestion du tems d'invincibilité du personnage
+        
 
-    drawImage(game->perso->image[frame_index],
-                game->perso->x - dep_x,
-                game->perso->y-dep_y,
-                game->screen->pRenderer
-    );
-    //Dessine ce que le personnage tient dans la main.
-    //Il faudra appliquer le principe des frames
-    if (game->perso->hand)
-    {
-      drawImage(game->perso->hand->image,
-                  game->perso->hand->x - dep_x,
-                  game->perso->hand->y-dep_y,
-                  game->screen->pRenderer);
+        drawImage(game->perso->image[frame_index],
+                    game->perso->x - dep_x,
+                    game->perso->y-dep_y,
+                    game->screen->pRenderer
+        );
+        //Dessine ce que le personnage tient dans la main.
+        //Il faudra appliquer le principe des frames
+        if (game->perso->hand)
+        {
+        drawImage(game->perso->hand->image,
+                    game->perso->hand->x - dep_x,
+                    game->perso->hand->y-dep_y,
+                    game->screen->pRenderer);
+        }
     }
     drawDialogueNPCs(game, dep_x, dep_y);
     drawProjectiles(game, dep_x, dep_y);
@@ -203,6 +208,8 @@ void consol_d(Game *game, int dep_x, int dep_y){
     sprintf(debug_text, "   x_screen : %d", game->perso->x - dep_x);
     print_line(game, x, y+=20, debug_text);
     sprintf(debug_text, "   y_screen : %d", game->perso->y - dep_y);
+    print_line(game, x, y+=20, debug_text);
+    sprintf(debug_text, "   life : %d", game->perso->hp);
     print_line(game, x, y+=20, debug_text);
 
 }

@@ -15,13 +15,16 @@ int main(int argc, char *argv[])
 /*add_monster(game, B1, 15*32, 17*32);
 add_monster(game, B1, 16*32, 18*32);*/
 
-  while (!game->input->quit)//boucle principale
+  while (!game->input->quit && game->perso->hp > 0)//boucle principale
   {
     inputs(game);
     updateGame(game);
     drawGame(game);
     mob_gestion(game);
 
+  }
+  if (game->perso->hp <= 0){
+      printf("Perdu :D\n");
   }
 
   freeAll(game);

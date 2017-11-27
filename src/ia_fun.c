@@ -63,8 +63,9 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
     mob_test(__LINE__, creature);
     creature->coord = malloc(sizeof(Coord_t));
     mob_test(__LINE__, creature->coord);
-    *(creature->coord) = (Coord_t) {x=x, y=y};
     creature->type = type;
+    creature->coord->x = x;
+    creature->coord->y = y;
     switch (type){
         case B1:
             creature->life = 3;
@@ -167,16 +168,21 @@ bool collision_perso(Game* game, mob *mob){
     );
 }
 
-bool collision_mob(Game* game, mob *monstre){
+bool collision_mob(Game* game, mob *monstre, int diff_x){
     mob *p_mob = game->first_mob;
     while (p_mob){
         if (p_mob == monstre){
-            continue;
+            if (monstre->mob_next){
+                p_mob = monstre->mob_next;
+                continue;
+            } else {
+                return false;
+            }
         }
         if (
             collision(p_mob->coord->x, p_mob->coord->y,
                     p_mob->coord->w, p_mob->coord->h, 
-                    monstre->coord->x, monstre->coord->y,
+                    monstre->coord->x + diff_x, monstre->coord->y,
                     monstre->coord->w, monstre->coord->h
             )){
                 return true;
@@ -184,6 +190,13 @@ bool collision_mob(Game* game, mob *monstre){
         p_mob = p_mob->mob_next;
     }
     return false;
+}
+
+void hurt_perso(Game *game, int deg){
+    if (!game->perso->invincible){
+            game->perso->hp -= deg;
+            game->perso->invincible = 100;
+    }
 }
 /*
 **************************************************
@@ -197,19 +210,25 @@ void B1_fun(mob* mob, Game* game){
     if (mob->life <= 0){
         destroy_mob(game, mob);
     }
+    if (collision_perso(game, mob)){
+        hurt_perso(game, 1);
+    }
     int x_enemy = game->perso->x;
     if (x_enemy > mob->coord->x){
-        if (!collisionMap(game, mob->coord->x + 1, mob->coord->y, mob->coord->w, mob->coord->h)){
-            if (!collisionMapObj(game, mob->coord->x + 1, mob->coord->y, mob->coord->w, mob->coord->h, NULL)){
-                mob->coord->x += mob->coord->Vx;
+        if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h)){
+            if (!collisionMapObj(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h, NULL)){
+                if (!collision_mob(game, mob, mob->coord->Vx)){
+                    mob->coord->x += mob->coord->Vx;
+                }
             }
         }
     } else {
         if (!collisionMap(game, mob->coord->x - 1, mob->coord->y, mob->coord->w, mob->coord->h)){
             if (!collisionMapObj(game, mob->coord->x - 1, mob->coord->y, mob->coord->w, mob->coord->h, NULL)){
-                mob->coord->x -= mob->coord->Vx;
+                if (!collision_mob(game, mob, -mob->coord->Vx)){
+                    mob->coord->x -= mob->coord->Vx;
+                }
             }
         }
-        //Faire collision avec le joueur
     }
 }
