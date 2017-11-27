@@ -117,7 +117,6 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
       break;
     case B1 :
       image = "../graphics/ghost.png";
-      puts("hey");
       break;
   }
   dynObj->image = loadTexture(image, editor->screen->pRenderer);
@@ -305,6 +304,7 @@ void loadBlocsEditor(Editor *editor)
       case 15 :
       editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
                 0, B1);
+      editor->nbDynObj++;
         break;
     }
   }
@@ -807,7 +807,7 @@ int main(int argc, char *argv[])
   {
     inputsEditor(editor);
     drawEditor(editor);
-    //printf("%d\n", editor->nbDynObj);
+    printf("%d\n", editor->nbDynObj);
   }
 
   quitSDL(editor->screen);//on supprime tous les renderers et on quitte SDL
