@@ -110,8 +110,8 @@ void drawMap(Game *game){
     if (game->perso->hand)
     {
       drawImage(game->perso->hand->image,
-                  game->perso->x - dep_x,
-                  game->perso->y-dep_y,
+                  game->perso->hand->x - dep_x,
+                  game->perso->hand->y-dep_y,
                   game->screen->pRenderer);
     }
     drawDialogueNPCs(game, dep_x, dep_y);

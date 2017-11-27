@@ -69,11 +69,11 @@ Perso *loadPerso(Game *game)
     exit(EXIT_FAILURE);
   }
   //Chargement des textures
-  perso->image[0] = loadTexture("../graphics/perso_1.png", game->screen->pRenderer);
-  perso->image[1] = loadTexture("../graphics/perso_2.png", game->screen->pRenderer);
-  perso->image[2] = loadTexture("../graphics/perso_3.png", game->screen->pRenderer);
-  perso->image[3] = loadTexture("../graphics/perso_4.png", game->screen->pRenderer);
-  perso->image[4] = loadTexture("../graphics/perso_5.png", game->screen->pRenderer);
+  perso->image[0] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
+  perso->image[1] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
+  perso->image[2] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
+  perso->image[3] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
+  perso->image[4] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
   //A changer selon les maps je suppose ?
   perso->w = 32;
   perso->h = 64;
@@ -258,9 +258,51 @@ void initMap(FILE *file, Game *game)
           game->mapObj[i]->yLink = yLink;
           i++;
           break;
+        case CIRCLE:
+          game->mapObj[i] = initDynObj(game, CIRCLE, x*32, y*32, 32, 32,
+                                        false, true, true, 0, 0, "../graphics/circle.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
+        case TRIANGLE:
+          game->mapObj[i] = initDynObj(game, TRIANGLE, x*32, y*32, 32, 32,
+                                        false, true, true, 0, 0, "../graphics/triangle.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
+        case SQUARE:
+          game->mapObj[i] = initDynObj(game, SQUARE, x*32, y*32, 32, 32,
+                                        false, true, true, 0, 0, "../graphics/square.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
+        case CIRCLE_BASE:
+          game->mapObj[i] = initDynObj(game, CIRCLE_BASE, x*32, y*32, 32, 32,
+                                        false, true, false, 0, 0, "../graphics/circle_base.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
+        case TRIANGLE_BASE:
+          game->mapObj[i] = initDynObj(game, TRIANGLE_BASE, x*32, y*32, 32, 32,
+                                        false, true, false, 0, 0, "../graphics/triangle_base.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
+        case SQUARE_BASE:
+          game->mapObj[i] = initDynObj(game, SQUARE_BASE, x*32, y*32, 32, 32,
+                                        false, true, false, 0, 0, "../graphics/square_base.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
         case NPC1 :
           game->mapObj[i] = initDynObj(game, NPC1, x*32, y*32, 32, 64,
-                                        false, true, true, 0, 0, "../graphics/npc.png");
+                                        false, true, false, 0, 0, "../graphics/npc.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;
           game->mapObj[i]->content = "Bonjour, je s'appelle Groot\n"
@@ -281,6 +323,7 @@ void initMap(FILE *file, Game *game)
     }
     jumpLine(file);
   }
+  int j = 0;
   for (int i=0; i<game->nbDynObj; i++)
   {
     if (game->mapObj[i]->xLink != -1 && game->mapObj[i]->yLink != -1)
@@ -292,6 +335,7 @@ void initMap(FILE *file, Game *game)
           game->mapObj[i]->link = game->mapObj[k];
           game->mapObj[k]->count++;
           game->mapObj[k]->linked = true;
+          j++;
         }
       }
     }
