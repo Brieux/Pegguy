@@ -167,16 +167,21 @@ bool collision_perso(Game* game, mob *mob){
     );
 }
 
-bool collision_mob(Game* game, mob *monstre){
+bool collision_mob(Game* game, mob *monstre, int diff_x){
     mob *p_mob = game->first_mob;
     while (p_mob){
         if (p_mob == monstre){
-            continue;
+            if (monstre->mob_next){
+                p_mob = monstre->mob_next;
+                continue;
+            } else {
+                return false;
+            }
         }
         if (
             collision(p_mob->coord->x, p_mob->coord->y,
                     p_mob->coord->w, p_mob->coord->h, 
-                    monstre->coord->x, monstre->coord->y,
+                    monstre->coord->x + diff_x, monstre->coord->y,
                     monstre->coord->w, monstre->coord->h
             )){
                 return true;
@@ -199,15 +204,19 @@ void B1_fun(mob* mob, Game* game){
     }
     int x_enemy = game->perso->x;
     if (x_enemy > mob->coord->x){
-        if (!collisionMap(game, mob->coord->x + 1, mob->coord->y, mob->coord->w, mob->coord->h)){
-            if (!collisionMapObj(game, mob->coord->x + 1, mob->coord->y, mob->coord->w, mob->coord->h, NULL)){
-                mob->coord->x += mob->coord->Vx;
+        if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h)){
+            if (!collisionMapObj(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h, NULL)){
+                if (!collision_mob(game, mob, mob->coord->Vx)){
+                    mob->coord->x += mob->coord->Vx;
+                }
             }
         }
     } else {
         if (!collisionMap(game, mob->coord->x - 1, mob->coord->y, mob->coord->w, mob->coord->h)){
             if (!collisionMapObj(game, mob->coord->x - 1, mob->coord->y, mob->coord->w, mob->coord->h, NULL)){
-                mob->coord->x -= mob->coord->Vx;
+                if (!collision_mob(game, mob, -mob->coord->Vx)){
+                    mob->coord->x -= mob->coord->Vx;
+                }
             }
         }
         //Faire collision avec le joueur
