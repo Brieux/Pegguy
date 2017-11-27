@@ -204,8 +204,10 @@ void B1_fun(mob* mob, Game* game){
         destroy_mob(game, mob);
     }
     if (collision_perso(game, mob)){
-        game->perso->hp--;
-        game->perso->invincible = 500;
+        if (!game->perso->invincible){
+            game->perso->hp--;
+            game->perso->invincible = 100;
+        }
     }
     int x_enemy = game->perso->x;
     if (x_enemy > mob->coord->x){
