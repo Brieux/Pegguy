@@ -63,8 +63,9 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
     mob_test(__LINE__, creature);
     creature->coord = malloc(sizeof(Coord_t));
     mob_test(__LINE__, creature->coord);
-    *(creature->coord) = (Coord_t) {x=x, y=y};
     creature->type = type;
+    creature->coord->x = x;
+    creature->coord->y = y;
     switch (type){
         case B1:
             creature->life = 3;
@@ -202,6 +203,10 @@ void B1_fun(mob* mob, Game* game){
     if (mob->life <= 0){
         destroy_mob(game, mob);
     }
+    if (collision_perso(game, mob)){
+        game->perso->hp--;
+        game->perso->invincible = 500;
+    }
     int x_enemy = game->perso->x;
     if (x_enemy > mob->coord->x){
         if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h)){
@@ -219,6 +224,5 @@ void B1_fun(mob* mob, Game* game){
                 }
             }
         }
-        //Faire collision avec le joueur
     }
 }
