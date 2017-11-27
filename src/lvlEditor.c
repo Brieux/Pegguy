@@ -50,7 +50,7 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
   dynObj->w = 32;
   dynObj->h = 32;
   dynObj->link = NULL;
-  if (dynObj->type > 50)
+  if (dynObj->type > 50 && dynObj->type != B1)
   {
     editor->nbDynObj++;
   }
@@ -114,6 +114,10 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
       break;
     case SQUARE_BASE :
       image = "../graphics/square_base.png";
+      break;
+    case B1 :
+      image = "../graphics/ghost.png";
+      puts("hey");
       break;
   }
   dynObj->image = loadTexture(image, editor->screen->pRenderer);
@@ -187,6 +191,7 @@ void loadMapEditor(Editor *editor, FILE *file)
   fscanf(file, "x:%d y:%d", &editor->wmap, &editor->hmap);//on recupere la taille de la grille
   jumpLine(file);//puis on passe à la ligne suivante
   fscanf(file, "nbDynObj:%d", &nbDynObj);//on recupere le nombre d'objets dynamiques
+  printf("%d\n", nbDynObj);
   jumpLine(file);//puis on passe à la ligne suivante
 
   editor->map = calloc(editor->wmap, sizeof(DynObj*));
@@ -231,7 +236,7 @@ void loadMapEditor(Editor *editor, FILE *file)
 
 void loadBlocsEditor(Editor *editor)
 {
-  editor->nbBlocs = 15;
+  editor->nbBlocs = 16;
   editor->blocs = malloc(editor->nbBlocs*sizeof(DynObj*));
   for (int i=0; i<editor->nbBlocs; i++)
   {
@@ -296,6 +301,10 @@ void loadBlocsEditor(Editor *editor)
       case 14 :
       editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
                 0, SQUARE_BASE);
+        break;
+      case 15 :
+      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                0, B1);
         break;
     }
   }
@@ -655,7 +664,7 @@ void resizeGrid(Editor *editor, int direction)
 
 void nbDynObjDecrease(Editor *editor, int type)
 {
-  if (type > 50)
+  if (type > 50 && type != B1)
   {
     editor->nbDynObj--;
   }
@@ -798,6 +807,7 @@ int main(int argc, char *argv[])
   {
     inputsEditor(editor);
     drawEditor(editor);
+    //printf("%d\n", editor->nbDynObj);
   }
 
   quitSDL(editor->screen);//on supprime tous les renderers et on quitte SDL

@@ -318,6 +318,9 @@ void initMap(FILE *file, Game *game)
                                         "Non\0";
           i++;
           break;
+        case B1 :
+          add_monster(game, B1, x*32, y*32);
+          break;
         default :
           game->map[x][y]->solid = false;
       }
