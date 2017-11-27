@@ -97,6 +97,24 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
       image = "../graphics/npc.png";
       dynObj->h = 64;
       break;
+    case TRIANGLE :
+      image = "../graphics/triangle.png";
+      break;
+    case CIRCLE :
+      image = "../graphics/circle.png";
+      break;
+    case SQUARE :
+      image = "../graphics/square.png";
+      break;
+    case TRIANGLE_BASE :
+      image = "../graphics/triangle_base.png";
+      break;
+    case CIRCLE_BASE :
+      image = "../graphics/circle_base.png";
+      break;
+    case SQUARE_BASE :
+      image = "../graphics/square_base.png";
+      break;
   }
   dynObj->image = loadTexture(image, editor->screen->pRenderer);
 
@@ -213,7 +231,7 @@ void loadMapEditor(Editor *editor, FILE *file)
 
 void loadBlocsEditor(Editor *editor)
 {
-  editor->nbBlocs = 9;
+  editor->nbBlocs = 15;
   editor->blocs = malloc(editor->nbBlocs*sizeof(DynObj*));
   for (int i=0; i<editor->nbBlocs; i++)
   {
@@ -254,6 +272,30 @@ void loadBlocsEditor(Editor *editor)
       case 8 :
       editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
                 0, NPC1);
+        break;
+      case 9 :
+      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                0, TRIANGLE);
+        break;
+      case 10 :
+      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                0, CIRCLE);
+        break;
+      case 11 :
+      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                0, SQUARE);
+        break;
+      case 12 :
+      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                0, TRIANGLE_BASE);
+        break;
+      case 13 :
+      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                0, CIRCLE_BASE);
+        break;
+      case 14 :
+      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                0, SQUARE_BASE);
         break;
     }
   }

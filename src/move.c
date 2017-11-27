@@ -6,6 +6,7 @@ void updateGame(Game *game)
   graviteObj(game);
   updateProjectilesPosition(game);
   updateLinks(game);
+  updateHand(game);
   pickItems(game);
   interactionNPC(game);
   if (game->perso->waitShoot!=0)
@@ -19,13 +20,44 @@ void updateLinks(Game *game)
 {
   for (int i=0; i<game->nbDynObj; i++)//gestion des liens, à mettre dans une fonction
   {                                   //quand on aura l'editeur
-    if (game->mapObj[i]->linked && game->mapObj[i]->count == 0)
+    if (game->mapObj[i]->linked)
     {
       switch (game->mapObj[i]->type)
       {
         case DOOR:
-          game->mapObj[i]->active = false;
+          if (game->mapObj[i]->count == 0)
+            game->mapObj[i]->active = false;
           break;
+      }
+      if (game->mapObj[i]->type == TRIANGLE_BASE || game->mapObj[i]->type == CIRCLE_BASE ||
+            game->mapObj[i]->type == SQUARE_BASE)
+      {
+
+        DynObj *dynObj = collisionMapObjNoSolid(game, game->mapObj[i]->x, game->mapObj[i]->y,
+                          game->mapObj[i]->w, game->mapObj[i]->h, game->mapObj[i]);
+        if (dynObj && dynObj->link == game->mapObj[i])
+        {
+          dynObj->active = false;
+          switch (game->mapObj[i]->type)
+          {
+            case TRIANGLE_BASE :
+              SDL_DestroyTexture(game->mapObj[i]->image);
+              game->mapObj[i]->image = loadTexture("../graphics/triangle_complete.png", game->screen->pRenderer);
+              break;
+            case CIRCLE_BASE :
+              SDL_DestroyTexture(game->mapObj[i]->image);
+              game->mapObj[i]->image = loadTexture("../graphics/circle_complete.png", game->screen->pRenderer);
+              break;
+            case SQUARE_BASE :
+              SDL_DestroyTexture(game->mapObj[i]->image);
+              game->mapObj[i]->image = loadTexture("../graphics/square_complete.png", game->screen->pRenderer);
+              break;
+          }
+          if (game->mapObj[i]->link)
+          {
+            game->mapObj[i]->link->count--;
+          }
+        }
       }
     }
   }
@@ -55,8 +87,34 @@ void pickItems(Game *game)
           game->perso->equip[game->perso->sizeEquip-1] = dummyLauncher; //et dans l'inventaire
           break;
       }
+      if ((game->mapObj[i]->type == TRIANGLE || game->mapObj[i]->type == CIRCLE ||
+          game->mapObj[i]->type == SQUARE) && game->perso->interact)
+      {
+        game->perso->interact = false;
+        game->input->key[SDL_SCANCODE_UP] = false;
+        game->perso->hand = game->mapObj[i];
+      }
     }
   }
+}
+
+void updateHand(Game *game)
+{
+  if (game->perso->hand)
+  {
+    if (game->perso->hand->type == TRIANGLE || game->perso->hand->type == CIRCLE ||
+          game->perso->hand->type == SQUARE)
+    {
+      game->perso->hand->x = game->perso->x;
+      game->perso->hand->y = game->perso->y - 32;
+    }
+    else
+    {
+      game->perso->hand->x = game->perso->x;
+      game->perso->hand->y = game->perso->y;
+    }
+  }
+
 }
 
 void move(Game *game, int vx, int vy)

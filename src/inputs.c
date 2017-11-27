@@ -100,7 +100,17 @@ void updateInputs(Game *game)
     }
     else
     {
-      game->perso->interact = true;
+      if (game->perso->hand && (game->perso->hand->type == TRIANGLE ||
+          game->perso->hand->type == CIRCLE || game->perso->hand->type == SQUARE))
+      {
+        game->perso->hand = NULL;
+        game->perso->interact = false;
+        game->input->key[SDL_SCANCODE_UP] = false;
+      }
+      else
+      {
+        game->perso->interact = true;
+      }
     }
   }
   else
@@ -159,6 +169,15 @@ void updateInputs(Game *game)
         game->perso->w, game->perso->h))                        //appuyée et que le perso est
     {                                                           //dans le vide,
       game->perso->hJumpAct = game->perso->hJump; /*on l'empeche de sauter de nouveau*/
+    }
+  }
+
+  if (game->input->key[SDL_SCANCODE_1])
+  {
+    game->input->key[SDL_SCANCODE_1] = false;
+    if (game->perso->sizeEquip > 0)
+    {
+      game->perso->hand = game->perso->equip[0];
     }
   }
 }
