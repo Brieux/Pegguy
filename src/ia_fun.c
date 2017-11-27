@@ -6,6 +6,15 @@ void mob_test(int line, void *p){
         exit(EXIT_FAILURE);
     }
 }
+
+void add_monster(Game *game, mob_type type, int x, int y){
+    mob *mob = game->first_mob;
+    while(mob && mob->mob_next){
+        mob = mob->mob_next;
+    }
+    game->first_mob = init_monster(game, mob, type, x, y);
+}
+
 void mob_gravite(Game *game, mob *mob){
     if (!mob->gravite){
         return;
