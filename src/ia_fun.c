@@ -160,7 +160,36 @@ void destroy_mob(Game *game, mob *c_mob){
     }
 }
 
-//Faire focntion de destruction de mob
+bool collision_perso(Game* game, mob *mob){
+    return collision(game->perso->x, game->perso->y, game->perso->w,
+                    game->perso->h, mob->coord->x, mob->coord->y,
+                    mob->coord->w, mob->coord->h
+    );
+}
+
+bool collision_mob(Game* game, mob *monstre){
+    mob *p_mob = game->first_mob;
+    while (p_mob){
+        if (p_mob == monstre){
+            continue;
+        }
+        if (
+            collision(p_mob->coord->x, p_mob->coord->y,
+                    p_mob->coord->w, p_mob->coord->h, 
+                    monstre->coord->x, monstre->coord->y,
+                    monstre->coord->w, monstre->coord->h
+            )){
+                return true;
+            }
+        p_mob = p_mob->mob_next;
+    }
+    return false;
+}
+/*
+**************************************************
+*   Fonctions des mobs !                         *
+**************************************************
+*/
 void B1_fun(mob* mob, Game* game){
     if (collisionProjectil(game, mob)){
         mob->life--;

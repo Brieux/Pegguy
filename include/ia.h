@@ -38,6 +38,8 @@ void mob_gravite(Game *game, mob *mob);
 void mob_gestion(Game *game);
 void draw_mob(Game *game, mob *mob);
 bool collisionProjectil(Game *game, mob *mob);
+bool collision_perso(Game* game, mob *mob);
+bool collision_mob(Game* game, mob *monstre);
 void B1_fun(mob*, Game*);
 
 #endif
