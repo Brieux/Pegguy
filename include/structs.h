@@ -63,6 +63,7 @@ typedef struct Perso
   SDL_Texture **image;
   DynObj *hand;
   int sizeEquip;
+  int invincible;
   DynObj **equip;
 
 }Perso;

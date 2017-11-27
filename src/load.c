@@ -16,6 +16,7 @@ Game *loadGame(int n_map)
   game->numDialogue = 0;
   game->dialogue = false;
   game->endDialogue = false;
+  game->first_mob = NULL;
   game->choice = 0;
   game->nbChoices = 0;
   game->background = loadTexture("../graphics/background.png", game->screen->pRenderer);
@@ -90,7 +91,7 @@ Perso *loadPerso(Game *game)
   perso->hand = NULL;
   perso->sizeEquip = 0;
   perso->equip = malloc(perso->sizeEquip*sizeof(DynObj*));
-
+  perso->invincible = 0;
   return perso;
 }
 

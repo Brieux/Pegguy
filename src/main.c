@@ -12,7 +12,8 @@ int main(int argc, char *argv[])
 
   Game *game = loadGame(map_selected);
 
-  game->first_mob = init_monster(game, NULL, B1, 15*32, 17*32);
+add_monster(game, B1, 15*32, 17*32);
+add_monster(game, B1, 16*32, 18*32);
 
   while (!game->input->quit)//boucle principale
   {

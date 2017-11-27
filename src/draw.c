@@ -100,6 +100,11 @@ void drawMap(Game *game){
         //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement
         frame_index = abs((game->perso->x/20)%(game->perso->nb_frame-1));
     }
+    //Gestion du tems d'invincibilité du personnage
+    if(game->perso->invincible > 0){
+        game->perso->invincible--;
+    }
+
     drawImage(game->perso->image[frame_index],
                 game->perso->x - dep_x,
                 game->perso->y-dep_y,

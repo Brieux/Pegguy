@@ -33,6 +33,7 @@ typedef struct mob{
 
 void mob_test(int, void*);
 mob *init_monster(Game*, mob*, mob_type, int, int);
+void add_monster(Game *game, mob_type type, int x, int y);
 void mob_gravite(Game *game, mob *mob);
 void mob_gestion(Game *game);
 void draw_mob(Game *game, mob *mob);

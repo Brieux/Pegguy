@@ -6,6 +6,15 @@ void mob_test(int line, void *p){
         exit(EXIT_FAILURE);
     }
 }
+
+void add_monster(Game *game, mob_type type, int x, int y){
+    mob *mob = game->first_mob;
+    while(mob && mob->mob_next){
+        mob = mob->mob_next;
+    }
+    game->first_mob = init_monster(game, mob, type, x, y);
+}
+
 void mob_gravite(Game *game, mob *mob){
     if (!mob->gravite){
         return;
@@ -127,22 +136,27 @@ bool collisionProjectil(Game *game, mob *mob){
     return false;
 }
 
-void destroy_mob(Game *game, mob *mob){
-    mob_test(__LINE__,mob);
-    struct mob *p_mob = game->first_mob;
-    while (p_mob->mob_next && p_mob->mob_next != mob){
+void destroy_mob(Game *game, mob *c_mob){
+    mob_test(__LINE__, c_mob);
+
+    mob *p_mob = game->first_mob;
+    while (p_mob->mob_next && p_mob->mob_next != c_mob){
         p_mob = p_mob->mob_next;
     }
-    if (p_mob == mob){
-        free(mob);
+    if (c_mob == game->first_mob && !game->first_mob->mob_next){
+        free(c_mob->coord);
+        free(c_mob);
         game->first_mob = NULL;
+    } else if (c_mob == game->first_mob && game->first_mob->mob_next){
+        game->first_mob = game->first_mob->mob_next;
     } else {
-        if (mob->mob_next){
-            p_mob->mob_next = mob->mob_next;
-            free(mob);
+        if (c_mob->mob_next){
+            p_mob->mob_next = c_mob->mob_next;
         } else {
-            free(mob);
+            p_mob->mob_next = NULL;
         }
+        free(c_mob->coord);
+        free(c_mob);
     }
 }
 
