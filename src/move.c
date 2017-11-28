@@ -76,6 +76,7 @@ void updateBall(Game *game, DynObj *ball)
 
 void updateMobilePlatform(Game *game, DynObj *platform)
 {
+  int xPerso;
   for (int i=0; i<abs(platform->hSpeed); i++)
   {
     if (collisionMapObj(game, platform->x + abs(platform->hSpeed)/platform->hSpeed,
@@ -91,7 +92,12 @@ void updateMobilePlatform(Game *game, DynObj *platform)
             platform->y, platform->w, platform->h, game->perso->x, game->perso->y,
             game->perso->w, game->perso->h))
       {
+        xPerso = game->perso->x;
         move(game, abs(platform->hSpeed)/platform->hSpeed, 0);
+        if (game->perso->x == xPerso)
+        {
+          game->perso->hp = 0;
+        }
       }
       if (collision(platform->x,
             platform->y - 1, platform->w, platform->h, game->perso->x, game->perso->y,
