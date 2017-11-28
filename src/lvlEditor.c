@@ -125,6 +125,9 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
     case BALL :
       image = "../graphics/billefinale.png";
       break;
+    case SECRET_GROUND :
+      image = "../graphics/secret_ground.png";
+      break;
   }
   dynObj->image = loadTexture(image, editor->screen->pRenderer);
 
@@ -241,7 +244,7 @@ void loadMapEditor(Editor *editor, FILE *file)
 
 void loadBlocsEditor(Editor *editor)
 {
-  editor->nbBlocs = 18;
+  editor->nbBlocs = 19;
   editor->blocs = malloc(editor->nbBlocs*sizeof(DynObj*));
   for (int i=0; i<editor->nbBlocs; i++)
   {
@@ -319,6 +322,10 @@ void loadBlocsEditor(Editor *editor)
       case 17 :
         editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
                   0, BALL);
+        break;
+      case 18 :
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, SECRET_GROUND);
         break;
     }
   }

@@ -9,7 +9,7 @@ enum {EMPTY=48/*0*/, GROUND/*1*/, GROUND_2/*2*/, BOX_DESTROYABLE_EMPTY/*3*/, BAL
       BOX/*5*/, DUMMY_LAUNCHER/*6*/, DUMMY/*7*/, TARGET/*8*/, DOOR/*9*/,
       BOX_DESTROYABLE_BALL=65/*A*/, BOX_DESTROYABLE_DUMMY_LAUNCHER/*B*/, NPC1/*C*/,
       SQUARE/*D*/, CIRCLE/*E*/, TRIANGLE/*F*/, SQUARE_BASE/*G*/, CIRCLE_BASE/*H*/,
-      TRIANGLE_BASE/*I*/, MOBILE_PLATFORM=75/*K*/};
+      TRIANGLE_BASE/*I*/, MOBILE_PLATFORM=75/*K*/, SECRET_GROUND};
 
 enum {RIGHT, LEFT, UP, DOWN};
 
@@ -57,10 +57,10 @@ typedef struct Perso
   int hJumpAct;
   int direction;
   int waitShoot;
-  bool letal, solid, interact;
+  bool letal, solid, interact, move;
   char *content;
   int nb_frame;
-  SDL_Texture **image;
+  SDL_Texture ***image;
   DynObj *hand;
   int sizeEquip;
   int invincible;
