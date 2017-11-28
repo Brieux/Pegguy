@@ -57,7 +57,7 @@ typedef struct Perso
   int hJumpAct;
   int direction;
   int waitShoot;
-  bool letal, solid, interact;
+  bool letal, solid, interact, move;
   char *content;
   int nb_frame;
   SDL_Texture **image;
