@@ -26,6 +26,7 @@
 #define DEP_DIALOGUE_Y 20
 
 #include "structs.h"
+#include "sin.h"
 #include "lvlEditor.h"
 #include "dialogues.h"
 #include "shoot.h"

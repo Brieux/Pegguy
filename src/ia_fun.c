@@ -156,7 +156,7 @@ void destroy_mob(Game *game, mob *c_mob){
         } else {
             p_mob->mob_next = NULL;
         }
-        free(c_mob->coord);
+        //free(c_mob->coord);
         free(c_mob);
     }
 }
