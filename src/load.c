@@ -30,7 +30,7 @@ Game *loadGame(int n_map)
 HUD *initHUD(Game *game)
 {
   HUD *hud = malloc(sizeof(HUD));
-  hud->ball = loadTexture("../graphics/bille.png", game->screen->pRenderer);
+  hud->ball = loadTexture("../graphics/billefinale.png", game->screen->pRenderer);
   hud->nbBalls = 0;
   hud->xBall = 200;
   hud->yBall = 40;
@@ -234,7 +234,7 @@ void initMap(FILE *file, Game *game)
           break;
         case BALL :
           game->mapObj[i] = initDynObj(game, BALL, x*32, y*32, 16, 16,
-                                        false, true, false, 0, 0, "../graphics/bille.png");
+                                        false, true, false, 0, 0, "../graphics/billefinale.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;
           i++;

@@ -314,7 +314,7 @@ void destroyBox(Game *game, DynObj *dynObj)
     case BOX_DESTROYABLE_BALL :
       freeDynObj(dynObj);
       dynObj = initDynObj(game, BALL, x+16, y+32, 32, 32,
-                false, true, false, 0, 0, "../graphics/bille.png");
+                false, true, false, 0, 0, "../graphics/billefinale.png");
       break;
     case BOX_DESTROYABLE_DUMMY_LAUNCHER :
       freeDynObj(dynObj);
