@@ -102,7 +102,7 @@ void drawMap(Game *game){
         int frame_index = 0;
         if (game->perso->vSpeed !=0){                       //Image quand le personnage saute
             frame_index = 0;
-        } else if (game->perso->hSpeed == 0){
+        } else if (!game->perso->move){
             frame_index = 0;                                //perso immobile
         } else {
             //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement

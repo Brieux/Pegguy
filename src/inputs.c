@@ -36,6 +36,8 @@ void updateEvents(Input *input)
 {
   SDL_Event event;
 
+
+
   while (SDL_PollEvent(&event))
   {
     switch (event.type)
@@ -65,6 +67,8 @@ void updateEvents(Input *input)
 
 void updateInputs(Game *game)
 {
+  //printf("%d  ", game->perso->move);
+  //fflush(stdout);
   //quit
   if (game->input->key[SDL_SCANCODE_ESCAPE])
   {
@@ -81,12 +85,9 @@ void updateInputs(Game *game)
       game->perso->move = true;
     }
   }
-  else
-  {
-    game->perso->move = false;
-  }
+  
   //deplacement gauche
-  if (game->input->key[SDL_SCANCODE_A])
+  else if (game->input->key[SDL_SCANCODE_A])
   {
     if (!game->dialogue)
     {
