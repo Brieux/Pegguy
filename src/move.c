@@ -209,9 +209,9 @@ void updateHand(Game *game)
       game->perso->hand->x = game->perso->x;
       game->perso->hand->y = game->perso->y - 32;
     }
-    else
+    else if (game->perso->hand->type == DUMMY_LAUNCHER)
     {
-      game->perso->hand->x = game->perso->x + 16;
+      game->perso->hand->x = game->perso->x + 14;
       game->perso->hand->y = game->perso->y + 25;
     }
   }
