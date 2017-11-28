@@ -181,7 +181,7 @@ bool collision_mob(Game* game, mob *monstre, int diff_x){
         }
         if (
             collision(p_mob->coord->x, p_mob->coord->y,
-                    p_mob->coord->w, p_mob->coord->h, 
+                    p_mob->coord->w, p_mob->coord->h,
                     monstre->coord->x + diff_x, monstre->coord->y,
                     monstre->coord->w, monstre->coord->h
             )){

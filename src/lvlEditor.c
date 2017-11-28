@@ -118,6 +118,12 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
     case B1 :
       image = "../graphics/ghost.png";
       break;
+    case MOBILE_PLATFORM :
+      image = "../graphics/mobile_platform.png";
+      break;
+    case BALL :
+      image = "../graphics/billefinale.png";
+      break;
   }
   dynObj->image = loadTexture(image, editor->screen->pRenderer);
 
@@ -235,7 +241,7 @@ void loadMapEditor(Editor *editor, FILE *file)
 
 void loadBlocsEditor(Editor *editor)
 {
-  editor->nbBlocs = 16;
+  editor->nbBlocs = 18;
   editor->blocs = malloc(editor->nbBlocs*sizeof(DynObj*));
   for (int i=0; i<editor->nbBlocs; i++)
   {
@@ -270,41 +276,49 @@ void loadBlocsEditor(Editor *editor)
                 0,TARGET);
         break;
       case 7 :
-      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, DOOR);
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, DOOR);
         break;
       case 8 :
-      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, NPC1);
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, NPC1);
         break;
       case 9 :
-      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, TRIANGLE);
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, TRIANGLE);
         break;
       case 10 :
-      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, CIRCLE);
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, CIRCLE);
         break;
       case 11 :
-      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, SQUARE);
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, SQUARE);
         break;
       case 12 :
-      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, TRIANGLE_BASE);
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, TRIANGLE_BASE);
         break;
       case 13 :
-      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, CIRCLE_BASE);
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, CIRCLE_BASE);
         break;
       case 14 :
-      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, SQUARE_BASE);
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, SQUARE_BASE);
         break;
       case 15 :
-      editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
-                0, B1);
-      editor->nbDynObj++;
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, B1);
+        editor->nbDynObj++;
+        break;
+      case 16 :
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, MOBILE_PLATFORM);
+        break;
+      case 17 :
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, BALL);
         break;
     }
   }
@@ -807,7 +821,6 @@ int main(int argc, char *argv[])
   {
     inputsEditor(editor);
     drawEditor(editor);
-    printf("%d\n", editor->nbDynObj);
   }
 
   quitSDL(editor->screen);//on supprime tous les renderers et on quitte SDL

@@ -5,6 +5,10 @@
 
 void updateGame(Game *game);
 void updateHand(Game *game);
+void updateBall(Game *game, DynObj *ball);
+void updateDummyLauncher(Game *game, DynObj *dummyLauncher);
+void updateForms(Game *game, DynObj *form);
+void updateObj(Game *game);
 void pickItems(Game *game);
 void updateLinks(Game *game);
 void move(Game *game, int vx, int vy);

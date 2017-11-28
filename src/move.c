@@ -7,7 +7,7 @@ void updateGame(Game *game)
   updateProjectilesPosition(game);
   updateLinks(game);
   updateHand(game);
-  pickItems(game);
+  updateObj(game);
   interactionNPC(game);
   if (game->perso->waitShoot!=0)
   {
@@ -60,6 +60,68 @@ void updateLinks(Game *game)
         }
       }
     }
+  }
+}
+
+void updateBall(Game *game, DynObj *ball)
+{
+  if (ball->active &&
+          collision(game->perso->x, game->perso->y, game->perso->w, game->perso->h,
+                ball->x, ball->y, ball->w, ball->h))
+  {
+    ball->active = false;
+    game->hud->nbBalls++;
+  }
+}
+
+void updateDummyLauncher(Game *game, DynObj *dummyLauncher)
+{
+  if (dummyLauncher->active &&
+          collision(game->perso->x, game->perso->y, game->perso->w, game->perso->h,
+                dummyLauncher->x, dummyLauncher->y, dummyLauncher->w, dummyLauncher->h))
+  {
+    dummyLauncher->active = false;
+    DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
+                                  false, true, false, 0, 0, "../graphics/dummy_launcher_hand.png");
+    game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
+    game->perso->sizeEquip++;
+    game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
+    game->perso->equip[game->perso->sizeEquip-1] = dummyLauncher; //et dans l'inventaire
+  }
+}
+
+void updateForms(Game *game, DynObj *form)
+{
+  if (form->active &&
+          collision(game->perso->x, game->perso->y, game->perso->w, game->perso->h,
+                form->x, form->y, form->w, form->h))
+  {
+    if ((form->type == TRIANGLE || form->type == CIRCLE ||
+        form->type == SQUARE) && game->perso->interact)
+    {
+      game->perso->interact = false;
+      game->input->key[SDL_SCANCODE_UP] = false;
+      game->perso->hand = form;
+    }
+  }
+}
+
+void updateObj(Game *game)
+{
+  for (int i=0; i<game->nbDynObj; i++)
+  {
+    switch (game->mapObj[i]->type)
+    {
+      case BALL :
+        updateBall(game, game->mapObj[i]);
+
+        break;
+
+      case DUMMY_LAUNCHER :
+        updateDummyLauncher(game, game->mapObj[i]);
+        break;
+    }
+    updateForms(game, game->mapObj[i]);
   }
 }
 
