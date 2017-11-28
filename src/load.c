@@ -321,7 +321,7 @@ void initMap(FILE *file, Game *game)
           break;
         case MOBILE_PLATFORM :
           game->mapObj[i] = initDynObj(game, MOBILE_PLATFORM, x*32, y*32, 64, 32,
-                                        true, true, false, 0, 0, "../graphics/mobile_platform.png");
+                                        true, true, false, 0, 2, "../graphics/mobile_platform.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;
           i++;

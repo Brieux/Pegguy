@@ -6,6 +6,7 @@
 void updateGame(Game *game);
 void updateHand(Game *game);
 void updateBall(Game *game, DynObj *ball);
+void updateMobilePlatform(Game *game, DynObj *platform);
 void updateDummyLauncher(Game *game, DynObj *dummyLauncher);
 void updateForms(Game *game, DynObj *form);
 void updateObj(Game *game);

@@ -74,6 +74,37 @@ void updateBall(Game *game, DynObj *ball)
   }
 }
 
+void updateMobilePlatform(Game *game, DynObj *platform)
+{
+  for (int i=0; i<abs(platform->hSpeed); i++)
+  {
+    if (collisionMapObj(game, platform->x + abs(platform->hSpeed)/platform->hSpeed,
+          platform->y, platform->w, platform->h, platform) ||
+          collisionMap(game, platform->x + abs(platform->hSpeed)/platform->hSpeed,
+            platform->y, platform->w, platform->h))
+    {
+      platform->hSpeed = -platform->hSpeed;
+    }
+    else
+    {
+      if (collision(platform->x + abs(platform->hSpeed)/platform->hSpeed,
+            platform->y, platform->w, platform->h, game->perso->x, game->perso->y,
+            game->perso->w, game->perso->h))
+      {
+        move(game, abs(platform->hSpeed)/platform->hSpeed, 0);
+      }
+      if (collision(platform->x,
+            platform->y - 1, platform->w, platform->h, game->perso->x, game->perso->y,
+            game->perso->w, game->perso->h))
+      {
+        move(game, abs(platform->hSpeed)/platform->hSpeed, 0);
+      }
+      platform->x += abs(platform->hSpeed)/platform->hSpeed;
+
+    }
+  }
+}
+
 void updateDummyLauncher(Game *game, DynObj *dummyLauncher)
 {
   if (dummyLauncher->active &&
@@ -116,10 +147,13 @@ void updateObj(Game *game)
         updateBall(game, game->mapObj[i]);
 
         break;
-
       case DUMMY_LAUNCHER :
         updateDummyLauncher(game, game->mapObj[i]);
         break;
+      case MOBILE_PLATFORM :
+        updateMobilePlatform(game, game->mapObj[i]);
+        break;
+
     }
     updateForms(game, game->mapObj[i]);
   }

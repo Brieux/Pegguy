@@ -77,12 +77,12 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
       dynObj->h = 64;
       break;
     case BOX_DESTROYABLE_BALL :
-      image = "../graphics/box_destroyable.png";
+      image = "../graphics/box_destroyable_ball.png";
       dynObj->w = 64;
       dynObj->h = 64;
       break;
     case BOX_DESTROYABLE_DUMMY_LAUNCHER :
-      image = "../graphics/box_destroyable.png";
+      image = "../graphics/box_destroyable_dummy.png";
       dynObj->w = 64;
       dynObj->h = 64;
       break;
@@ -197,7 +197,6 @@ void loadMapEditor(Editor *editor, FILE *file)
   fscanf(file, "x:%d y:%d", &editor->wmap, &editor->hmap);//on recupere la taille de la grille
   jumpLine(file);//puis on passe à la ligne suivante
   fscanf(file, "nbDynObj:%d", &nbDynObj);//on recupere le nombre d'objets dynamiques
-  printf("%d\n", nbDynObj);
   jumpLine(file);//puis on passe à la ligne suivante
 
   editor->map = calloc(editor->wmap, sizeof(DynObj*));
