@@ -18,7 +18,7 @@ void addProjectile(Game *game){
     } else {
         Projectile *p_projectile = malloc(sizeof(Projectile));
         p_projectile = game->projectiles;
-        
+
         game->projectiles = initProjectile(game);
         game->projectiles->following = p_projectile;
     }
@@ -52,7 +52,7 @@ void deleteProjectile(Game *game, Projectile *projectile){
     while(p_projectile->following && p_projectile->following != projectile){
        p_projectile = p_projectile->following;
     }
-    
+
     if (projectile == game->projectiles && !game->projectiles->following){
         free(projectile->dynObj);
         free(projectile);
@@ -65,10 +65,8 @@ void deleteProjectile(Game *game, Projectile *projectile){
         } else {
             p_projectile->following = NULL;
         }
-    
+
         free(projectile->dynObj);
         free(projectile);
     }
 }
-
-
