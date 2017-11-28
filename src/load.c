@@ -90,6 +90,7 @@ Perso *loadPerso(Game *game)
   perso->y = 200;
   perso->waitShoot = 0;
   perso->direction = RIGHT;
+  perso->move = false;
   perso->hSpeed = 5;
   perso->vSpeed = 0;
   perso->vJump = 13;

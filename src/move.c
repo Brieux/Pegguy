@@ -84,7 +84,7 @@ void updateMobilePlatform(Game *game, DynObj *platform)
           collisionMap(game, platform->x + abs(platform->hSpeed)/platform->hSpeed,
             platform->y, platform->w, platform->h))
     {
-      platform->hSpeed = -platform->hSpeed;
+      platform->hSpeed = -platform->hSpeed;//si collision avec mur, demi-tour
     }
     else
     {
@@ -92,21 +92,20 @@ void updateMobilePlatform(Game *game, DynObj *platform)
             platform->y, platform->w, platform->h, game->perso->x, game->perso->y,
             game->perso->w, game->perso->h))
       {
-        xPerso = game->perso->x;
+        xPerso = game->perso->x; //si collision avec perso sur cote, on le deplace
         move(game, abs(platform->hSpeed)/platform->hSpeed, 0);
-        if (game->perso->x == xPerso)
+        if (game->perso->x == xPerso)//si le perso n'a pas bougé, c'est qu'il s'est fait ecraser
         {
-          game->perso->hp = 0;
+          game->perso->hp = 0;//mort
         }
       }
       if (collision(platform->x,
             platform->y - 1, platform->w, platform->h, game->perso->x, game->perso->y,
             game->perso->w, game->perso->h))
-      {
+      {         //si perso sur plateforme, on le deplace
         move(game, abs(platform->hSpeed)/platform->hSpeed, 0);
       }
-      platform->x += abs(platform->hSpeed)/platform->hSpeed;
-
+      platform->x += abs(platform->hSpeed)/platform->hSpeed;//on deplace la plateforme
     }
   }
 }
