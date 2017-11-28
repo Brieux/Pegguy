@@ -120,6 +120,7 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
       break;
     case MOBILE_PLATFORM :
       image = "../graphics/mobile_platform.png";
+      dynObj->w = 64;
       break;
     case BALL :
       image = "../graphics/billefinale.png";
