@@ -204,6 +204,13 @@ void initMap(FILE *file, Game *game)
         case GROUND_2 :                   //case sol
           initBlocMap(game, game->map[x][y], x, y, "../graphics/Dirt_2.png");
           break;
+        case SECRET_GROUND :                   //case sol
+          game->mapObj[i] = initDynObj(game, BOX, x*32, y*32, 32, 32, false, true, false, 0, 0,
+                                        "../graphics/Dirt_2.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
         case BOX :
           game->mapObj[i] = initDynObj(game, BOX, x*32, y*32, 64, 64, true, true, true, 0, 0,
                                         "../graphics/box.png");
