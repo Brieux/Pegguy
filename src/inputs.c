@@ -38,6 +38,7 @@ void updateEvents(Input *input)
 
   while (SDL_PollEvent(&event))
   {
+    puts("coucou");
     switch (event.type)
     {
       case SDL_QUIT:
