@@ -5,16 +5,7 @@ void drawGame(Game *game)
   clearScreen(game->screen);
   drawMap(game);
   drawHUD(game);
-  /*dialogue(game, "Bonjour, je s'appelle Groot\n"
-                  "Je suis ici pour vous guider\n"
-                  "Etes-vous d'accord ?\\3"
-                    "Et puis quoi encore ?\n"
-                    "Hey ! Listen !\n"
-                    "Ca me va, je suis un assiste\\"
-                  "Bien, votre choix est fait\n"
-                  "Enfin, il me semble ?\\2"
-                    "Oui\n"
-                    "Non\0", DEP_DIALOGUE_X, DEP_DIALOGUE_Y);*/
+
   SDL_RenderPresent(game->screen->pRenderer);
 }
 
@@ -91,39 +82,11 @@ void drawMap(Game *game){
                     );
         }
     }
-    bool cooldown = false;
-    if(game->perso->invincible > 0){
-        game->perso->invincible--;
-        cooldown = true;
+    if (game->sin)
+    {
+      drawPerso(game, game->sin, dep_x, dep_y);
     }
-    
-    if (!cooldown || game->perso->invincible % 8 == 0){
-        //Dessin des animations
-        int frame_index = 0;
-        if (game->perso->vSpeed !=0){                       //Image quand le personnage saute
-            frame_index = game->perso->nb_frame - 1;
-        } else {
-            //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement
-            frame_index = abs((game->perso->x/20)%(game->perso->nb_frame-1));
-        }
-        //Gestion du tems d'invincibilité du personnage
-        
-
-        drawImage(game->perso->image[frame_index],
-                    game->perso->x - dep_x,
-                    game->perso->y-dep_y,
-                    game->screen->pRenderer
-        );
-        //Dessine ce que le personnage tient dans la main.
-        //Il faudra appliquer le principe des frames
-        if (game->perso->hand)
-        {
-        drawImage(game->perso->hand->image,
-                    game->perso->hand->x - dep_x,
-                    game->perso->hand->y-dep_y,
-                    game->screen->pRenderer);
-        }
-    }
+    drawPerso(game, game->perso, dep_x, dep_y);
     drawDialogueNPCs(game, dep_x, dep_y);
     drawProjectiles(game, dep_x, dep_y);
 
@@ -153,6 +116,40 @@ void drawProjectiles(Game *game, int dep_x, int dep_y)
     projectile2 = projectile2->following;
   }
 }
+
+void drawPerso(Game *game, Perso *perso, int dep_x, int dep_y)
+{
+  bool cooldown = false;
+  if(perso->invincible > 0){
+      perso->invincible--;
+      cooldown = true;
+  }
+
+  if (!cooldown || perso->invincible % 8 == 0){
+      //Dessin des animations
+      int frame_index = 0;
+      if (perso->vSpeed !=0){                       //Image quand le personnage saute
+          frame_index = perso->nb_frame - 1;
+      } else {
+          //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement
+          frame_index = abs((perso->x/20)%(perso->nb_frame-1));
+      }
+      //Gestion du tems d'invincibilité du personnage
+
+
+      drawImage(perso->image[frame_index],
+                  perso->x - dep_x,
+                  perso->y-dep_y,
+                  game->screen->pRenderer
+      );
+      if (perso->hand)
+      {
+      drawImage(perso->hand->image,
+                  perso->hand->x - dep_x,
+                  perso->hand->y-dep_y,
+                  game->screen->pRenderer);
+}
+}}
 
 void drawHUD(Game *game)
 {

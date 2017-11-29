@@ -77,13 +77,23 @@ void updateInputs(Game *game)
     if (!game->dialogue)
     {
       game->perso->direction = RIGHT;
-      move(game, game->perso->hSpeed, 0);
+      move(game, game->perso, game->perso->hSpeed, 0);
       game->perso->move = true;
+      if (game->sin)
+      {
+        game->sin->direction = RIGHT;
+        move(game, game->sin, game->sin->hSpeed, 0);
+        game->perso->move = true;
+      }
     }
   }
   else
   {
     game->perso->move = false;
+    if (game->sin)
+    {
+      game->perso->move = false;
+    }
   }
   //deplacement gauche
   if (game->input->key[SDL_SCANCODE_A])
@@ -91,13 +101,23 @@ void updateInputs(Game *game)
     if (!game->dialogue)
     {
       game->perso->direction = LEFT;
-      move(game, -game->perso->hSpeed, 0);
+      move(game, game->perso, -game->perso->hSpeed, 0);
       game->perso->move = true;
+      if (game->sin)
+      {
+        game->sin->direction = LEFT;
+        move(game, game->sin, -game->sin->hSpeed, 0);
+        game->perso->move = true;
+      }
     }
   }
   else
   {
     game->perso->move = false;
+    if (game->sin)
+    {
+      game->perso->move = false;
+    }
   }
 
   //interaction
@@ -171,6 +191,13 @@ void updateInputs(Game *game)
       {
         game->input->key[SDL_SCANCODE_W] = false;
       }
+      if (game->sin)
+      {
+        if (game->sin->hJumpAct < game->sin->hJump)//si le perso n'a pas dépassé
+        {                                                //la hauteur de saut max
+          jumpSin(game->sin);
+        }
+      }
     }
   }
   else
@@ -179,6 +206,14 @@ void updateInputs(Game *game)
         game->perso->w, game->perso->h))                        //appuyée et que le perso est
     {                                                           //dans le vide,
       game->perso->hJumpAct = game->perso->hJump; /*on l'empeche de sauter de nouveau*/
+    }
+    if (game->sin)
+    {
+      if (!collisionMap(game, game->sin->x, game->sin->y + 1,//si la touche de saut n'est pas
+          game->sin->w, game->sin->h))                        //appuyée et que le perso est
+      {                                                           //dans le vide,
+        game->sin->hJumpAct = game->sin->hJump; /*on l'empeche de sauter de nouveau*/
+      }
     }
   }
 
