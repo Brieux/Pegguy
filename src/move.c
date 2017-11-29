@@ -118,7 +118,7 @@ void updateDummyLauncher(Game *game, DynObj *dummyLauncher)
   {
     dummyLauncher->active = false;
     DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
-                                  false, true, false, 0, 0, "../graphics/dummy_launcher_hand.png");
+                                  false, true, false, 0, 0, "../graphics/dummy_launcher_handrightpointed.png");
     game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
     game->perso->sizeEquip++;
     game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
@@ -181,7 +181,7 @@ void pickItems(Game *game)
         case DUMMY_LAUNCHER : //si collision avec lance-tetine
           game->mapObj[i]->active = false;
           DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
-                                        false, true, false, 0, 0, "../graphics/dummy_launcher_hand.png");
+                                        false, true, false, 0, 0, "../graphics/dummy_launcher_handrightpointed.png");
           game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
           game->perso->sizeEquip++;
           game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
@@ -209,10 +209,10 @@ void updateHand(Game *game)
       game->perso->hand->x = game->perso->x;
       game->perso->hand->y = game->perso->y - 32;
     }
-    else
+    else if (game->perso->hand->type == DUMMY_LAUNCHER)
     {
-      game->perso->hand->x = game->perso->x;
-      game->perso->hand->y = game->perso->y;
+      game->perso->hand->x = game->perso->x + 14;
+      game->perso->hand->y = game->perso->y + 25;
     }
   }
 

@@ -62,19 +62,27 @@ Perso *loadPerso(Game *game)
     fprintf(stderr, "Unable to alloc perso in loadPerso\n");
     exit(EXIT_FAILURE);
   }
-  perso->nb_frame = 5;
-  perso->image = malloc(perso->nb_frame * sizeof(SDL_Texture*));
+  perso->nb_frame = 4;
+
+  perso->image = malloc(2 * sizeof(SDL_Texture*));
+  perso->image[0] = malloc(perso->nb_frame * sizeof(SDL_Texture*));
+  perso->image[1] = malloc(perso->nb_frame * sizeof(SDL_Texture*));
 
   if (!perso->image){
     fprintf(stderr, "Unable to alloc image in perso\n");
     exit(EXIT_FAILURE);
   }
   //Chargement des textures
-  perso->image[0] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
-  perso->image[1] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
-  perso->image[2] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
-  perso->image[3] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
-  perso->image[4] = loadTexture("../graphics/peggy1.png", game->screen->pRenderer);
+  perso->image[0][0] = loadTexture("../graphics/spritepegguy/testprofildroite.png", game->screen->pRenderer);
+  perso->image[0][1] = loadTexture("../graphics/spritepegguy/testprofildroitjambedroite.png", game->screen->pRenderer);
+  perso->image[0][2] = perso->image[0][0];
+  perso->image[0][3] = loadTexture("../graphics/spritepegguy/testprofildroitjambegauche.png", game->screen->pRenderer);
+
+  perso->image[1][0] = loadTexture("../graphics/spritepegguy/testprofilgauche.png", game->screen->pRenderer);
+  perso->image[1][1] = loadTexture("../graphics/spritepegguy/testprofilgauchejambedroite.png", game->screen->pRenderer);
+  perso->image[1][2] = perso->image[1][0];
+  perso->image[1][3] = loadTexture("../graphics/spritepegguy/testprofilgauchejambegauche.png", game->screen->pRenderer);
+  
   //A changer selon les maps je suppose ?
   perso->w = 32;
   perso->h = 64;

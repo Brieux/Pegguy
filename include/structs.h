@@ -60,7 +60,7 @@ typedef struct Perso
   bool letal, solid, interact, move;
   char *content;
   int nb_frame;
-  SDL_Texture **image;
+  SDL_Texture ***image;
   DynObj *hand;
   int sizeEquip;
   int invincible;

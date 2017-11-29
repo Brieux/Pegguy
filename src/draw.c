@@ -101,15 +101,17 @@ void drawMap(Game *game){
         //Dessin des animations
         int frame_index = 0;
         if (game->perso->vSpeed !=0){                       //Image quand le personnage saute
-            frame_index = game->perso->nb_frame - 1;
+            frame_index = 0;
+        } else if (!game->perso->move){
+            frame_index = 0;                                //perso immobile
         } else {
             //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement
-            frame_index = abs((game->perso->x/20)%(game->perso->nb_frame-1));
+            frame_index = abs((game->perso->x/40)%(game->perso->nb_frame));
         }
         //Gestion du tems d'invincibilité du personnage
         
 
-        drawImage(game->perso->image[frame_index],
+        drawImage(game->perso->image[game->perso->direction][frame_index],
                     game->perso->x - dep_x,
                     game->perso->y-dep_y,
                     game->screen->pRenderer
