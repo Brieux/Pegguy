@@ -20,7 +20,7 @@ Obj::Obj(int x, int y, int h, int w, int nb_Frames, int deep_Image,
         int end_name = 0;
         while(sprite_name[++end_name] != '\0');
         sprite_name[end_name + 1] = '\0';
-        
+
         cout << "création d'une instance d'un Obj\n";
         image = new SDL_Texture*[nb_frame];
         if (!image){
@@ -45,4 +45,8 @@ Obj::~Obj(){
         delete image[i];
     }
     delete image;
+}
+
+Obj::Draw(){
+    
 }
