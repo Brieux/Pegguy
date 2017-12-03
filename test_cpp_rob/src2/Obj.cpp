@@ -47,6 +47,19 @@ Obj::~Obj(){
     delete image;
 }
 
+int Get_x(){
+    return x;
+}
+int Get_y(){
+    return y;
+}
+int Get_h(){
+    return h;
+}
+int Get_w(){
+    return w;
+}
+
 Obj::Draw(){
-    
+
 }
