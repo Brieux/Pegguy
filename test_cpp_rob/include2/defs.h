@@ -10,7 +10,7 @@
 #include "Screen.h"
 #include "Obj.h"
 #include "Game.h"
-
+#include "DynObj.h"
 
 const int WINDOW_W = 1280;
 const int WINDOW_H = 640;
