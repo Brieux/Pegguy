@@ -2,7 +2,7 @@
 
 using namespace std;
 
-SDL_Texture *loadTexture(char *image, SDL_Renderer *pRenderer){
+static SDL_Texture *loadTexture(char *image, SDL_Renderer *pRenderer){
     SDL_Surface *surface = IMG_Load(image);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(pRenderer, surface);
     SDL_FreeSurface(surface);
