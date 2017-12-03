@@ -15,6 +15,12 @@ Obj::Obj(int x, int y, int h, int w, int nb_Frames, int deep_Image,
     x(x), y(y), h(h), w(w), nb_Frames(nb_Frames), deep_Image(deep_Image),
     type(type), solid(solid), active(active){
 
+        char sprite_name[128];
+        strcpy(sprite_name, img);
+        int end_name = 0;
+        while(sprite_name[++end_name] != '\0');
+        sprite_name[end_name + 1] = '\0';
+        
         cout << "création d'une instance d'un Obj\n";
         image = new SDL_Texture*[nb_frame];
         if (!image){
