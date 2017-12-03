@@ -28,3 +28,7 @@ void Game::Calcul_Dep(int &dep_x, int &dep_y){   //Ne marche pas tant que perso 
         dep_y = 0;
     }
 }
+
+Screen *Game::Get_Screen(){
+    return screen;
+}

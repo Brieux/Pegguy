@@ -10,6 +10,8 @@ class Screen{
     public:
         Screen(const char *title = "");
         ~Screen();
+        SDL_Window *Get_Window();
+        SDL_Renderer *Get_Renderer();
 };
 
 #endif

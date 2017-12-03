@@ -32,6 +32,13 @@ Screen::Screen(const char *title){
     SDL_ShowCursor(SDL_DISABLE);
 }
 
+SDL_Window *Screen::Get_Window(){
+    return p_Window;
+}
+SDL_Renderer *Screen::Get_Renderer(){
+    return p_Renderer;
+}
+
 Screen::~Screen(){
     cout << "Destruction d'une instance de Screen\n";
     SDL_DestroyWindow(p_Window);
