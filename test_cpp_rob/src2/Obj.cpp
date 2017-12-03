@@ -10,8 +10,16 @@ static SDL_Texture *loadTexture(char *image, SDL_Renderer *pRenderer){
   return texture;
 }
 
-Obj::Obj(int x, int y, int h, int w, int nb_Frames, int deep_Image,
-    const char* img, type_t type, bool solid, bool active):
+static void drawImage(SDL_Texture *texture, int x, int y, SDL_Renderer *pRenderer){
+    SDL_Rect dest;
+    dest.x = x;
+    dest.y = y;
+    SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+    SDL_RenderCopy(pRenderer, texture, NULL, &dest);
+}
+
+Obj::Obj(int x, int y, int h, int w, int nb_Frames, int deep_Image,\
+    const char* img, int type, bool solid, bool active):
     x(x), y(y), h(h), w(w), nb_Frames(nb_Frames), deep_Image(deep_Image),
     type(type), solid(solid), active(active){
 
@@ -22,44 +30,52 @@ Obj::Obj(int x, int y, int h, int w, int nb_Frames, int deep_Image,
         sprite_name[end_name + 1] = '\0';
 
         cout << "création d'une instance d'un Obj\n";
-        image = new SDL_Texture*[nb_frame];
+        image = new SDL_Texture*[nb_Frames];
         if (!image){
             cerr << "Error in Obj, can't alloc memory\n";
-            exi(EXIT_FAILURE);
+            exit(EXIT_FAILURE);
         }
-        for (int i = 0; i < nb_frames; i++){
-            image[i] = new SDL_Texture*;
+        for (int i = 0; i < nb_Frames; i++){
+            image[i] = new (SDL_Texture *);
             if (!image[i]){
-                cerr << "Error in Obj, can't alloc memory\n"
-                exi(EXIT_FAILURE);
+                cerr << "Error in Obj, can't alloc memory\n";
+                exit(EXIT_FAILURE);
             }
 
         }
 
-    }
 }
+
 
 Obj::~Obj(){
     cout << "Destruction d'une instance d'un Obj\n";
-    for (int i = 0; i < nb_frames; i++){
+    for (int i = 0; i < nb_Frames; i++){
         delete image[i];
     }
     delete image;
 }
 
-int Get_x(){
+int Obj::Get_x(){
     return x;
 }
-int Get_y(){
+int Obj::Get_y(){
     return y;
 }
-int Get_h(){
+int Obj::Get_h(){
     return h;
 }
-int Get_w(){
+int Obj::Get_w(){
     return w;
 }
 
-Obj::Draw(){
+void Obj::draw(Game *game){
+    int dep_x;
+    int dep_y;
+    game->Calcul_Dep(dep_x, dep_y);
+    drawImage(game->map[x + dep_x/32][y + dep_y/32]->image,
+                x*32 - dep_x%32,
+                y*32 - dep_y%32,
+                game->screen->pRenderer
+    );
 
 }
