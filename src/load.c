@@ -82,7 +82,7 @@ Perso *loadPerso(Game *game)
   perso->image[1][1] = loadTexture("../graphics/spritepegguy/testprofilgauchejambedroite.png", game->screen->pRenderer);
   perso->image[1][2] = perso->image[1][0];
   perso->image[1][3] = loadTexture("../graphics/spritepegguy/testprofilgauchejambegauche.png", game->screen->pRenderer);
-  
+
   //A changer selon les maps je suppose ?
   perso->w = 32;
   perso->h = 64;

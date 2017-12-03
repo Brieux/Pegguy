@@ -11,7 +11,7 @@ class Game{
         Screen *screen;
 
     public:
-        Game(int id_level = 0, const char* title = "");
+        Game(int id_level = 0, const char* title = "", int wmap = 0, int hmap = 0);
         ~Game();
 };
 
