@@ -128,8 +128,8 @@ void drawPerso(Game *game, Perso *perso, int dep_x, int dep_y)
   if (!cooldown || perso->invincible % 8 == 0){
       //Dessin des animations
       int frame_index = 0;
-      if (perso->vSpeed !=0){                       //Image quand le personnage saute
-          frame_index = perso->nb_frame - 1;
+      if (perso->vSpeed !=0 || !perso->move){                       //Image quand le personnage saute
+          frame_index = 0;
       } else {
           //20 peut être diminué pour augmente la vitesse d'animation, et réciproquement
           frame_index = abs((perso->x/20)%(perso->nb_frame-1));
@@ -137,7 +137,7 @@ void drawPerso(Game *game, Perso *perso, int dep_x, int dep_y)
       //Gestion du tems d'invincibilité du personnage
 
 
-      drawImage(perso->image[frame_index],
+      drawImage(perso->image[perso->direction][frame_index],
                   perso->x - dep_x,
                   perso->y-dep_y,
                   game->screen->pRenderer

@@ -67,8 +67,6 @@ void updateEvents(Input *input)
 
 void updateInputs(Game *game)
 {
-  //printf("%d  ", game->perso->move);
-  //fflush(stdout);
   //quit
   if (game->input->key[SDL_SCANCODE_ESCAPE])
   {

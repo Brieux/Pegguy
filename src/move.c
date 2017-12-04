@@ -148,6 +148,7 @@ void updateDummyLauncher(Game *game, DynObj *dummyLauncher)
     game->perso->sizeEquip++;
     game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
     game->perso->equip[game->perso->sizeEquip-1] = dummyLauncher; //et dans l'inventaire
+    puts("coucou");
   }
 }
 

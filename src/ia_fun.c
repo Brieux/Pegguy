@@ -145,7 +145,7 @@ void destroy_mob(Game *game, mob *c_mob){
         p_mob = p_mob->mob_next;
     }
     if (c_mob == game->first_mob && !game->first_mob->mob_next){
-        free(c_mob->coord);
+        //free(c_mob->coord);
         free(c_mob);
         game->first_mob = NULL;
     } else if (c_mob == game->first_mob && game->first_mob->mob_next){
