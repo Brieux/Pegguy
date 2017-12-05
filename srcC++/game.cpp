@@ -32,11 +32,8 @@ void Game::calculDep(int &dep_x, int &dep_y){
         dep_x = 0;
     }
 
-    if (character->getY() > WINDOW_H/2){
-        dep_y = character->getY() - WINDOW_H/2;
-    } else {
-        dep_y = 0;
-    }
+    dep_y = character->getY() - WINDOW_H/1.3;
+
 }
 
 void Game::drawGame()

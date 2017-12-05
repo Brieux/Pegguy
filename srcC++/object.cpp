@@ -37,7 +37,10 @@ void Object::draw(SDL_Renderer *renderer, ImagesBank *bank)
   {
       Uint32 time_Sdl = SDL_GetTicks();
       frame_index = (int)(SDL_GetTicks()/(time_frame*1000))%nbFrame;
-      drawImage(bank->getImage(image[frame_index]), x, y, renderer);
+      int dep_x = 0;
+      int dep_y = 0;
+      game.calculDep(dep_x, dep_y);
+      drawImage(bank->getImage(image[frame_index]), x - dep_x, y - dep_y, renderer);
   }
 }
 
