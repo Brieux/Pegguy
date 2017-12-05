@@ -3,6 +3,8 @@
 void updateGame(Game *game)
 {
   gravite(game, game->perso);
+  if (game->sin)
+    graviteSin(game, game->sin);
   graviteObj(game);
   updateProjectilesPosition(game);
   updateLinks(game);
@@ -93,17 +95,40 @@ void updateMobilePlatform(Game *game, DynObj *platform)
             game->perso->w, game->perso->h))
       {
         xPerso = game->perso->x; //si collision avec perso sur cote, on le deplace
-        move(game, abs(platform->hSpeed)/platform->hSpeed, 0);
+        move(game, game->perso, abs(platform->hSpeed)/platform->hSpeed, 0);
         if (game->perso->x == xPerso)//si le perso n'a pas bougé, c'est qu'il s'est fait ecraser
         {
           game->perso->hp = 0;//mort
+        }
+      }
+      if (game->sin)
+      {
+        if (collision(platform->x + abs(platform->hSpeed)/platform->hSpeed,
+              platform->y, platform->w, platform->h, game->sin->x, game->sin->y,
+              game->sin->w, game->sin->h))
+        {
+          xPerso = game->sin->x; //si collision avec perso sur cote, on le deplace
+          move(game, game->sin, abs(platform->hSpeed)/platform->hSpeed, 0);
+          if (game->sin->x == xPerso)//si le perso n'a pas bougé, c'est qu'il s'est fait ecraser
+          {
+            game->perso->hp = 0;//mort
+          }
         }
       }
       if (collision(platform->x,
             platform->y - 1, platform->w, platform->h, game->perso->x, game->perso->y,
             game->perso->w, game->perso->h))
       {         //si perso sur plateforme, on le deplace
-        move(game, abs(platform->hSpeed)/platform->hSpeed, 0);
+        move(game, game->perso, abs(platform->hSpeed)/platform->hSpeed, 0);
+      }
+      if (game->sin)
+      {
+        if (collision(platform->x,
+              platform->y + 1, platform->w, platform->h, game->sin->x, game->sin->y,
+              game->sin->w, game->sin->h))
+        {         //si perso sur plateforme, on le deplace
+          move(game, game->sin, abs(platform->hSpeed)/platform->hSpeed, 0);
+        }
       }
       platform->x += abs(platform->hSpeed)/platform->hSpeed;//on deplace la plateforme
     }
@@ -123,6 +148,7 @@ void updateDummyLauncher(Game *game, DynObj *dummyLauncher)
     game->perso->sizeEquip++;
     game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
     game->perso->equip[game->perso->sizeEquip-1] = dummyLauncher; //et dans l'inventaire
+    puts("coucou");
   }
 }
 
@@ -218,36 +244,36 @@ void updateHand(Game *game)
 
 }
 
-void move(Game *game, int vx, int vy)
+void move(Game *game, Perso *perso, int vx, int vy)
 {
-  int wPerso = game->perso->w;
-  int hPerso = game->perso->h;
+  int wPerso = perso->w;
+  int hPerso = perso->h;
   DynObj *dynObj = NULL;
 
   for (uint i=0; i<abs(vx); i++)
   {
-    if (!collisionMap(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso))
+    if (!collisionMap(game, perso->x + abs(vx)/vx, perso->y, wPerso, hPerso))
     {//si pas de decor solide
-      if ((dynObj = collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y, wPerso, hPerso, 0)) != 0)
+      if ((dynObj = collisionMapObj(game, perso->x + abs(vx)/vx, perso->y, wPerso, hPerso, 0)) != 0)
       {//si collision avec objet dynamique
         if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY ||
             dynObj->type == BOX_DESTROYABLE_BALL || dynObj->type == BOX_DESTROYABLE_DUMMY_LAUNCHER)
         {//si c'est une caisse
           if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
               !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h, dynObj) &&
-              !collisionMapObj(game, game->perso->x + abs(vx)/vx, game->perso->y,
-                game->perso->w, game->perso->h, dynObj) &&
-              game->perso->interact && !i%2)
+              !collisionMapObj(game, perso->x + abs(vx)/vx, perso->y,
+                perso->w, perso->h, dynObj) &&
+              perso->interact && !i%2)
           {//si on peut la deplacer et que le perso interagit
-            game->perso->x+=abs(vx)/vx;
+            perso->x+=abs(vx)/vx;
             dynObj->x+=abs(vx)/vx;//on pousse
           }
         }
       }
       else
       {
-        if ((dynObj = collisionMapObj(game, game->perso->x - abs(vx)/vx*2, game->perso->y, wPerso, hPerso, 0)) != 0 &&
-             game->perso->interact)//si caisse derriere soi
+        if ((dynObj = collisionMapObj(game, perso->x - abs(vx)/vx*2, perso->y, wPerso, hPerso, 0)) != 0 &&
+             perso->interact)//si caisse derriere soi
         {
           if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY ||
               dynObj->type == BOX_DESTROYABLE_BALL || dynObj->type == BOX_DESTROYABLE_DUMMY_LAUNCHER)
@@ -255,14 +281,14 @@ void move(Game *game, int vx, int vy)
             if (!collisionMap(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h) &&
                 !collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h, dynObj) && !i%2)
             {
-              game->perso->x+=abs(vx)/vx;
+              perso->x+=abs(vx)/vx;
               dynObj->x+=abs(vx)/vx;//on tire la caisse
             }
           }
         }
         else
         {
-          game->perso->x+=abs(vx)/vx;/*si le pixel suivant est vide, on fait avancer le perso*/
+          perso->x+=abs(vx)/vx;/*si le pixel suivant est vide, on fait avancer le perso*/
         }
       }
     }
@@ -377,17 +403,17 @@ void gravite(Game *game, Perso *perso)
     for (uint i=0; i<abs(perso->vSpeed); i++)
     {
       if (collisionMap(game, perso->x, perso->y + abs(perso->vSpeed)/perso->vSpeed,
-          game->perso->w, game->perso->h) || //si collision avec element du decor
+          perso->w, perso->h) || //si collision avec element du decor
           collisionMapObj(game, perso->x, perso->y + abs(perso->vSpeed)/perso->vSpeed,
-          game->perso->w, game->perso->h, 0))//si collision avec objet dynamique
+          perso->w, perso->h, 0))//si collision avec objet dynamique
       {
         perso->vSpeed = 0;
         perso->hJumpAct = perso->hJump;//on stoppe
 
         if (collisionMap(game, perso->x, perso->y + 1,
-            game->perso->w, game->perso->h) ||
+            perso->w, perso->h) ||
             (dynObj = collisionMapObj(game, perso->x, perso->y + 1,
-            game->perso->w, game->perso->h, 0)))//si c'etait le sol
+            perso->w, perso->h, 0)))//si c'etait le sol
         {
           perso->hJumpAct = 0;//on remet le compteur de saut à 0
           if (dynObj)

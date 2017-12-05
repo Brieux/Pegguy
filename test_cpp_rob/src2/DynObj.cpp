@@ -11,8 +11,15 @@ DynObj(bool gravite, int vSpeed, int hSpeed, int count, bool linked, bool move):
 ~DynObj(){
     cout << "Destruction d'une instance de DynObj\n";
 }
+
+bool collision(Obj *obj){
+
+}
+
 void move(){
     x += hSpeed;
     //Faire les collisions puis appliquer la gravité !
 }
-void manageCount(int diff);
+void manageCount(int diff){
+    count += diif;
+}

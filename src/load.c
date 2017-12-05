@@ -9,6 +9,7 @@ Game *loadGame(int n_map)
   }
   game->screen = initScreen("Peggy");
   game->perso = loadPerso(game);
+  game->sin = NULL;
   game->input = generateInput();
   game->hud = initHUD(game);
   game->projectiles = NULL;

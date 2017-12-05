@@ -98,6 +98,7 @@ typedef struct Game
   SDL_Texture *background;
   Input *input;
   Perso *perso;
+  Perso *sin;
   Bloc ***map;
   DynObj **mapObj;
   Projectile *projectiles;
