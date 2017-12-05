@@ -257,7 +257,7 @@ void initMap(FILE *file, Game *game)
           break;
         case DUMMY_LAUNCHER :
           game->mapObj[i] = initDynObj(game, DUMMY_LAUNCHER, x*32, y*32, 32, 32,
-                                        false, true, false, 0, 0, "../graphics/dummy_launcher.png");
+                                        false, true, false, 0, 0, "../graphics/dummy_launcher/dummy_launcher.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;
           i++;

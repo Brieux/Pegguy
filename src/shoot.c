@@ -39,7 +39,7 @@ Projectile *initProjectile(Game *game)
       break;
   }
   projectile->dynObj = initDynObj(game, DUMMY, game->perso->x, game->perso->y,
-                                      16, 16, false, true, true, -15, hSpeed, "../graphics/dummy.png");
+                                      16, 16, false, true, true, -15, hSpeed, "../graphics/dummy_launcher/dummyupright.png");
 
   return projectile;
 }
