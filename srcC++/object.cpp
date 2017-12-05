@@ -5,13 +5,13 @@ using namespace std;
 
 extern Game game;
 
-Object::Object() : x(20), y(20), w(32), h(32), nbFrame(1), frameAct(0)
+Object::Object() : x(20), y(20), w(32), h(32), nbFrame(1), time_frame(0), frame_index(0)
 {
 
 }
 
-Object::Object(int x2, int y2, int type2) : x(x2), y(y2), w(32), h(32), nbFrame(1),
-    frameAct(0), type(type2)
+Object::Object(int x2, int y2, int type2) : x(x2), y(y2), w(32), h(32), nbFrame(1), frame_index(0),
+    time_frame(0), type(type2)
 {
   string name;
   switch (type)
@@ -35,8 +35,9 @@ void Object::draw(SDL_Renderer *renderer, ImagesBank *bank)
 {
   if (type != EMPTY)
   {
-    drawImage(bank->getImage(image[frameAct]), x, y, renderer);
-    frameAct = (frameAct + 1)%nbFrame;
+      Uint32 time_Sdl = SDL_GetTicks();
+      frame_index = (int)(SDL_GetTicks()/(time_frame*1000))%nbFrame;
+      drawImage(bank->getImage(image[frame_index]), x, y, renderer);
   }
 }
 
@@ -75,9 +76,9 @@ int Object::getType() const
   return type;
 }
 
-int Object::getFrameAct() const
+int Object::getTimeFrame() const
 {
-  return frameAct;
+  return time_frame;
 }
 
 int Object::getNbFrame() const
@@ -102,7 +103,7 @@ bool Object::getActive() const
 
 string Object::getImage() const
 {
-  return image[frameAct];
+  return image[frame_index];
 }
 
 

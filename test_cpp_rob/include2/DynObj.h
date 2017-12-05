@@ -17,6 +17,7 @@ class DynObj : public Obj{
             const char* img, int type, bool solid, bool active, Game *game,\
             bool gravite, int vSpeed, int hSpeed, int count, bool linked, bool move);
         ~DynObj();
+        void collision(Obj *obj);
         void move();
         void manageCount(int diff);
 };
