@@ -21,6 +21,24 @@ void Game::play()
   }
 }
 
+void Game::calculDep(int &dep_x, int &dep_y){
+    if (character->getX() > WINDOW_W/2){
+        if (character->getX() > wMap * 32 - WINDOW_W/2){
+            dep_x = wMap * 32 - WINDOW_W;
+        } else {
+            dep_x = character->getX() - WINDOW_W/2;
+        }
+    } else {
+        dep_x = 0;
+    }
+
+    if (character->getY() > WINDOW_H/2){
+        dep_y = character->getY() - WINDOW_H/2;
+    } else {
+        dep_y = 0;
+    }
+}
+
 void Game::drawGame()
 {
   screen->clearScreen();
