@@ -9,12 +9,14 @@ Character::Character()
   y = 200;
   w = 32;
   h = 32;
+  gravite = true;
   image[0] = "../graphics/baby.png";
 }
 
 void Character::update()
 {
   movement();
+  setJump();
 }
 
 void Character::movement()

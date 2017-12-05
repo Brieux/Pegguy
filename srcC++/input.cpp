@@ -70,6 +70,10 @@ void Input::manageInputs()
     game.getCharacter()->move(RIGHT);
   }
 
+  if (key[SDL_SCANCODE_W])
+  {
+    game.getCharacter()->jump();
+  }
 }
 
 void Input::updateInputs()

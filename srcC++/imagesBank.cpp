@@ -19,6 +19,7 @@ ImagesBank::ImagesBank(SDL_Renderer *renderer)
   place("../graphics/baby.png", renderer);
   place("../graphics/Dirt.png", renderer);
   place("../graphics/Dirt_2.png", renderer);
+  place("../graphics/target.png", renderer);
 }
 
 //autres

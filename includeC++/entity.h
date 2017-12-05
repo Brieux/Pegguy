@@ -4,6 +4,8 @@
 #include "defs.h"
 #include "dynObj.h"
 
+class Game;
+
 class Entity : public DynObj
 {
   public :
@@ -16,6 +18,7 @@ class Entity : public DynObj
   void manageInvincible();
   void jump();
   void changeHand();
+  void setJump();
   void addEquipment();
   void deleteEquipment();
 
@@ -24,7 +27,6 @@ class Entity : public DynObj
   int getDirection() const;
   int getWaitShoot() const;
   int getHJump() const;
-  int getSJump() const;
   int getJumpAct() const;
   int getInvincible() const;
   std::vector<DynObj> getEquipment() const;
@@ -37,7 +39,7 @@ class Entity : public DynObj
   int hp;
   int direction;
   int waitShoot;
-  int hJump, sJump, jumpAct;
+  int hJump, jumpAct;
   bool invincible;
   std::vector<DynObj> equipment;
   DynObj *hand;

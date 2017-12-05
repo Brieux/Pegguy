@@ -24,5 +24,7 @@ enum {LEFT, RIGHT, UP, DOWN};
 
 #define WINDOW_W 1280
 #define WINDOW_H 640
+#define GRAVITE 2
+#define S_DOWN 18
 
 #endif

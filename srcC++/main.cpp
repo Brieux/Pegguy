@@ -8,8 +8,6 @@ Game game;
 
 int main(int argc, char *argv[])
 {
-
-
   game.play();
 
   return EXIT_SUCCESS;

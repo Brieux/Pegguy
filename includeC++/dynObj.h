@@ -16,6 +16,7 @@ class DynObj : public Object
   void update();
   void movement();
   void move(int direction);
+  void applyGravite();
   void manageCounter(int nbCounter);
 
 

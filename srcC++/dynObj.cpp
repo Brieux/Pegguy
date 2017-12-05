@@ -5,7 +5,7 @@ using namespace std;
 
 extern Game game;
 
-DynObj::DynObj() : hSpeed(5), vSpeed(5), hSpeedAct(0), vSpeedAct(0)
+DynObj::DynObj() : hSpeed(5), vSpeed(15), hSpeedAct(0), vSpeedAct(0), gravite(false)
 {
 
 }
@@ -17,6 +17,7 @@ void DynObj::update()
 
 void DynObj::movement()
 {
+  applyGravite();
   for (int i=0; i<abs(hSpeedAct); i++)
   {
     if (!collisionMap(true, x + abs(hSpeedAct)/hSpeedAct, y, w, h))
@@ -52,7 +53,18 @@ void DynObj::move(int direction)
       hSpeedAct = hSpeed;
       break;
   }
+}
 
+void DynObj::applyGravite()
+{
+  if (gravite)
+  {
+    vSpeedAct += GRAVITE;
+    if (vSpeedAct > S_DOWN)
+    {
+      vSpeedAct = S_DOWN;
+    }
+  }
 }
 
 void DynObj::manageCounter(int nbCounter)
