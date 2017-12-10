@@ -43,16 +43,13 @@ void updateLinks(Game *game)
           switch (game->mapObj[i]->type)
           {
             case TRIANGLE_BASE :
-              SDL_DestroyTexture(game->mapObj[i]->image);
-              game->mapObj[i]->image = loadTexture("../graphics/triangle_complete.png", game->screen->pRenderer);
+              game->mapObj[i]->image = "../graphics/triangle_complete.png";
               break;
             case CIRCLE_BASE :
-              SDL_DestroyTexture(game->mapObj[i]->image);
-              game->mapObj[i]->image = loadTexture("../graphics/circle_complete.png", game->screen->pRenderer);
+              game->mapObj[i]->image = "../graphics/circle_complete.png";
               break;
             case SQUARE_BASE :
-              SDL_DestroyTexture(game->mapObj[i]->image);
-              game->mapObj[i]->image = loadTexture("../graphics/square_complete.png", game->screen->pRenderer);
+              game->mapObj[i]->image = "../graphics/square_complete.png";
               break;
           }
           if (game->mapObj[i]->link)
@@ -143,12 +140,29 @@ void updateDummyLauncher(Game *game, DynObj *dummyLauncher)
   {
     dummyLauncher->active = false;
     DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
-                                  false, true, false, 0, 0, "../graphics/dummy_launcher_handrightpointed.png");
+                                  false, true, false, 0, 0,
+                                  "../graphics/dummy_launcher/dummy_launcher_handrightpointed.png");
     game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
     game->perso->sizeEquip++;
     game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
     game->perso->equip[game->perso->sizeEquip-1] = dummyLauncher; //et dans l'inventaire
-    puts("coucou");
+  }
+}
+
+void updateGhostGun(Game *game, DynObj *ghostGun)
+{
+  if (ghostGun->active &&
+          collision(game->perso->x, game->perso->y, game->perso->w, game->perso->h,
+                ghostGun->x, ghostGun->y, ghostGun->w, ghostGun->h))
+  {
+    ghostGun->active = false;
+    DynObj *ghostGun = initDynObj(game, GHOST_GUN, 0, 0, 32, 32,
+                                  false, true, false, 0, 0,
+                                  "../graphics/ghost_gun/ghost_gunrightpointed.png");
+    game->perso->hand = ghostGun; //on place le lance-tetine dans la main
+    game->perso->sizeEquip++;
+    game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
+    game->perso->equip[game->perso->sizeEquip-1] = ghostGun; //et dans l'inventaire
   }
 }
 
@@ -181,6 +195,9 @@ void updateObj(Game *game)
       case DUMMY_LAUNCHER :
         updateDummyLauncher(game, game->mapObj[i]);
         break;
+      case GHOST_GUN :
+        updateGhostGun(game, game->mapObj[i]);
+        break;
       case MOBILE_PLATFORM :
         updateMobilePlatform(game, game->mapObj[i]);
         break;
@@ -207,7 +224,8 @@ void pickItems(Game *game)
         case DUMMY_LAUNCHER : //si collision avec lance-tetine
           game->mapObj[i]->active = false;
           DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
-                                        false, true, false, 0, 0, "../graphics/dummy_launcher_handrightpointed.png");
+                                        false, true, false, 0, 0,
+                                        "../graphics/dummy_launcher/dummy_launcher_handrightpointed.png");
           game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
           game->perso->sizeEquip++;
           game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
@@ -237,8 +255,33 @@ void updateHand(Game *game)
     }
     else if (game->perso->hand->type == DUMMY_LAUNCHER)
     {
-      game->perso->hand->x = game->perso->x + 14;
+      switch (game->perso->direction)
+      {
+        case RIGHT:
+          game->perso->hand->x = game->perso->x + 14;
+          game->perso->hand->image = "../graphics/dummy_launcher/dummy_launcher_handrightpointed.png";
+          break;
+        case LEFT:
+          game->perso->hand->x = game->perso->x - 14;
+          game->perso->hand->image = "../graphics/dummy_launcher/dummy_launcher_handleftpointed.png";
+          break;
+      }
+
       game->perso->hand->y = game->perso->y + 25;
+    }
+    else if (game->perso->hand->type == GHOST_GUN)
+    {
+      switch (game->perso->direction)
+      {
+        case RIGHT:
+          game->perso->hand->image = "../graphics/ghost_gun/ghost_gunrightpointed.png";
+          break;
+        case LEFT:
+          game->perso->hand->image = "../graphics/ghost_gun/ghost_gunleftpointed.png";
+          break;
+      }
+      game->perso->hand->x = game->perso->x;
+      game->perso->hand->y = game->perso->y;
     }
   }
 
@@ -256,8 +299,9 @@ void move(Game *game, Perso *perso, int vx, int vy)
     {//si pas de decor solide
       if ((dynObj = collisionMapObj(game, perso->x + abs(vx)/vx, perso->y, wPerso, hPerso, 0)) != 0)
       {//si collision avec objet dynamique
-        if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY ||
-            dynObj->type == BOX_DESTROYABLE_BALL || dynObj->type == BOX_DESTROYABLE_DUMMY_LAUNCHER)
+        if (dynObj->type == BRIDGE || dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY ||
+            dynObj->type == BOX_DESTROYABLE_BALL || dynObj->type == BOX_DESTROYABLE_DUMMY_LAUNCHER ||
+            dynObj->type == BOX_DESTROYABLE_GHOST_GUN)
         {//si c'est une caisse
           if (!collisionMap(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h) &&
               !collisionMapObj(game, dynObj->x + abs(vx)/vx,dynObj->y, dynObj->w, dynObj->h, dynObj) &&
@@ -276,7 +320,8 @@ void move(Game *game, Perso *perso, int vx, int vy)
              perso->interact)//si caisse derriere soi
         {
           if (dynObj->type == BOX || dynObj->type == BOX_DESTROYABLE_EMPTY ||
-              dynObj->type == BOX_DESTROYABLE_BALL || dynObj->type == BOX_DESTROYABLE_DUMMY_LAUNCHER)
+              dynObj->type == BOX_DESTROYABLE_BALL || dynObj->type == BOX_DESTROYABLE_DUMMY_LAUNCHER ||
+              dynObj->type == BOX_DESTROYABLE_GHOST_GUN)
           {
             if (!collisionMap(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h) &&
                 !collisionMapObj(game, dynObj->x + abs(vx)/vx, dynObj->y, dynObj->w, dynObj->h, dynObj) && !i%2)
@@ -446,7 +491,13 @@ void destroyBox(Game *game, DynObj *dynObj)
     case BOX_DESTROYABLE_DUMMY_LAUNCHER :
       freeDynObj(dynObj);
       dynObj = initDynObj(game, DUMMY_LAUNCHER, x+16, y+32, 32, 32,
-                  false, true, false, 0, 0, "../graphics/dummy_launcher.png");
+                  false, true, false, 0, 0, "../graphics/dummy_launcher/dummy_launcher.png");
+
+      break;
+    case BOX_DESTROYABLE_GHOST_GUN :
+      freeDynObj(dynObj);
+      dynObj = initDynObj(game, GHOST_GUN, x+16, y, 32, 32,
+                  false, true, false, 0, 0, "../graphics/ghost_gun/ghost_gun.png");
 
       break;
   }

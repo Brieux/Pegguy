@@ -27,6 +27,10 @@ void addProjectile(Game *game){
 Projectile *initProjectile(Game *game)
 {
   Projectile *projectile = malloc(sizeof(Projectile));
+  if (!projectile)
+  {
+    error("Unable to malloc projectile");
+  }
   projectile->following = NULL;
   int hSpeed;
   switch (game->perso->direction)
@@ -38,8 +42,19 @@ Projectile *initProjectile(Game *game)
       hSpeed = -6;
       break;
   }
+  char *dummy = "";
+  switch (game->perso->direction)
+  {
+    case RIGHT :
+        dummy = "../graphics/dummy_launcher/dummyupright.png";
+        break;
+    case LEFT :
+        dummy = "../graphics/dummy_launcher/dummyupleft.png";
+        break;
+  }
   projectile->dynObj = initDynObj(game, DUMMY, game->perso->x, game->perso->y,
-                                      16, 16, false, true, true, -15, hSpeed, "../graphics/dummy.png");
+                                      16, 16, false, true, true, -15, hSpeed,
+                                       dummy);
 
   return projectile;
 }

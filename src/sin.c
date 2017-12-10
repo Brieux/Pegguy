@@ -62,15 +62,15 @@ Perso *loadSin(Game *game)
     exit(EXIT_FAILURE);
   }
   //Chargement des textures
-  perso->image[0][0] = loadTexture("../graphics/spritepegguy/testprofildroite.png", game->screen->pRenderer);
-  perso->image[0][1] = loadTexture("../graphics/spritepegguy/testprofildroitjambedroite.png", game->screen->pRenderer);
+  perso->image[0][0] = "../graphics/spritepegguy/testprofildroite.png";
+  perso->image[0][1] = "../graphics/spritepegguy/testprofildroitjambedroite.png";
   perso->image[0][2] = perso->image[0][0];
-  perso->image[0][3] = loadTexture("../graphics/spritepegguy/testprofildroitjambegauche.png", game->screen->pRenderer);
+  perso->image[0][3] = "../graphics/spritepegguy/testprofildroitjambegauche.png";
 
-  perso->image[1][0] = loadTexture("../graphics/spritepegguy/testprofilgauche.png", game->screen->pRenderer);
-  perso->image[1][1] = loadTexture("../graphics/spritepegguy/testprofilgauchejambedroite.png", game->screen->pRenderer);
+  perso->image[1][0] = "../graphics/spritepegguy/testprofilgauche.png";
+  perso->image[1][1] = "../graphics/spritepegguy/testprofilgauchejambedroite.png";
   perso->image[1][2] = perso->image[1][0];
-  perso->image[1][3] = loadTexture("../graphics/spritepegguy/testprofilgauchejambegauche.png", game->screen->pRenderer);
+  perso->image[1][3] = "../graphics/spritepegguy/testprofilgauchejambegauche.png";
 
   //A changer selon les maps je suppose ?
   perso->w = 32;

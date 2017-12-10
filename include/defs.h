@@ -25,8 +25,11 @@
 #define DEP_DIALOGUE_X 700
 #define DEP_DIALOGUE_Y 20
 
+#define BANK_SIZE 500
+
 #include "structs.h"
 #include "sin.h"
+#include "imagesBank.h"
 #include "lvlEditor.h"
 #include "dialogues.h"
 #include "shoot.h"

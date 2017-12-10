@@ -8,6 +8,7 @@ Game *loadGame(int n_map)
     error("Unable to alloc game.");
   }
   game->screen = initScreen("Peggy");
+  loadImagesBank(game);
   game->perso = loadPerso(game);
   game->sin = NULL;
   game->input = generateInput();
@@ -20,8 +21,8 @@ Game *loadGame(int n_map)
   game->first_mob = NULL;
   game->choice = 0;
   game->nbChoices = 0;
-  game->background = loadTexture("../graphics/background.png", game->screen->pRenderer);
-  game->menuPointer = loadTexture("../graphics/menuPointer.png", game->screen->pRenderer);
+  game->background = "../graphics/background.png";
+  game->menuPointer = "../graphics/menuPointer.png";
   loadMap(game);
   loadFont(game);
 
@@ -31,12 +32,14 @@ Game *loadGame(int n_map)
 HUD *initHUD(Game *game)
 {
   HUD *hud = malloc(sizeof(HUD));
-  hud->ball = loadTexture("../graphics/billefinale.png", game->screen->pRenderer);
+  if (!hud){
+    error("Unable to alloc hud.");
+  }
+  hud->ball = "../graphics/billefinale.png";
   hud->nbBalls = 0;
   hud->xBall = 200;
   hud->yBall = 40;
-
-  hud->hearts = loadTexture("../graphics/Heart.png", game->screen->pRenderer);
+  hud->hearts = "../graphics/Heart.png";
   hud->xHearts = 40;
   hud->yHearts = 40;
 
@@ -66,23 +69,32 @@ Perso *loadPerso(Game *game)
   perso->nb_frame = 4;
 
   perso->image = malloc(2 * sizeof(SDL_Texture*));
-  perso->image[0] = malloc(perso->nb_frame * sizeof(SDL_Texture*));
-  perso->image[1] = malloc(perso->nb_frame * sizeof(SDL_Texture*));
-
   if (!perso->image){
     fprintf(stderr, "Unable to alloc image in perso\n");
     exit(EXIT_FAILURE);
   }
-  //Chargement des textures
-  perso->image[0][0] = loadTexture("../graphics/spritepegguy/testprofildroite.png", game->screen->pRenderer);
-  perso->image[0][1] = loadTexture("../graphics/spritepegguy/testprofildroitjambedroite.png", game->screen->pRenderer);
-  perso->image[0][2] = perso->image[0][0];
-  perso->image[0][3] = loadTexture("../graphics/spritepegguy/testprofildroitjambegauche.png", game->screen->pRenderer);
+  perso->image[0] = malloc(perso->nb_frame * sizeof(SDL_Texture*));
+  if (!perso->image[0]){
+    fprintf(stderr, "Unable to alloc image[0] in perso\n");
+    exit(EXIT_FAILURE);
+  }
+  perso->image[1] = malloc(perso->nb_frame * sizeof(SDL_Texture*));
+  if (!perso->image[1]){
+    fprintf(stderr, "Unable to alloc image[1] in perso\n");
+    exit(EXIT_FAILURE);
+  }
 
-  perso->image[1][0] = loadTexture("../graphics/spritepegguy/testprofilgauche.png", game->screen->pRenderer);
-  perso->image[1][1] = loadTexture("../graphics/spritepegguy/testprofilgauchejambedroite.png", game->screen->pRenderer);
+
+  //Chargement des textures
+  perso->image[0][0] = "../graphics/spritepegguy/testprofildroite.png";
+  perso->image[0][1] = "../graphics/spritepegguy/testprofildroitjambedroite.png";
+  perso->image[0][2] = perso->image[0][0];
+  perso->image[0][3] = "../graphics/spritepegguy/testprofildroitjambegauche.png";
+
+  perso->image[1][0] = "../graphics/spritepegguy/testprofilgauche.png";
+  perso->image[1][1] = "../graphics/spritepegguy/testprofilgauchejambedroite.png";
   perso->image[1][2] = perso->image[1][0];
-  perso->image[1][3] = loadTexture("../graphics/spritepegguy/testprofilgauchejambegauche.png", game->screen->pRenderer);
+  perso->image[1][3] = "../graphics/spritepegguy/testprofilgauchejambegauche.png";
 
   //A changer selon les maps je suppose ?
   perso->w = 32;
@@ -101,6 +113,9 @@ Perso *loadPerso(Game *game)
   perso->hand = NULL;
   perso->sizeEquip = 0;
   perso->equip = malloc(perso->sizeEquip*sizeof(DynObj*));
+  if (!perso->equip){
+    error("Unable to malloc perso->equip");
+  }
   perso->invincible = 0;
   perso->hp = 3;
   return perso;
@@ -134,6 +149,9 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
                       bool active, bool gravite, int vSpeed, int hSpeed, char *image)
 {
   DynObj *dynObj = malloc(sizeof(DynObj));
+  if (!dynObj){
+    error("Unable to malloc dynObj");
+  }
   dynObj->type = type;
   dynObj->x = x;
   dynObj->y = y;
@@ -145,7 +163,7 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
   dynObj->gravite = gravite;
   dynObj->vSpeed = vSpeed;
   dynObj->hSpeed = hSpeed;
-  dynObj->image = loadTexture(image, game->screen->pRenderer);
+  dynObj->image = image;
   dynObj->link = NULL;
   dynObj->count = 0;
   dynObj->dialogue = false;
@@ -156,7 +174,7 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
 void initBlocMap(Game *game, Bloc *bloc, int x, int y, char *image)
 {
   bloc->solid = true;
-  bloc->image = loadTexture(image, game->screen->pRenderer);
+  bloc->image = image;
   bloc->w = 32;
   bloc->h = 32;
   bloc->x = x*32;
@@ -228,15 +246,22 @@ void initMap(FILE *file, Game *game)
           game->mapObj[i]->yLink = yLink;
           i++;
           break;
+        case BRIDGE :
+          game->mapObj[i] = initDynObj(game, BOX, x*32, y*32, 256, 32, true, true, true, 0, 0,
+                                        "../graphics/bridge.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
         case BOX_DESTROYABLE_EMPTY :
-          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_EMPTY, x*32, y*32, 64, 64,
+          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_EMPTY, x*32, y*32, 64, 96,
                                         true, true, true, 0, 0, "../graphics/box_destroyable.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;
           i++;
           break;
         case BOX_DESTROYABLE_BALL :
-          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_BALL, x*32, y*32, 64, 64,
+          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_BALL, x*32, y*32, 64, 96,
                                         true, true, true, 0, 0, "../graphics/box_destroyable.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;
@@ -244,6 +269,13 @@ void initMap(FILE *file, Game *game)
           break;
         case BOX_DESTROYABLE_DUMMY_LAUNCHER :
           game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_DUMMY_LAUNCHER, x*32, y*32, 64, 64,
+                                        true, true, true, 0, 0, "../graphics/box_destroyable.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
+        case BOX_DESTROYABLE_GHOST_GUN :
+          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_GHOST_GUN, x*32, y*32, 64, 64,
                                         true, true, true, 0, 0, "../graphics/box_destroyable.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;
@@ -258,7 +290,7 @@ void initMap(FILE *file, Game *game)
           break;
         case DUMMY_LAUNCHER :
           game->mapObj[i] = initDynObj(game, DUMMY_LAUNCHER, x*32, y*32, 32, 32,
-                                        false, true, false, 0, 0, "../graphics/dummy_launcher.png");
+                                        false, true, false, 0, 0, "../graphics/dummy_launcher/dummy_launcher.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;
           i++;

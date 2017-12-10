@@ -11,11 +11,12 @@ class DynObj : public Object
   public :
 
   DynObj();
+  DynObj(int x2, int y2, int type2);
 
   //autres
   void update();
   void movement();
-  void move(int direction);
+  void move(int direction, int hSpeed2, int vSpeed2);
   void applyGravite();
   void manageCounter(int nbCounter);
 

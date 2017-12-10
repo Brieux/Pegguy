@@ -62,6 +62,13 @@ void freeDynObj(DynObj *dynObj)
   free(dynObj);
 }
 
+void freeDynObjEditor(DynObjEditor *dynObj)
+{
+  dynObj->link = NULL;
+  SDL_DestroyTexture(dynObj->image);
+  free(dynObj);
+}
+
 //Fonction Mr propre
 void quitSDL(Screen *screen)
 {

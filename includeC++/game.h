@@ -34,6 +34,7 @@ class Game
   Character *getCharacter() const;
   Screen *getScreen() const;
   Object *getMap(int i) const;
+
   Bullet *getBullets(int num) const;
 
   ~Game();

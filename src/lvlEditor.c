@@ -41,9 +41,9 @@ Editor *loadEditor(int map_selected)
   return editor;
 }
 
-DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
+DynObjEditor *initBlocEditor(Editor *editor, int x, int y, int type)
 {
-  DynObj *dynObj = malloc(sizeof(DynObj));
+  DynObjEditor *dynObj = malloc(sizeof(DynObj));
   dynObj->type = type;
   dynObj->x = x;
   dynObj->y = y;
@@ -71,6 +71,10 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
       dynObj->w = 64;
       dynObj->h = 64;
       break;
+    case BRIDGE :
+      image = "../graphics/bridge.png";
+      dynObj->w = 256;
+      break;
     case BOX_DESTROYABLE_EMPTY :
       image = "../graphics/box_destroyable.png";
       dynObj->w = 64;
@@ -83,6 +87,11 @@ DynObj *initBlocEditor(Editor *editor, int x, int y, int type)
       break;
     case BOX_DESTROYABLE_DUMMY_LAUNCHER :
       image = "../graphics/box_destroyable_dummy.png";
+      dynObj->w = 64;
+      dynObj->h = 64;
+      break;
+    case BOX_DESTROYABLE_GHOST_GUN :
+      image = "../graphics/box_destroyable_ghost_gun.png";
       dynObj->w = 64;
       dynObj->h = 64;
       break;
@@ -244,7 +253,7 @@ void loadMapEditor(Editor *editor, FILE *file)
 
 void loadBlocsEditor(Editor *editor)
 {
-  editor->nbBlocs = 19;
+  editor->nbBlocs = 21;
   editor->blocs = malloc(editor->nbBlocs*sizeof(DynObj*));
   for (int i=0; i<editor->nbBlocs; i++)
   {
@@ -326,6 +335,14 @@ void loadBlocsEditor(Editor *editor)
       case 18 :
         editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
                   0, SECRET_GROUND);
+        break;
+      case 19 :
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                  0, BOX_DESTROYABLE_GHOST_GUN);
+        break;
+      case 20 :
+        editor->blocs[i] = initBlocEditor(editor, 0,
+                  64, BRIDGE);
         break;
     }
   }
@@ -561,7 +578,7 @@ void updateInputsEditor(Editor *editor)
   }
 }
 
-DynObj *collisionBlocEditor(Editor *editor, int x, int y, int w, int h)
+DynObjEditor *collisionBlocEditor(Editor *editor, int x, int y, int w, int h)
 {
   for (int i=0; i<editor->nbBlocs; i++)
   {
@@ -577,7 +594,7 @@ DynObj *collisionBlocEditor(Editor *editor, int x, int y, int w, int h)
   return 0;
 }
 
-void deleteBlocsAround(Editor *editor, DynObj *bloc)
+void deleteBlocsAround(Editor *editor, DynObjEditor *bloc)
 {
   for (int x=0; x<editor->wmap; x++)
   {
@@ -588,7 +605,7 @@ void deleteBlocsAround(Editor *editor, DynObj *bloc)
                 editor->map[x][y]->w, editor->map[x][y]->h))
       {
         nbDynObjDecrease(editor, editor->map[x][y]->type);
-        freeDynObj(editor->map[x][y]);
+        freeDynObjEditor(editor->map[x][y]);
         editor->map[x][y] = initBlocEditor(editor, x*32+DEP_MAP_X, y*32+DEP_MAP_Y,
                               EMPTY);
       }
@@ -608,7 +625,7 @@ void  placeBloc(Editor *editor)
                   editor->map[x][y]->x - editor->dep_x, editor->map[x][y]->y - editor->dep_y, 32, 32))
         {
           nbDynObjDecrease(editor, editor->map[x][y]->type);
-          freeDynObj(editor->map[x][y]);
+          freeDynObjEditor(editor->map[x][y]);
           editor->map[x][y] = initBlocEditor(editor, x*32+DEP_MAP_X, y*32+DEP_MAP_Y,
                                 editor->typeAct);
           deleteBlocsAround(editor, editor->map[x][y]);
@@ -661,7 +678,7 @@ void resizeGrid(Editor *editor, int direction)
       {
         for (int y=0; y<editor->hmap; y++)
         {
-          freeDynObj(editor->map[editor->wmap-1][y]);
+          freeDynObjEditor(editor->map[editor->wmap-1][y]);
         }
         free(editor->map[editor->wmap-1]);
         editor->wmap--;
@@ -674,7 +691,7 @@ void resizeGrid(Editor *editor, int direction)
       {
         for (int x=0; x<editor->wmap; x++)
         {
-          freeDynObj(editor->map[x][editor->hmap-1]);
+          freeDynObjEditor(editor->map[x][editor->hmap-1]);
           editor->map[x] = realloc(editor->map[x], (editor->hmap-1)*sizeof(DynObj*));
         }
         editor->hmap--;
@@ -701,7 +718,7 @@ void deleteBloc(Editor *editor)
                 editor->map[x][y]->x - editor->dep_x, editor->map[x][y]->y - editor->dep_y, 32, 32))
       {
         nbDynObjDecrease(editor, editor->map[x][y]->type);
-        freeDynObj(editor->map[x][y]);
+        freeDynObjEditor(editor->map[x][y]);
         editor->map[x][y] = initBlocEditor(editor, x*32+DEP_MAP_X, y*32+DEP_MAP_Y,
                               EMPTY);
         deleteBlocsAround(editor, editor->map[x][y]);

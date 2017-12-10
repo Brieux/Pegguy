@@ -5,9 +5,49 @@ using namespace std;
 
 extern Game game;
 
-DynObj::DynObj() : hSpeed(5), vSpeed(15), hSpeedAct(0), vSpeedAct(0), gravite(false)
+DynObj::DynObj() : hSpeed(5), vSpeed(15), hSpeedAct(0), vSpeedAct(0), gravite(true)
 {
 
+}
+
+DynObj::DynObj(int x2, int y2, int type2) : Object(x2, y2, type2), hSpeed(5),
+    vSpeed(15), hSpeedAct(0), vSpeedAct(0), gravite(true)
+{
+  string name;
+  switch (type)
+  {
+    case BOX_DESTROYABLE_EMPTY :
+      name = "../../sentryBlob.png";
+      solid = true;
+      w = 64;
+      y-=32;
+      h = 96;
+      subType = BOX;
+      break;
+    case BOX :
+      name =  "../../blob.png";
+      solid = true;
+      w = 64;
+      y-=32;
+      h = 96;
+      subType = BOX;
+      break;
+    case BOX_DESTROYABLE_BALL :
+      name =  "../../soldier.png";;
+      solid = true;
+      w = 64;
+      h = 64;
+      subType = BOX;
+      break;
+    case BOX_DESTROYABLE_DUMMY_LAUNCHER :
+      name =  "../../soldier.png";
+      solid = true;
+      w = 64;
+      h = 64;
+      subType = BOX;
+      break;
+  }
+  image[0] = name;
 }
 
 void DynObj::update()
@@ -20,6 +60,7 @@ void DynObj::movement()
   applyGravite();
   for (int i=0; i<abs(hSpeedAct); i++)
   {
+    cout << type << " " << x << " " << y << endl;
     if (!collisionMap(true, x + abs(hSpeedAct)/hSpeedAct, y, w, h))
     {
       x += abs(hSpeedAct)/hSpeedAct;
@@ -42,15 +83,16 @@ void DynObj::movement()
   }
 }
 
-void DynObj::move(int direction)
+void DynObj::move(int direction, int hSpeed2, int vSpeed2)
 {
   switch (direction)
   {
     case LEFT :
-      hSpeedAct = -hSpeed;
+      cout << type << " " << x << " " << y << " " << hSpeedAct <<  endl;
+      hSpeedAct = -hSpeed2;
       break;
     case RIGHT :
-      hSpeedAct = hSpeed;
+      hSpeedAct = hSpeed2;
       break;
   }
 }

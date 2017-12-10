@@ -62,12 +62,14 @@ void Input::manageInputs()
 
   if (key[SDL_SCANCODE_A])
   {
-    game.getCharacter()->move(LEFT);
+    game.getCharacter()->move(LEFT, game.getCharacter()->getHSpeed(),
+              game.getCharacter()->getVSpeed());
   }
 
   if (key[SDL_SCANCODE_D])
   {
-    game.getCharacter()->move(RIGHT);
+    game.getCharacter()->move(RIGHT, game.getCharacter()->getHSpeed(),
+              game.getCharacter()->getVSpeed());
   }
 
   if (key[SDL_SCANCODE_W])

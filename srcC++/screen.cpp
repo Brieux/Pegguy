@@ -12,11 +12,13 @@ Screen::Screen()
   window = SDL_CreateWindow("Peggy", SDL_WINDOWPOS_UNDEFINED,
                                            SDL_WINDOWPOS_UNDEFINED,
                                            WINDOW_W, WINDOW_H,
-                                           SDL_WINDOW_SHOWN);
+                                           SDL_WINDOW_FULLSCREEN);
   if (window == NULL)
   {
     exit(EXIT_FAILURE);
   }
+
+
 
   //on cree le renderer de la fenetre
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
@@ -37,7 +39,7 @@ Screen::Screen()
 
 void Screen::clearScreen()
 {
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+  SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
   SDL_RenderClear(renderer);
 }
 
@@ -56,6 +58,12 @@ Screen::~Screen()
 {
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
+  window = SDL_CreateWindow("Peggy", SDL_WINDOWPOS_UNDEFINED,
+                                           SDL_WINDOWPOS_UNDEFINED,
+                                           WINDOW_W, WINDOW_H,
+                                           0);
+
+                                           SDL_DestroyWindow(window);
   IMG_Quit();
   SDL_Quit();
   TTF_Quit();

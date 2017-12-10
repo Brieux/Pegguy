@@ -25,6 +25,7 @@ class Object
   int getW() const;
   int getH() const;
   int getType() const;
+  int getSubType() const;
   int getFrameAct() const;
   int getNbFrame() const;
   int getDeepImage() const;
@@ -38,6 +39,7 @@ class Object
 
   int x, y, w, h;
   int type;
+  int subType;
   int nbFrame;
   int frameAct;
   int deepImage;

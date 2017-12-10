@@ -89,6 +89,18 @@ void Game::loadMap(int level)
         case GROUND_2 :
           map.push_back(new Object(x*32, y*32, type));
           break;
+        case BOX :
+          map.push_back(new DynObj(x*32, y*32, type));
+          break;
+        case BOX_DESTROYABLE_BALL :
+          map.push_back(new DynObj(x*32, y*32, type));
+          break;
+        case BOX_DESTROYABLE_EMPTY :
+          map.push_back(new DynObj(x*32, y*32, type));
+          break;
+        case BOX_DESTROYABLE_DUMMY_LAUNCHER :
+          map.push_back(new DynObj(x*32, y*32, type));
+          break;
         default :
           map.push_back(new Object(x*32, y*32, EMPTY));
           break;
@@ -165,5 +177,5 @@ Bullet *Game::getBullets(int num) const
 
 Game::~Game()
 {
-
+  delete screen;
 }

@@ -132,6 +132,10 @@ void updateInputs(Game *game)
           game->perso->hand->type == CIRCLE || game->perso->hand->type == SQUARE))
       {
         game->perso->hand = NULL;
+        if (game->perso->sizeEquip > 0)
+        {
+          game->perso->hand = game->perso->equip[0];
+        }
         game->perso->interact = false;
         game->input->key[SDL_SCANCODE_UP] = false;
       }
@@ -221,6 +225,14 @@ void updateInputs(Game *game)
     if (game->perso->sizeEquip > 0)
     {
       game->perso->hand = game->perso->equip[0];
+    }
+  }
+  else if (game->input->key[SDL_SCANCODE_2])
+  {
+    game->input->key[SDL_SCANCODE_2] = false;
+    if (game->perso->sizeEquip > 1)
+    {
+      game->perso->hand = game->perso->equip[1];
     }
   }
 }

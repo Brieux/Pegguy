@@ -5,7 +5,6 @@ void drawGame(Game *game)
   clearScreen(game->screen);
   drawMap(game);
   drawHUD(game);
-
   SDL_RenderPresent(game->screen->pRenderer);
 }
 
@@ -39,7 +38,7 @@ void drawMap(Game *game){
 
     //Gestion du scroll horizontal
     //Background
-    drawImage(game->background, -dep_x/SCROLLING_BACKGROUND_X, -dep_y/SCROLLING_BACKGROUND_Y, game->screen->pRenderer);
+    drawImage(getImage(game, game->background), -dep_x/SCROLLING_BACKGROUND_X, -dep_y/SCROLLING_BACKGROUND_Y, game->screen->pRenderer);
 
     //On dessine la map
     for (int x = 0; x < WINDOW_W/32 + 1; x++){
@@ -49,14 +48,14 @@ void drawMap(Game *game){
             if (y + dep_y/32>= game->hmap)    break;                    //Ne pas toucher
             switch (game->map[x + dep_x/32][y + dep_y/32]->type){
                 case GROUND:
-                    drawImage(game->map[x + dep_x/32][y + dep_y/32]->image,
+                    drawImage(getImage(game, game->map[x + dep_x/32][y + dep_y/32]->image),
                                 x*32 - dep_x%32,
                                 y*32 - dep_y%32,
                                 game->screen->pRenderer
                     );
                   break;
                 case GROUND_2:
-                    drawImage(game->map[x + dep_x/32][y + dep_y/32]->image,
+                    drawImage(getImage(game, game->map[x + dep_x/32][y + dep_y/32]->image),
                                 x*32 - dep_x%32,
                                 y*32 - dep_y%32,
                                 game->screen->pRenderer
@@ -75,7 +74,7 @@ void drawMap(Game *game){
     int nb_obj = game->nbDynObj;
     for (int i = 0; i < nb_obj; i++){
       if (game->mapObj[i]->active){
-        drawImage(game->mapObj[i]->image,
+        drawImage(getImage(game, game->mapObj[i]->image),
                                 game->mapObj[i]->x - dep_x,
                                 game->mapObj[i]->y - dep_y,
                                 game->screen->pRenderer
@@ -87,8 +86,8 @@ void drawMap(Game *game){
       drawPerso(game, game->sin, dep_x, dep_y);
     }
     drawPerso(game, game->perso, dep_x, dep_y);
-    drawDialogueNPCs(game, dep_x, dep_y);
     drawProjectiles(game, dep_x, dep_y);
+    drawDialogueNPCs(game, dep_x, dep_y);
 
     //Gérer les frames !
     mob *p_mob = game->first_mob;
@@ -109,7 +108,7 @@ void drawProjectiles(Game *game, int dep_x, int dep_y)
   Projectile *projectile2 = game->projectiles;
   while (projectile2)
   {
-    drawImage(projectile2->dynObj->image,
+    drawImage(getImage(game, projectile2->dynObj->image),
                             projectile2->dynObj->x - dep_x,
                             projectile2->dynObj->y - dep_y,
                             game->screen->pRenderer);
@@ -137,14 +136,14 @@ void drawPerso(Game *game, Perso *perso, int dep_x, int dep_y)
       //Gestion du tems d'invincibilité du personnage
 
 
-      drawImage(perso->image[perso->direction][frame_index],
+      drawImage(getImage(game, perso->image[perso->direction][frame_index]),
                   perso->x - dep_x,
                   perso->y-dep_y,
                   game->screen->pRenderer
       );
       if (perso->hand)
       {
-      drawImage(perso->hand->image,
+      drawImage(getImage(game, perso->hand->image),
                   perso->hand->x - dep_x,
                   perso->hand->y-dep_y,
                   game->screen->pRenderer);
@@ -171,9 +170,9 @@ void drawHUD(Game *game)
       return;
   }
   drawImage(text_texture, game->hud->xBall + 40, game->hud->yBall - 2, game->screen->pRenderer);
-  drawImage(game->hud->ball, game->hud->xBall, game->hud->yBall, game->screen->pRenderer);
+  drawImage(getImage(game, game->hud->ball), game->hud->xBall, game->hud->yBall, game->screen->pRenderer);
 
-  drawImage(game->hud->hearts, game->hud->xHearts, game->hud->yHearts, game->screen->pRenderer);
+  drawImage(getImage(game, game->hud->hearts), game->hud->xHearts, game->hud->yHearts, game->screen->pRenderer);
 
   SDL_FreeSurface(text_surface);
   SDL_DestroyTexture(text_texture);

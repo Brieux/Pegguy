@@ -28,6 +28,7 @@ add_monster(game, B1, 16*32, 18*32);*/
   }
 
   freeAll(game);
+  freeImagesBank(game);
   quitSDL(game->screen);//on supprime tous les renderers et on quitte SDL
 
   return EXIT_SUCCESS;

@@ -6,6 +6,7 @@
 void error(char *cmd);
 Screen *initScreen(char *title);
 void freeDynObj(DynObj *dynObj);
+void freeDynObjEditor(DynObjEditor *dynObj);
 void freeAll(Game *game);
 void quitSDL(Screen *screen);
 

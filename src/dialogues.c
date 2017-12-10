@@ -127,7 +127,7 @@ void dialogue(Game *game, char *text, int dep_x, int dep_y)
           choice[n] = '\0';
           if (j == game->numDialogue - 1)  //si la demande de choix est bien celle
           {                               //où s'est arrêté le joueur
-            drawImage(game->menuPointer, dep_x - 10,
+            drawImage(getImage(game, game->menuPointer), dep_x - 10,
                             dep_y + 30 + game->choice*20,
                             game->screen->pRenderer); //on dessine le pointeur
             switch (m)

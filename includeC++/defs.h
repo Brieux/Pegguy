@@ -18,12 +18,12 @@ enum {EMPTY=48/*0*/, GROUND/*1*/, GROUND_2/*2*/, BOX_DESTROYABLE_EMPTY/*3*/, BAL
       TRIANGLE_BASE/*I*/, MOBILE_PLATFORM=75/*K*/, SECRET_GROUND};
 
 
-enum {OBJECT};
+enum {OBJECT, BLOCK, DYNOBJ};
 
 enum {LEFT, RIGHT, UP, DOWN};
 
-#define WINDOW_W 1280
-#define WINDOW_H 640
+#define WINDOW_W 700
+#define WINDOW_H 500
 #define GRAVITE 2
 #define S_DOWN 18
 

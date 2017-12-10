@@ -9,7 +9,8 @@ enum {EMPTY=48/*0*/, GROUND/*1*/, GROUND_2/*2*/, BOX_DESTROYABLE_EMPTY/*3*/, BAL
       BOX/*5*/, DUMMY_LAUNCHER/*6*/, DUMMY/*7*/, TARGET/*8*/, DOOR/*9*/,
       BOX_DESTROYABLE_BALL=65/*A*/, BOX_DESTROYABLE_DUMMY_LAUNCHER/*B*/, NPC1/*C*/,
       SQUARE/*D*/, CIRCLE/*E*/, TRIANGLE/*F*/, SQUARE_BASE/*G*/, CIRCLE_BASE/*H*/,
-      TRIANGLE_BASE/*I*/, MOBILE_PLATFORM=75/*K*/, SECRET_GROUND};
+      TRIANGLE_BASE/*I*/, MOBILE_PLATFORM=75/*K*/, SECRET_GROUND/*L*/, BRIDGE/*M*/,
+      GHOST_GUN/*N*/, BOX_DESTROYABLE_GHOST_GUN/*O*/};
 
 enum {RIGHT, LEFT, UP, DOWN};
 
@@ -36,7 +37,7 @@ typedef struct DynObj
   int type, count;
   bool solid, active, gravite, dialogue;
   char *content;
-  SDL_Texture *image;
+  char *image;
   int xLink, yLink;
   bool linked;
   struct DynObj *link;
@@ -60,7 +61,7 @@ typedef struct Perso
   bool letal, solid, interact, move;
   char *content;
   int nb_frame;
-  SDL_Texture ***image;
+  char ***image;
   DynObj *hand;
   int sizeEquip;
   int invincible;
@@ -73,16 +74,22 @@ typedef struct Bloc
   int x, y, w, h;
   int type;
   bool solid;
-  SDL_Texture *image;
+  char *image;
 }Bloc;
 
 typedef struct HUD
 {
   int nbBalls, xBall, yBall;
-  SDL_Texture *ball;
+  char *ball;
   int xHearts, yHearts;
-  SDL_Texture *hearts;
+  char *hearts;
 }HUD;
+
+typedef struct ImagesBank
+{
+  SDL_Texture **bank;
+  char **bankName;
+}ImagesBank;
 
 typedef struct Game
 {
@@ -92,19 +99,35 @@ typedef struct Game
   int numDialogue;
   int choice, nbChoices;
   bool dialogue, endDialogue;
-  SDL_Texture *menuPointer;
+  char *menuPointer;
   HUD *hud;
   Screen *screen;
-  SDL_Texture *background;
+  char *background;
   Input *input;
   Perso *perso;
   Perso *sin;
   Bloc ***map;
   DynObj **mapObj;
+  ImagesBank *imagesBank;
   Projectile *projectiles;
   struct mob *first_mob;
   TTF_Font *font;
 }Game;
+
+//EDITOR
+
+typedef struct DynObjEditor
+{
+  int x, y, w, h;
+  int vSpeed, hSpeed;
+  int type, count;
+  bool solid, active, gravite, dialogue;
+  char *content;
+  SDL_Texture *image;
+  int xLink, yLink;
+  bool linked;
+  struct DynObjEditor *link;
+}DynObjEditor;
 
 typedef struct Editor
 {
@@ -115,9 +138,9 @@ typedef struct Editor
   int typeAct;
   int level;
   bool link;
-  DynObj *linker;
-  DynObj **blocs;
-  DynObj ***map;
+  DynObjEditor *linker;
+  DynObjEditor **blocs;
+  DynObjEditor ***map;
   Screen *screen;
   SDL_Texture *background;
   SDL_Texture *cursorImage;

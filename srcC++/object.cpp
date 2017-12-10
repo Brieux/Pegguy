@@ -5,13 +5,15 @@ using namespace std;
 
 extern Game game;
 
-Object::Object() : x(20), y(20), w(32), h(32), nbFrame(1), frameAct(0)
+
+
+Object::Object() : x(20), y(20), w(32), h(32), nbFrame(1), frameAct(0), subType(BLOCK)
 {
 
 }
 
 Object::Object(int x2, int y2, int type2) : x(x2), y(y2), w(32), h(32), nbFrame(1),
-    frameAct(0), type(type2)
+    frameAct(0), type(type2), subType(BLOCK)
 {
   string name;
   switch (type)
@@ -73,6 +75,11 @@ int Object::getH() const
 int Object::getType() const
 {
   return type;
+}
+
+int Object::getSubType() const
+{
+  return subType;
 }
 
 int Object::getFrameAct() const

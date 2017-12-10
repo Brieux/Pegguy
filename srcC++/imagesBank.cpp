@@ -20,6 +20,12 @@ ImagesBank::ImagesBank(SDL_Renderer *renderer)
   place("../graphics/Dirt.png", renderer);
   place("../graphics/Dirt_2.png", renderer);
   place("../graphics/target.png", renderer);
+  place("../graphics/box_destroyable.png", renderer);
+  place("../graphics/box.png", renderer);
+  place("../../blob.png", renderer);
+  place("../../perso.png", renderer);
+  place("../../sentryBlob.png", renderer);
+  place("../../soldier.png", renderer);
 }
 
 //autres
