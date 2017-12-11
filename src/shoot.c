@@ -8,7 +8,6 @@ void shoot(Game *game)
   if (game->perso->waitShoot==0)
   {
     addProjectile(game);
-    game->perso->waitShoot = DELAY_SHOOT_DUMMY;
   }
 }
 
@@ -31,31 +30,72 @@ Projectile *initProjectile(Game *game)
   {
     error("Unable to malloc projectile");
   }
-  projectile->following = NULL;
-  int hSpeed;
-  switch (game->perso->direction)
-  {
-    case RIGHT :
-      hSpeed = 6;
-      break;
-    case LEFT :
-      hSpeed = -6;
-      break;
-  }
-  char *dummy = "";
-  switch (game->perso->direction)
-  {
-    case RIGHT :
-        dummy = "../graphics/dummy_launcher/dummyupright.png";
-        break;
-    case LEFT :
-        dummy = "../graphics/dummy_launcher/dummyupleft.png";
-        break;
-  }
-  projectile->dynObj = initDynObj(game, DUMMY, game->perso->x, game->perso->y,
-                                      16, 16, false, true, true, -15, hSpeed,
-                                       dummy);
 
+  projectile->following = NULL;
+  char *image = "";
+  int hSpeed, vSpeed, type, x, y;
+  bool gravite;
+
+  switch (game->perso->hand->type)
+  {
+    case DUMMY_LAUNCHER :
+      game->perso->waitShoot = DELAY_SHOOT_DUMMY;
+      switch (game->perso->direction)
+      {
+        case RIGHT :
+          hSpeed = 6;
+          x = game->perso->x + 33;
+          break;
+        case LEFT :
+          hSpeed = -6;
+          x = game->perso->x - 25;
+          break;
+      }
+      switch (game->perso->direction)
+      {
+        case RIGHT :
+            image = "../graphics/dummy_launcher/dummyupright.png";
+            break;
+        case LEFT :
+            image = "../graphics/dummy_launcher/dummyupleft.png";
+            break;
+      }
+      y = game->perso->y + 14;
+      vSpeed = -15;
+      type = DUMMY;
+      gravite = true;
+      break;
+    case GHOST_GUN :
+      game->perso->waitShoot = DELAY_SHOOT_PLASMA;
+      switch (game->perso->direction)
+      {
+        case RIGHT :
+          hSpeed = 8;
+          x = game->perso->x + 20;
+          break;
+        case LEFT :
+          hSpeed = -8;
+          x = game->perso->x - 12;
+          break;
+      }
+      switch (game->perso->direction)
+      {
+        case RIGHT :
+            image = "../graphics/ghost_gun/plasma.png";
+            break;
+        case LEFT :
+            image = "../graphics/ghost_gun/plasma.png";
+            break;
+      }
+      y = game->perso->y + 38;
+      vSpeed = 0;
+      type = PLASMA;
+      gravite = false;
+      break;
+  }
+  projectile->dynObj = initDynObj(game, type, x, y,
+                                          16, 16, false, true, gravite, vSpeed, hSpeed,
+                                           image);
   return projectile;
 }
 

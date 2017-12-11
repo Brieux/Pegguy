@@ -76,6 +76,7 @@ void loadImagesBank(Game *game)
   placeBank("../graphics/ghost_gun/ghost_gunrightpointed.png", game);
   placeBank("../graphics/ghost_gun/ghost_gunleftpointed.png", game);
   placeBank("../graphics/ghost_gun/ghost_gun.png", game);
+  placeBank("../graphics/ghost_gun/plasma.png", game);
   placeBank("../graphics/ghost_gun/ghost-gun-visualisation.png", game);
 
 

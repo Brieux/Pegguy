@@ -516,10 +516,13 @@ void updateProjectilesPosition(Game *game){
                 deleteProjectile(game, p_projectile);
             }
         } else {
-          if (p_projectile->dynObj->vSpeed >= VDOWN){
-              p_projectile->dynObj->vSpeed = VDOWN;
-          } else {
-              p_projectile->dynObj->vSpeed += GRAVITE/2;
+          if (p_projectile->dynObj->gravite)
+          {
+            if (p_projectile->dynObj->vSpeed >= VDOWN){
+                p_projectile->dynObj->vSpeed = VDOWN;
+            } else {
+                p_projectile->dynObj->vSpeed += GRAVITE/2;
+            }
           }
           p_projectile->dynObj->x += p_projectile->dynObj->hSpeed;
           p_projectile->dynObj->y += p_projectile->dynObj->vSpeed;

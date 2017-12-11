@@ -163,7 +163,8 @@ void updateInputs(Game *game)
   {
     if (!game->dialogue)
     {
-      if (game->perso->hand && game->perso->hand->type == DUMMY_LAUNCHER)
+      if (game->perso->hand && (game->perso->hand->type == DUMMY_LAUNCHER ||
+          game->perso->hand->type == GHOST_GUN))
       {
         shoot(game);
       }
