@@ -93,9 +93,15 @@ Projectile *initProjectile(Game *game)
       gravite = false;
       break;
   }
+<<<<<<< HEAD
   projectile->dynObj = initDynObj(game, type, x, y,
                                           16, 16, false, true, gravite, vSpeed, hSpeed,
                                            image);
+=======
+  projectile->dynObj = initDynObj(game, DUMMY, game->perso->x, game->perso->y,
+                                      16, 16, false, true, true, -15, hSpeed, "../graphics/dummy_launcher/dummyupright.png");
+
+>>>>>>> c836409e42a61bb970fdbf8497f46f4beced7280
   return projectile;
 }
 

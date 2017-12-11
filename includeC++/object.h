@@ -26,7 +26,7 @@ class Object
   int getH() const;
   int getType() const;
   int getSubType() const;
-  int getFrameAct() const;
+  int getTimeFrame() const;
   int getNbFrame() const;
   int getDeepImage() const;
   bool getSolid() const;
@@ -41,7 +41,8 @@ class Object
   int type;
   int subType;
   int nbFrame;
-  int frameAct;
+  double time_frame;
+  int frame_index;
   int deepImage;
   bool solid;
   bool active;

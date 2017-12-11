@@ -23,6 +23,7 @@ class Game
   void updateGame();
   void loadMap(int level);
   int jumpLine(FILE *file);
+  void calculDep(int &dep_x, int &dep_y);
 
   //accesseurs
   int getWMap() const;
