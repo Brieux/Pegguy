@@ -140,12 +140,8 @@ void updateDummyLauncher(Game *game, DynObj *dummyLauncher)
   {
     dummyLauncher->active = false;
     DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
-<<<<<<< HEAD
                                   false, true, false, 0, 0,
                                   "../graphics/dummy_launcher/dummy_launcher_handrightpointed.png");
-=======
-                                  false, true, false, 0, 0, "../graphics/dummy_launcher/dummy_launcher_handrightpointed.png");
->>>>>>> c836409e42a61bb970fdbf8497f46f4beced7280
     game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
     game->perso->sizeEquip++;
     game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
@@ -228,12 +224,8 @@ void pickItems(Game *game)
         case DUMMY_LAUNCHER : //si collision avec lance-tetine
           game->mapObj[i]->active = false;
           DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
-<<<<<<< HEAD
                                         false, true, false, 0, 0,
                                         "../graphics/dummy_launcher/dummy_launcher_handrightpointed.png");
-=======
-                                        false, true, false, 0, 0, "../graphics/dummy_launcher/dummy_launcher_handrightpointed.png");
->>>>>>> c836409e42a61bb970fdbf8497f46f4beced7280
           game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
           game->perso->sizeEquip++;
           game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
@@ -500,15 +492,12 @@ void destroyBox(Game *game, DynObj *dynObj)
       freeDynObj(dynObj);
       dynObj = initDynObj(game, DUMMY_LAUNCHER, x+16, y+32, 32, 32,
                   false, true, false, 0, 0, "../graphics/dummy_launcher/dummy_launcher.png");
-<<<<<<< HEAD
 
       break;
     case BOX_DESTROYABLE_GHOST_GUN :
       freeDynObj(dynObj);
       dynObj = initDynObj(game, GHOST_GUN, x+16, y, 32, 32,
                   false, true, false, 0, 0, "../graphics/ghost_gun/ghost_gun.png");
-=======
->>>>>>> c836409e42a61bb970fdbf8497f46f4beced7280
 
       break;
   }
