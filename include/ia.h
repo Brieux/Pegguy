@@ -13,7 +13,7 @@ typedef struct mob_w{
 
 }mob_w;
 
-typedef enum {B1=74/*J*/}mob_type;
+typedef enum {B1=74/*J*/, BEBE}mob_type;
 
 typedef struct mob{
     void (*p_mob_fun) (struct mob*, Game*);                    //Pointeur sur la fonction du mob

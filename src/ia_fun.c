@@ -123,14 +123,16 @@ void mob_gestion(Game *game){
         p_mob = p_mob->mob_next;
     }
 }
-bool collisionProjectil(Game *game, mob *mob){
+bool collisionProjectil(Game *game, mob *mob, int type){
     Projectile *p_projectile = game->projectiles;
     while (p_projectile){   //Si toucher détruire projectile
         if (collision(p_projectile->dynObj->x, p_projectile->dynObj->y,
                         p_projectile->dynObj->w, p_projectile->dynObj->h,
                         mob->coord->x, mob->coord->y, mob->coord->w, mob->coord->h)){
-            deleteProjectile(game, p_projectile);
-            return true;
+                if (p_projectile->dynObj->type == type){
+                    deleteProjectile(game, p_projectile);
+                    return true;
+                }
         }
         p_projectile = p_projectile->following;
     }
@@ -204,7 +206,7 @@ void hurt_perso(Game *game, int deg){
 **************************************************
 */
 void B1_fun(mob* mob, Game* game){
-    if (collisionProjectil(game, mob)){
+    if (collisionProjectil(game, mob, DUMMY)){
         mob->life--;
     }
     if (mob->life <= 0){
@@ -231,4 +233,38 @@ void B1_fun(mob* mob, Game* game){
             }
         }
     }
+}
+
+void BEBE_fun(mob* mob, Game *game){
+
+    if (collisionProjectil(game, mob, PLASMA)){
+        mob->life--;
+    }
+    if (mob->life <= 0){
+        destroy_mob(game, mob);
+    }
+    if (collision_perso(game, mob)){
+        hurt_perso(game, 1);
+    }
+        //Si le mob allai tomber, on change de direction
+        if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y + 1, mob->coord->w, mob->coord->h)){
+            if (!collisionMapObj(game, mob->coord->x + mob->coord->Vx, mob->coord->y + 1, mob->coord->w, mob->coord->h, NULL)){
+                if (!collision_mob(game, mob, mob->coord->Vx)){ //Ici changer la fonction collision mob pour gérer aussi sur l'axe vertical. Source de comportement indéfini je pense
+                    mob->coord->Vx = -mob->coord->Vx;
+                }
+            }
+        }
+
+
+    //Si collision avec quelque chose
+    if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h)){
+        if (!collisionMapObj(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h, NULL)){
+            if (!collision_mob(game, mob, mob->coord->Vx)){
+                mob->coord->x += mob->coord->Vx;
+            }
+        }
+    } 
+
+
+
 }
