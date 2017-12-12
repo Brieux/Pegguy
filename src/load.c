@@ -10,7 +10,7 @@ Game *loadGame(int n_map)
   game->screen = initScreen("Peggy");
   loadImagesBank(game);
   game->perso = loadPerso(game);
-  game->sin = NULL;
+  game->sin = loadSin(game);
   game->input = generateInput();
   game->hud = initHUD(game);
   game->projectiles = NULL;
@@ -22,7 +22,7 @@ Game *loadGame(int n_map)
   game->choice = 0;
   game->nbChoices = 0;
   game->background = "../graphics/background.png";
-  game->menuPointer = "../graphics/menuPointer.png";
+  game->menuPointer = "../graphics/menu_pointer.png";
   loadMap(game);
   loadFont(game);
 
