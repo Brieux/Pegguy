@@ -172,7 +172,11 @@ void drawHUD(Game *game)
   drawImage(text_texture, game->hud->xBall + 40, game->hud->yBall - 2, game->screen->pRenderer);
   drawImage(getImage(game, game->hud->ball), game->hud->xBall, game->hud->yBall, game->screen->pRenderer);
 
-  drawImage(getImage(game, game->hud->hearts), game->hud->xHearts, game->hud->yHearts, game->screen->pRenderer);
+  for (int i=0; i<game->perso->hp; i++)
+  {
+    drawImage(getImage(game, game->hud->hearts), game->hud->xHearts + i * 28, 
+                        game->hud->yHearts, game->screen->pRenderer);
+  }
 
   SDL_FreeSurface(text_surface);
   SDL_DestroyTexture(text_texture);
