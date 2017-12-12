@@ -84,6 +84,18 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
             creature->p_mob_fun = B1_fun;
         break;
 
+        case BEBE:
+            creature->life = 3;
+            creature->coord->h = 32;
+            creature->coord->w = 32;
+            creature->can_jump = false;
+            creature->h_jump = creature->act_jump = 0;
+            creature->weapon = NULL;
+            creature->solid = true;
+            creature->gravite = true;
+            creature->nb_frame = 1;
+            creature->mob_next = NULL;
+            creature->p_mob_fun = BEBE_fun;
         default:
             fprintf(stderr, "Error in init_monster, wrong mob_type\n");
             exit(EXIT_FAILURE);
