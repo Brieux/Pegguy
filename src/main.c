@@ -15,12 +15,17 @@ int main(int argc, char *argv[])
 /*add_monster(game, B1, 15*32, 17*32);
 add_monster(game, B1, 16*32, 18*32);*/
 
+
+
+  add_monster(game, BEBE, 800, 300);
+
+
   while (!game->input->quit && game->perso->hp > 0)//boucle principale
   {
     inputs(game);
     updateGame(game);
     drawGame(game);
-    mob_gestion(game);
+    mob_gestion(game); //Problème dans la gestion des mobs, plus précisement dans les collisions
 
   }
   if (game->perso->hp <= 0){

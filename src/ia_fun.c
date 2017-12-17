@@ -94,8 +94,11 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
             creature->solid = true;
             creature->gravite = true;
             creature->nb_frame = 1;
+            creature->image = malloc(creature->nb_frame * sizeof(SDL_Texture *));
+            creature->image[0] = loadTexture("../graphics/baby.png", game->screen->pRenderer);
             creature->mob_next = NULL;
             creature->p_mob_fun = BEBE_fun;
+        break;
         default:
             fprintf(stderr, "Error in init_monster, wrong mob_type\n");
             exit(EXIT_FAILURE);
