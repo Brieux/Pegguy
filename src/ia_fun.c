@@ -66,6 +66,7 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
     creature->type = type;
     creature->coord->x = x;
     creature->coord->y = y;
+    creature->coord->Vy = 0;
     switch (type){
         case B1:
             creature->life = 3;
@@ -88,6 +89,7 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
             creature->life = 3;
             creature->coord->h = 32;
             creature->coord->w = 32;
+            creature->coord->Vx = 3;
             creature->can_jump = false;
             creature->h_jump = creature->act_jump = 0;
             creature->weapon = NULL;
