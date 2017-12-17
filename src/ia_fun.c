@@ -89,7 +89,7 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
             creature->life = 3;
             creature->coord->h = 32;
             creature->coord->w = 32;
-            creature->coord->Vx = 3;
+            creature->coord->Vx = 2;
             creature->can_jump = false;
             creature->h_jump = creature->act_jump = 0;
             creature->weapon = NULL;
@@ -254,7 +254,7 @@ void B1_fun(mob* mob, Game* game){
 
 void BEBE_fun(mob* mob, Game *game){
 
-    if (collisionProjectil(game, mob, PLASMA)){
+    if (collisionProjectil(game, mob, DUMMY)){
         mob->life--;
     }
     if (mob->life <= 0){
@@ -264,14 +264,14 @@ void BEBE_fun(mob* mob, Game *game){
         hurt_perso(game, 1);
     }
         //Si le mob allai tomber, on change de direction
-        if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y + 1, mob->coord->w, mob->coord->h)){
-            if (!collisionMapObj(game, mob->coord->x + mob->coord->Vx, mob->coord->y + 1, mob->coord->w, mob->coord->h, NULL)){
-                if (!collision_mob(game, mob, mob->coord->Vx)){ //Ici changer la fonction collision mob pour gérer aussi sur l'axe vertical. Source de comportement indéfini je pense
-                    mob->coord->Vx = -mob->coord->Vx;
-                }
-            }
+        if (collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h)){
+            mob->coord->Vx = -mob->coord->Vx;
+            
         }
-
+        else if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y + 1, mob->coord->w, mob->coord->h)){
+            //Si le mob va tomber
+            mob->coord->Vx = -mob->coord->Vx;
+        }
 
     //Si collision avec quelque chose
     if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h)){

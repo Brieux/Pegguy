@@ -17,7 +17,7 @@ add_monster(game, B1, 16*32, 18*32);*/
 
 
 
-  add_monster(game, BEBE, 800, 300);
+  add_monster(game, BEBE, 780, 300);
 
 
   while (!game->input->quit && game->perso->hp > 0)//boucle principale
