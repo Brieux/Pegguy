@@ -183,36 +183,39 @@ void initBlocMap(Game *game, Bloc *bloc, int x, int y, char *image)
 
 void initMap(FILE *file, Game *game)
 {
-  fscanf(file, "x:%d y:%d", &game->wmap, &game->hmap);//on recupere la taille de la grille
-  jumpLine(file);//puis on passe à la ligne suivante
-  fscanf(file, "nbDynObj:%d", &game->nbDynObj);//on recupere le nombre d'objets dynamiques
-  jumpLine(file);//puis on passe à la ligne suivante
+    fscanf(file, "x:%d y:%d", &game->wmap, &game->hmap);                  //on recupere la taille de la grille
+    jumpLine(file);                                                       //puis on passe à la ligne suivante
+    fscanf(file, "nbDynObj:%d", &game->nbDynObj);                         //on recupere le nombre d'objets dynamiques
+    jumpLine(file);                                                       //puis on passe à la ligne suivante
 
-  game->mapObj = calloc(game->nbDynObj, sizeof(DynObj));//alloue tableau objets dynamiques
-  if (!game->mapObj)
-  {
-    error("Unable to malloc map");
-  }
+    //Initialisaion de mapObj
+    game->mapObj = NULL;
+    if (!(game->mapObj = calloc(game->nbDynObj, sizeof(DynObj)))){
+        fprintf(stderr, "Error in initMap, can't alloc memory.\n");
+        exit(EXIT_FAILURE);
+    }
 
+    //Initialisation de map
     game->map = NULL;
     if (!(game->map = malloc(game->wmap * sizeof(Bloc**)))){
         fprintf(stderr, "Error in initMap, can't alloc memory.\n");
         exit(EXIT_FAILURE);
     }
 
-    for (uint i=0; i<game->wmap; i++){
-        game->map[i] = NULL;
-        if (!(game->map[i] = malloc(game->hmap*sizeof(Bloc*)))){
-            printf("Unable to malloc map %d\n", i);
+    for (int x = 0; x < game->wmap; x++){
+        game->map[x] = NULL;
+        if (!(game->map[x] = malloc(game->hmap*sizeof(Bloc*)))){
+            printf("Unable to malloc map %d\n", x);
             exit(EXIT_FAILURE);
         }
     
-        
-        for (uint k=0; k<game->hmap; k++){
-            game->map[i][k] = NULL;
-            if (!(game->map[i][k] = malloc(sizeof(Bloc)))){
-                fprintf(stderr, "Error in initMap : Can't alloc memory.\n");
+        for (int y = 0; y < game->hmap; y++){
+            game->map[x][y] = NULL;
+            if (!(game->map[x][y] = malloc(sizeof(Bloc)))){
+                fprintf(stderr, "Error in initMap : Can't alloc memory for (%d,%d)\n", x, y);
                 exit(EXIT_FAILURE);
+            } else {
+                game->map[x][y]->solid = false;
             }
         }
     }
