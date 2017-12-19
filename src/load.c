@@ -193,26 +193,29 @@ void initMap(FILE *file, Game *game)
   {
     error("Unable to malloc map");
   }
-  game->map = malloc(game->wmap*sizeof(Bloc*));//alloue tableau 2 dimensions map
-  if (!game->map)
-  {
-    error("Unable to malloc map");
-  }
 
-  for (uint i=0; i<game->wmap; i++)//pour chaque case en abscisse de la map
-  {
-    game->map[i] = malloc(game->hmap*sizeof(Bloc*));
-    //on alloue un espace suffisant pour un tableau en ordonnee
-    if (!game->map[i])
-    {
-      printf("Unable to malloc map %d\n", i);
-      exit(EXIT_FAILURE);
+    game->map = NULL;
+    if (!(game->map = malloc(game->wmap * sizeof(Bloc**)))){
+        fprintf(stderr, "Error in initMap, can't alloc memory.\n");
+        exit(EXIT_FAILURE);
     }
-    for (uint k=0; k<game->hmap; k++)
-    {
-      game->map[i][k] = malloc(sizeof(Bloc));//et pour chaque case on initialise un Bloc
+
+    for (uint i=0; i<game->wmap; i++){
+        game->map[i] = NULL;
+        if (!(game->map[i] = malloc(game->hmap*sizeof(Bloc*)))){
+            printf("Unable to malloc map %d\n", i);
+            exit(EXIT_FAILURE);
+        }
+    
+        
+        for (uint k=0; k<game->hmap; k++){
+            game->map[i][k] = NULL;
+            if (!(game->map[i][k] = malloc(sizeof(Bloc)))){
+                fprintf(stderr, "Error in initMap : Can't alloc memory.\n");
+                exit(EXIT_FAILURE);
+            }
+        }
     }
-  }
 
   int xLink, yLink;
   int i = 0;
@@ -221,6 +224,10 @@ void initMap(FILE *file, Game *game)
     for (int x=0; x<game->wmap; x++)
     {
       game->map[x][y]->type = fgetc(file);//on copie la grille
+      if (game->map[x][y]->type == EOF){
+        fprintf(stderr, "Error in initMap, EOF\n");
+        exit(EXIT_FAILURE);
+      }
       fscanf(file, ",x:%dy:%d/", &xLink, &yLink);
 
       switch (game->map[x][y]->type)     //lue dans le fichier

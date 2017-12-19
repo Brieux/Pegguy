@@ -356,7 +356,8 @@ bool collisionMap(Game *game, int x1, int y1, int w1, int h1)
   {
     for (int y=0; y<game->hmap; y++)
     {
-      if (game->map[x][y]->solid)/*on teste toutes les collisions solides des cases de la map*/
+      //Erreur dans la ligne suivante celon valgrind, case non initialisée
+      if (game->map[x][y]->solid) /*on teste toutes les collisions solides des cases de la map*/
       {
         if (collision(x1, y1, w1, h1, game->map[x][y]->x, game->map[x][y]->y,
                                        game->map[x][y]->w, game->map[x][y]->h))

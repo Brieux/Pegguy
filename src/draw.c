@@ -242,6 +242,12 @@ void drawImage(SDL_Texture *texture, int x, int y, SDL_Renderer *pRenderer)
   SDL_Rect dest;
   dest.x = x;
   dest.y = y;
-  SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
-  SDL_RenderCopy(pRenderer, texture, NULL, &dest);
+  if (SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h)){
+      fprintf(stderr, "Error in drawImage with SDL_QueryTexture : %s\n", SDL_GetError());
+      exit(EXIT_FAILURE);
+  }
+  if (SDL_RenderCopy(pRenderer, texture, NULL, &dest)){
+      fprintf(stderr, "Error in drawImage with SDL_RenderCopy : %s\n", SDL_GetError());
+      exit(EXIT_FAILURE);
+  }
 }
