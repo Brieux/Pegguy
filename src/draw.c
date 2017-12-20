@@ -231,7 +231,7 @@ void print_line(Game *game, int x, int y, char *debug_text){
     }
     drawImage(text_texture, x, y, game->screen->pRenderer);
     SDL_FreeSurface(text_surface);
-    SDL_DestroyTexture(text_texture);
+    text_surface = NULL;
 }
 
 void clearScreen(Screen *screen)

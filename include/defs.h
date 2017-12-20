@@ -17,7 +17,7 @@
 #define WINDOW_W 1280
 #define GRAVITE 2
 #define VDOWN 20
-#define DEBUG 0
+#define DEBUG 1
 #define SCROLLING_BACKGROUND_X 3
 #define SCROLLING_BACKGROUND_Y 2
 
