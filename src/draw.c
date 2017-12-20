@@ -157,29 +157,32 @@ void drawHUD(Game *game)
   //affiche le nombre de billes
   char text[3];
   sprintf(text, "%d", game->hud->nbBalls);
-  SDL_Surface *text_surface = TTF_RenderText_Solid(game->font, text, color_text);
-  if (!text_surface)
-  {
+
+      
+  SDL_Surface *text_surface = NULL;
+  if (!(text_surface = TTF_RenderText_Solid(game->font, text, color_text))){ //Tester le retour de ce truc
       fprintf(stderr, "drawHUD error: Can't create surface\n");
-      return;
+      exit(EXIT_FAILURE);   //Avant c'était juste un return ?
   }
-  SDL_Texture *text_texture = SDL_CreateTextureFromSurface(game->screen->pRenderer, text_surface);
-  if (!text_texture)
-  {
-      fprintf(stderr, "drawHUD error: Can't create texure\n");
-      return;
+    
+  SDL_Texture *text_texture = NULL;
+  if (!(text_texture = SDL_CreateTextureFromSurface(game->screen->pRenderer, text_surface))){
+      fprintf(stderr, "Error in drawHUD : %s\n", SDL_GetError());
+      exit(EXIT_FAILURE);
   }
+    
   drawImage(text_texture, game->hud->xBall + 40, game->hud->yBall - 2, game->screen->pRenderer);
   drawImage(getImage(game, game->hud->ball), game->hud->xBall, game->hud->yBall, game->screen->pRenderer);
-
+    
   for (int i=0; i<game->perso->hp; i++)
   {
     drawImage(getImage(game, game->hud->hearts), game->hud->xHearts + i * 28, 
                         game->hud->yHearts, game->screen->pRenderer);
   }
-
+    
   SDL_FreeSurface(text_surface);
-  SDL_DestroyTexture(text_texture);
+  text_surface = NULL;
+  
 }
 
 void consol_d(Game *game, int dep_x, int dep_y){

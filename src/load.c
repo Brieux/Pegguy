@@ -10,7 +10,7 @@ Game *loadGame(int n_map)
   game->screen = initScreen("Peggy");
   loadImagesBank(game);
   game->perso = loadPerso(game);
-  game->sin = loadSin(game);
+  game->sin = NULL;             //loadSin(game); 
   game->input = generateInput();
   game->hud = initHUD(game);
   game->projectiles = NULL;
@@ -99,7 +99,7 @@ Perso *loadPerso(Game *game)
   //A changer selon les maps je suppose ?
   perso->w = 32;
   perso->h = 64;
-  perso->x = 96;
+  perso->x = 110;  //96 was here
   perso->y = 200;
   perso->waitShoot = 0;
   perso->direction = RIGHT;
@@ -220,7 +220,7 @@ void initMap(FILE *file, Game *game)
         }
     }
 
-  int xLink, yLink;
+  int xLink = 0, yLink = 0;
   int i = 0;
   for (int y=0; y<game->hmap; y++)
   {
