@@ -79,7 +79,11 @@ void loadImagesBank(Game *game)
   placeBank("../graphics/ghost_gun/plasma.png", game);
   placeBank("../graphics/ghost_gun/ghost-gun-visualisation.png", game);
 
-
+  placeBank("../graphics/boken.png", game);
+  placeBank("../graphics/boken_left.png", game);
+  placeBank("../graphics/hit_boken.png", game);
+  placeBank("../graphics/hit_boken_left.png", game);
+  placeBank("../graphics/box_destroyable_boken.png", game);
 
   placeBank("../graphics/spritepegguy/testprofildroitjambedroite.png", game);
   placeBank("../graphics/spritepegguy/testprofildroitjambegauche.png", game);
@@ -99,13 +103,13 @@ void loadImagesBank(Game *game)
 int hash(ImagesBank *bank, char *name)
 {
   int size = 0;
-  for (size = 0; name[size] != '\0'; size++)
+  for (size = 0; name[size] != '\0'; size++)//on récupère la taille de la chaîne
   {
   }
   int key = 0;
   for (int i= size - 15; i<size; i++)
   {
-    key += name[i] * pow(2, size-i+1);
+    key += name[i] * pow(2, size-i+1);//algo de hachage
   }
   key %= BANK_SIZE;
   return key;
@@ -113,17 +117,17 @@ int hash(ImagesBank *bank, char *name)
 
 void placeBank(char *name, Game *game)
 {
-  int key = hash(game->imagesBank, name);
+  int key = hash(game->imagesBank, name);//on prend la clé de base
   int keyOrigine = key;
   while (game->imagesBank->bank[key] != NULL)
-  {
-    key++;
+  {                                   //et on va chercher une place libre
+    key++;                      //à partir de la clé originelle
     if (key >= BANK_SIZE)
     {
       key = 0;
     }
-    if (key == keyOrigine)
-    {
+    if (key == keyOrigine)//si on retombe sur la clé de base, c'est que l'images
+    {                     //n'existait pas
       fprintf(stderr, "No place for image %s\n", name);
       exit(EXIT_FAILURE);
     }
@@ -135,18 +139,18 @@ void placeBank(char *name, Game *game)
 
 int searchBank(Game *game, char *name)
 {
-  int key = hash(game->imagesBank, name);
+  int key = hash(game->imagesBank, name);//hash originel
   int keyOrigine = key;
 
   while (strcmp(game->imagesBank->bankName[key], name) != 0)
-  {
+  {                         //on cherche l'image
     key++;
     if (key >= BANK_SIZE)
     {
       key = 0;
     }
     if (key == keyOrigine || game->imagesBank->bank[key] == NULL)
-    {
+    {                       //image non trouvée
       fprintf(stderr, "Image %s not found\n", name);
       exit(EXIT_FAILURE);
     }
@@ -156,13 +160,12 @@ int searchBank(Game *game, char *name)
 }
 
 SDL_Texture *getImage(Game *game, char *name)
-{
-
+{                               //on cherche l'image
   int key = searchBank(game, name);
   return game->imagesBank->bank[key];
 }
 
-void printBank(Game *game)
+void printBank(Game *game)//fonction utile uniquement aux devs
 {
   int sum = 0;
   for (int i=0; i<BANK_SIZE; i++)
@@ -178,7 +181,7 @@ void printBank(Game *game)
 
 void freeImagesBank(Game *game)
 {
-  for (int i=0; i<BANK_SIZE; i++)
+  for (int i=0; i<BANK_SIZE; i++)//on supprime toutes les images de la banque
   {
     if (game->imagesBank->bank[i])
     {

@@ -2,20 +2,33 @@
 
 void updateGame(Game *game)
 {
-  gravite(game, game->perso);
-  if (game->sin)
-    graviteSin(game, game->sin);
   graviteObj(game);
   updateProjectilesPosition(game);
   updateLinks(game);
-  updateHand(game);
+  updatePerso(game);
   updateObj(game);
   interactionNPC(game);
+
+}
+
+void updatePerso(Game *game)
+{
+  gravite(game, game->perso);
+  if (game->sin)
+    graviteSin(game, game->sin);
+  updateHand(game);
   if (game->perso->waitShoot!=0)
   {
     game->perso->waitShoot--;
   }
-
+  if (game->perso->hit == RIGHT)
+  {
+    move(game, game->perso, game->perso->hSpeed, 0);
+  }
+  else if (game->perso->hit == LEFT)
+  {
+    move(game, game->perso, -game->perso->hSpeed, 0);
+  }
 }
 
 void updateLinks(Game *game)
@@ -166,6 +179,23 @@ void updateGhostGun(Game *game, DynObj *ghostGun)
   }
 }
 
+void updateBoken(Game *game, DynObj *boken)
+{
+  if (boken->active &&
+          collision(game->perso->x, game->perso->y, game->perso->w, game->perso->h,
+                boken->x, boken->y, boken->w, boken->h))
+  {
+    boken->active = false;
+    DynObj *boken = initDynObj(game, BOKEN, 0, 0, 32, 32,
+                                  false, true, false, 0, 0,
+                                  "../graphics/boken.png");
+    game->perso->hand = boken; //on place le lance-tetine dans la main
+    game->perso->sizeEquip++;
+    game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
+    game->perso->equip[game->perso->sizeEquip-1] = boken; //et dans l'inventaire
+  }
+}
+
 void updateForms(Game *game, DynObj *form)
 {
   if (form->active &&
@@ -190,7 +220,6 @@ void updateObj(Game *game)
     {
       case BALL :
         updateBall(game, game->mapObj[i]);
-
         break;
       case DUMMY_LAUNCHER :
         updateDummyLauncher(game, game->mapObj[i]);
@@ -198,48 +227,15 @@ void updateObj(Game *game)
       case GHOST_GUN :
         updateGhostGun(game, game->mapObj[i]);
         break;
+      case BOKEN :
+        updateBoken(game, game->mapObj[i]);
+        break;
       case MOBILE_PLATFORM :
         updateMobilePlatform(game, game->mapObj[i]);
         break;
 
     }
     updateForms(game, game->mapObj[i]);
-  }
-}
-
-void pickItems(Game *game)
-{
-  for (int i=0; i<game->nbDynObj; i++)
-  {
-    if (game->mapObj[i]->active &&
-            collision(game->perso->x, game->perso->y, game->perso->w, game->perso->h,
-                  game->mapObj[i]->x, game->mapObj[i]->y, game->mapObj[i]->w, game->mapObj[i]->h))
-    {
-      switch (game->mapObj[i]->type) //si collision avec bille
-      {
-        case BALL :
-          game->mapObj[i]->active = false;
-          game->hud->nbBalls++;
-          break;
-        case DUMMY_LAUNCHER : //si collision avec lance-tetine
-          game->mapObj[i]->active = false;
-          DynObj *dummyLauncher = initDynObj(game, DUMMY_LAUNCHER, 0, 0, 32, 32,
-                                        false, true, false, 0, 0,
-                                        "../graphics/dummy_launcher/dummy_launcher_handrightpointed.png");
-          game->perso->hand = dummyLauncher; //on place le lance-tetine dans la main
-          game->perso->sizeEquip++;
-          game->perso->equip = realloc(game->perso->equip, game->perso->sizeEquip*sizeof(DynObj*));
-          game->perso->equip[game->perso->sizeEquip-1] = dummyLauncher; //et dans l'inventaire
-          break;
-      }
-      if ((game->mapObj[i]->type == TRIANGLE || game->mapObj[i]->type == CIRCLE ||
-          game->mapObj[i]->type == SQUARE) && game->perso->interact)
-      {
-        game->perso->interact = false;
-        game->input->key[SDL_SCANCODE_UP] = false;
-        game->perso->hand = game->mapObj[i];
-      }
-    }
   }
 }
 
@@ -278,6 +274,20 @@ void updateHand(Game *game)
           break;
         case LEFT:
           game->perso->hand->image = "../graphics/ghost_gun/ghost_gunleftpointed.png";
+          break;
+      }
+      game->perso->hand->x = game->perso->x;
+      game->perso->hand->y = game->perso->y;
+    }
+    else if (game->perso->hand->type == BOKEN)
+    {
+      switch (game->perso->direction)
+      {
+        case RIGHT:
+          game->perso->hand->image = "../graphics/boken.png";
+          break;
+        case LEFT:
+          game->perso->hand->image = "../graphics/boken_left.png";
           break;
       }
       game->perso->hand->x = game->perso->x;
@@ -498,6 +508,11 @@ void destroyBox(Game *game, DynObj *dynObj)
                   false, true, false, 0, 0, "../graphics/ghost_gun/ghost_gun.png");
 
       break;
+    case BOX_DESTROYABLE_BOKEN :
+      dynObj = modifDynObj(game, dynObj, BOKEN, x+16, y, 32, 32,
+                  false, true, false, 0, 0, "../graphics/boken.png");
+
+      break;
   }
 }
 
@@ -538,12 +553,36 @@ void updateProjectilesPosition(Game *game){
               if (dynObj) {
                   destroyBox(game, dynObj);
               }
-              deleteProjectile(game, p_projectile);
+              if (p_projectile->dynObj->type != HIT_BOKEN)
+              {
+                deleteProjectile(game, p_projectile);
+              }
+
         }
 
 
       }
       if (p_projectile){
+        if (p_projectile->dynObj->type == HIT_BOKEN)
+        {
+          switch (game->perso->direction)
+          {
+            case RIGHT :
+              p_projectile->dynObj->x = game->perso->x + 32;
+              p_projectile->dynObj->y = game->perso->y;
+              break;
+            case LEFT :
+              p_projectile->dynObj->x = game->perso->x - 32;
+              p_projectile->dynObj->y = game->perso->y;
+              break;
+          }
+          p_projectile->dynObj->count--;
+          if (p_projectile->dynObj->count <= 0)
+          {
+            deleteProjectile(game, p_projectile);
+            game->perso->hit = UNDEFINED;
+          }
+        }
           p_projectile = p_projectile->following;
       }
     }while(p_projectile);

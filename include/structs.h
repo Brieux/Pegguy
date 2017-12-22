@@ -10,9 +10,10 @@ enum {EMPTY=48/*0*/, GROUND/*1*/, GROUND_2/*2*/, BOX_DESTROYABLE_EMPTY/*3*/, BAL
       BOX_DESTROYABLE_BALL=65/*A*/, BOX_DESTROYABLE_DUMMY_LAUNCHER/*B*/, NPC1/*C*/,
       SQUARE/*D*/, CIRCLE/*E*/, TRIANGLE/*F*/, SQUARE_BASE/*G*/, CIRCLE_BASE/*H*/,
       TRIANGLE_BASE/*I*/, MOBILE_PLATFORM=75/*K*/, SECRET_GROUND/*L*/, BRIDGE/*M*/,
-      GHOST_GUN/*N*/, BOX_DESTROYABLE_GHOST_GUN/*O*/, PLASMA/*P*/};
+      GHOST_GUN/*N*/, BOX_DESTROYABLE_GHOST_GUN/*O*/, PLASMA/*P*/, BOKEN/*Q*/,
+      BOX_DESTROYABLE_BOKEN/*R*/, HIT_BOKEN/*S*/};
 
-enum {RIGHT, LEFT, UP, DOWN};
+enum {RIGHT, LEFT, UP, DOWN, UNDEFINED};
 
 enum {CHOICE_PREVIOUS, CHOICE_NEXT, NEXT};
 
@@ -58,6 +59,7 @@ typedef struct Perso
   int hJumpAct;
   int direction;
   int waitShoot;
+  int hit;
   bool letal, solid, interact, move;
   char *content;
   int nb_frame;

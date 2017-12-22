@@ -4,14 +4,15 @@
 #include "defs.h"
 
 void updateGame(Game *game);
+void updatePerso(Game *game);
 void updateHand(Game *game);
 void updateBall(Game *game, DynObj *ball);
 void updateMobilePlatform(Game *game, DynObj *platform);
 void updateDummyLauncher(Game *game, DynObj *dummyLauncher);
 void updateGhostGun(Game *game, DynObj *ghostGun);
+void updateBoken(Game *game, DynObj *boken);
 void updateForms(Game *game, DynObj *form);
 void updateObj(Game *game);
-void pickItems(Game *game);
 void updateLinks(Game *game);
 void move(Game *game, Perso *perso, int vx, int vy);
 bool collision(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);

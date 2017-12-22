@@ -95,6 +95,11 @@ DynObjEditor *initBlocEditor(Editor *editor, int x, int y, int type)
       dynObj->w = 64;
       dynObj->h = 64;
       break;
+    case BOX_DESTROYABLE_BOKEN :
+      image = "../graphics/box_destroyable_boken.png";
+      dynObj->w = 64;
+      dynObj->h = 64;
+      break;
     case TARGET :
       image = "../graphics/target.png";
       break;
@@ -253,7 +258,7 @@ void loadMapEditor(Editor *editor, FILE *file)
 
 void loadBlocsEditor(Editor *editor)
 {
-  editor->nbBlocs = 21;
+  editor->nbBlocs = 22;
   editor->blocs = malloc(editor->nbBlocs*sizeof(DynObj*));
   for (int i=0; i<editor->nbBlocs; i++)
   {
@@ -343,6 +348,10 @@ void loadBlocsEditor(Editor *editor)
       case 20 :
         editor->blocs[i] = initBlocEditor(editor, 0,
                   64, BRIDGE);
+        break;
+      case 21 :
+        editor->blocs[i] = initBlocEditor(editor, editor->blocs[i-1]->x + editor->blocs[i-1]->w,
+                editor->blocs[i-1]->y, BOX_DESTROYABLE_BOKEN);
         break;
     }
   }

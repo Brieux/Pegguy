@@ -33,7 +33,7 @@ Projectile *initProjectile(Game *game)
 
   projectile->following = NULL;
   char *image = "";
-  int hSpeed, vSpeed, type, x, y;
+  int hSpeed = 0, vSpeed = 0, type, x, y;
   bool gravite;
 
   switch (game->perso->hand->type)
@@ -88,20 +88,48 @@ Projectile *initProjectile(Game *game)
             break;
       }
       y = game->perso->y + 38;
-      vSpeed = 0;
       type = PLASMA;
       gravite = false;
       break;
+    case BOKEN :
+      game->perso->waitShoot = DELAY_HIT_BOKEN;
+      switch (game->perso->direction)
+      {
+        case RIGHT :
+          x = game->perso->x + 32;
+          break;
+        case LEFT :
+          x = game->perso->x - 32;
+          break;
+      }
+      switch (game->perso->direction)
+      {
+        case RIGHT :
+            image = "../graphics/hit_boken.png";
+            game->perso->hit = RIGHT;
+            break;
+        case LEFT :
+            image = "../graphics/hit_boken_left.png";
+            game->perso->hit = LEFT;
+            break;
+      }
+      y = game->perso->y;
+      type = HIT_BOKEN;
+      gravite = false;
+      break;
   }
-  projectile->dynObj = initDynObj(game, type, x, y,
-                                          16, 16, false, true, gravite, vSpeed, hSpeed,
-                                           image);
+  projectile->dynObj = initDynObj(game, type, x, y, 16, 16, false, true,
+                                  gravite, vSpeed, hSpeed, image);
   return projectile;
 }
 
 void deleteProjectile(Game *game, Projectile *projectile){
     if (!projectile || !game->projectiles){
         return;
+    }
+    if (projectile->dynObj->type == HIT_BOKEN)
+    {
+      game->perso->hit = UNDEFINED;
     }
     Projectile *p_projectile = game->projectiles;
     while(p_projectile->following && p_projectile->following != projectile){

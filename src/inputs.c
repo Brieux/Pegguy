@@ -14,7 +14,7 @@ Input *generateInput()
   {
     input->key[i] = false;
   }
-  for (uint i=0; i<5; i++)
+  for (uint i=0; i<5; i++)//les touches de souris aussi
   {
     input->mouse[i] = false;
   }
@@ -35,8 +35,6 @@ void inputs(Game *game)
 void updateEvents(Input *input)
 {
   SDL_Event event;
-
-
 
   while (SDL_PollEvent(&event))
   {
@@ -76,44 +74,50 @@ void updateInputs(Game *game)
   //deplacement droit
   if (game->input->key[SDL_SCANCODE_D])
   {
-    if (!game->dialogue)
+    if (game->perso->hit == UNDEFINED)
     {
-      game->perso->direction = RIGHT;
-      move(game, game->perso, game->perso->hSpeed, 0);
-      game->perso->move = true;
-      if (game->sin)
+      if (!game->dialogue)//si le perso n'est pas engagé dans un dialogue
       {
-        game->sin->direction = RIGHT;
-        move(game, game->sin, game->sin->hSpeed, 0);
-        game->perso->move = true;
+        game->perso->direction = RIGHT;
+        move(game, game->perso, game->perso->hSpeed, 0);//on déplace le perso
+        game->perso->move = true;//le perso bouge
+        if (game->sin)//et on fait la même chose pour sin s'il est présent
+        {
+          game->sin->direction = RIGHT;
+          move(game, game->sin, game->sin->hSpeed, 0);
+          game->perso->move = true;
+        }
       }
     }
   }
 
   //deplacement gauche
-  else if (game->input->key[SDL_SCANCODE_A])
+  else if (game->input->key[SDL_SCANCODE_A])//voir plus haut
   {
-    if (!game->dialogue)
+    if (game->perso->hit == UNDEFINED)
     {
-      game->perso->direction = LEFT;
-      move(game, game->perso, -game->perso->hSpeed, 0);
-      game->perso->move = true;
-      if (game->sin)
+      if (!game->dialogue)
       {
-        game->sin->direction = LEFT;
-        move(game, game->sin, -game->sin->hSpeed, 0);
+        game->perso->direction = LEFT;
+        move(game, game->perso, -game->perso->hSpeed, 0);
         game->perso->move = true;
+        if (game->sin)
+        {
+          game->sin->direction = LEFT;
+          move(game, game->sin, -game->sin->hSpeed, 0);
+          game->perso->move = true;
+        }
       }
     }
   }
   else
   {
-    if (!game->input->key[SDL_SCANCODE_D])
+    if (!game->input->key[SDL_SCANCODE_D])//si aucune touche n'est appuyée
     {
-      game->perso->move = false;
+      game->perso->move = false;//le perso ne se déplace pas
       if (game->sin)
       {
-        game->perso->move = false;
+        game->perso->move = false;//de même pour sin
       }
     }
   }
@@ -121,27 +125,30 @@ void updateInputs(Game *game)
   //interaction
   if (game->input->key[SDL_SCANCODE_UP])
   {
-    if (game->dialogue)
+    if (game->perso->hit == UNDEFINED)
     {
-      gestionDialogues(game, CHOICE_PREVIOUS);
-      game->input->key[SDL_SCANCODE_UP] = false;
-    }
-    else
-    {
-      if (game->perso->hand && (game->perso->hand->type == TRIANGLE ||
-          game->perso->hand->type == CIRCLE || game->perso->hand->type == SQUARE))
+      if (game->dialogue)//si le perso est dans un dialogue
       {
-        game->perso->hand = NULL;
-        if (game->perso->sizeEquip > 0)
-        {
-          game->perso->hand = game->perso->equip[0];
-        }
-        game->perso->interact = false;
+        gestionDialogues(game, CHOICE_PREVIOUS);//on le gère
         game->input->key[SDL_SCANCODE_UP] = false;
       }
       else
       {
-        game->perso->interact = true;
+        if (game->perso->hand && (game->perso->hand->type == TRIANGLE ||
+            game->perso->hand->type == CIRCLE || game->perso->hand->type == SQUARE))
+        {               //si on tient un objet
+          game->perso->hand = NULL;//on le lâche
+          if (game->perso->sizeEquip > 0)
+          {
+            game->perso->hand = game->perso->equip[0];//on lui fait tenir le premier
+          }                     //objet
+          game->perso->interact = false;
+          game->input->key[SDL_SCANCODE_UP] = false;
+        }
+        else
+        {
+          game->perso->interact = true;
+        }
       }
     }
   }
@@ -149,7 +156,7 @@ void updateInputs(Game *game)
   {
     game->perso->interact = false;
   }
-  if (game->input->key[SDL_SCANCODE_DOWN])
+  if (game->input->key[SDL_SCANCODE_DOWN])//on se déplace dans les dialogues
   {
     if (game->dialogue)
     {
@@ -161,18 +168,18 @@ void updateInputs(Game *game)
   //tir
   if (game->input->key[SDL_SCANCODE_LEFT])
   {
-    if (!game->dialogue)
+    if (!game->dialogue)//si pas dialogue
     {
       if (game->perso->hand && (game->perso->hand->type == DUMMY_LAUNCHER ||
-          game->perso->hand->type == GHOST_GUN))
-      {
-        shoot(game);
+          game->perso->hand->type == GHOST_GUN || game->perso->hand->type == BOKEN))
+      {               //et que arme
+        shoot(game);//tir
       }
       game->input->key[SDL_SCANCODE_LEFT] = false;
     }
   }
 
-  if (game->input->key[SDL_SCANCODE_RIGHT])
+  if (game->input->key[SDL_SCANCODE_RIGHT])//touche pour continuer dialogue
   {
     if (game->dialogue)
     {
@@ -220,7 +227,7 @@ void updateInputs(Game *game)
     }
   }
 
-  if (game->input->key[SDL_SCANCODE_1])
+  if (game->input->key[SDL_SCANCODE_1])//changer d'arme en main
   {
     game->input->key[SDL_SCANCODE_1] = false;
     if (game->perso->sizeEquip > 0)
@@ -234,6 +241,14 @@ void updateInputs(Game *game)
     if (game->perso->sizeEquip > 1)
     {
       game->perso->hand = game->perso->equip[1];
+    }
+  }
+  else if (game->input->key[SDL_SCANCODE_3])
+  {
+    game->input->key[SDL_SCANCODE_3] = false;
+    if (game->perso->sizeEquip > 2)
+    {
+      game->perso->hand = game->perso->equip[2];
     }
   }
 }

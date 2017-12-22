@@ -103,6 +103,7 @@ Perso *loadPerso(Game *game)
   perso->y = 200;
   perso->waitShoot = 0;
   perso->direction = RIGHT;
+  perso->hit = UNDEFINED;
   perso->move = false;
   perso->hSpeed = 5;
   perso->vSpeed = 0;
@@ -167,6 +168,13 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
   dynObj->link = NULL;
   dynObj->count = 0;
   dynObj->dialogue = false;
+
+  switch (type)
+  {
+    case HIT_BOKEN :
+      dynObj->count = TIME_HIT_BOKEN;
+      break;
+  }
 
   return dynObj;
 }
@@ -311,6 +319,13 @@ void initMap(FILE *file, Game *game)
           break;
         case BOX_DESTROYABLE_GHOST_GUN :
           game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_GHOST_GUN, x*32, y*32, 64, 64,
+                                        true, true, true, 0, 0, "../graphics/box_destroyable.png");
+          game->mapObj[i]->xLink = xLink;
+          game->mapObj[i]->yLink = yLink;
+          i++;
+          break;
+        case BOX_DESTROYABLE_BOKEN :
+          game->mapObj[i] = initDynObj(game, BOX_DESTROYABLE_BOKEN, x*32, y*32, 64, 64,
                                         true, true, true, 0, 0, "../graphics/box_destroyable.png");
           game->mapObj[i]->xLink = xLink;
           game->mapObj[i]->yLink = yLink;

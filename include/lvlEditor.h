@@ -4,7 +4,7 @@
 #include "defs.h"
 
 #define DEP_MAP_X 0
-#define DEP_MAP_Y 96
+#define DEP_MAP_Y 128
 
 void print(Editor *editor);
 Editor *loadEditor(int map_selected);
