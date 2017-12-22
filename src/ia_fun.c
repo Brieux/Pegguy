@@ -1,5 +1,6 @@
 #include "../include/ia.h"
 
+//Fonction pas très utile qui permet de tester les pointeurs, mais j'oublie souvent qu'elle existe
 void mob_test(int line, void *p){
     if (!p){
         fprintf(stderr, "Error line %d, pointer NULL\n", line);
@@ -7,7 +8,9 @@ void mob_test(int line, void *p){
     }
 }
 
+//Fonction a utiliser si vous voulez ajouter un monstre, elle s'occupe de tout !
 void add_monster(Game *game, mob_type type, int x, int y){
+  //alors la on cherche le dernier mob de la liste chainée pour le passer à init_monster pour qu'il le mette apres
     mob *mob = game->first_mob;
     while(mob && mob->mob_next){
         mob = mob->mob_next;
@@ -15,17 +18,20 @@ void add_monster(Game *game, mob_type type, int x, int y){
     game->first_mob = init_monster(game, mob, type, x, y);
 }
 
+//Fonction qui gère la gravité des mobs
 void mob_gravite(Game *game, mob *mob){
     if (!mob->gravite){
         return;
     }
+
     DynObj *dynObj = NULL;
     mob->coord->Vy += GRAVITE;
-
+    //Ici on limite la vitesse VY pour pas aller trop vite
     if (mob->coord->Vy > VDOWN){
         mob->coord->Vy = VDOWN;
     }
 
+    //Pour tous les pixels sous le perso dans son vecteur Vy on regard si ya collision
     for (uint i=0; i<abs(mob->coord->Vy); i++){
         if (collisionMap(game, mob->coord->x, mob->coord->y + abs(mob->coord->Vy)/mob->coord->Vy,
           mob->coord->w, mob->coord->h) || //si collision avec element du decor
@@ -49,6 +55,7 @@ void mob_gravite(Game *game, mob *mob){
                     mob->h_jump = 0;
                 }
                 if (dynObj){
+                    //Faudra peut-être voir si on autorise le mob à casser des objets dynamiques
                     destroyBox(game, dynObj);
                 }
             }
@@ -58,6 +65,8 @@ void mob_gravite(Game *game, mob *mob){
     }
 }
 
+
+//Fonction d'initialisation des monstres
 mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
     mob *creature = malloc(sizeof(mob));
     mob_test(__LINE__, creature);
@@ -116,13 +125,15 @@ mob *init_monster(Game *game, mob *previous,mob_type type, int x, int y){
 
 }
 
+//Ici on dessine le mob, à élaborer pour les animations des mobs je pense
 void draw_mob(Game *game, mob *mob){
     int dep_x;
     int dep_y;
 
+    //Permet de calculer le déplacement sur l'écran dans le jeu par rapport à la position du personnage
     calcul_dep(&dep_x, &dep_y, game);
 
-   if (mob->coord->x > dep_x && mob->coord->x + mob->coord->w < WINDOW_W + dep_x){ //Formule a tester
+   if (mob->coord->x > dep_x && mob->coord->x + mob->coord->w < WINDOW_W + dep_x){ //Formule a tester -- formule approuvée :D
         if (mob->coord->y + mob->coord->h > dep_y && mob->coord->y < WINDOW_H + dep_y){
             drawImage(mob->image[0], mob->coord->x - dep_x, mob->coord->y - dep_y, game->screen->pRenderer);
         }
@@ -131,6 +142,8 @@ void draw_mob(Game *game, mob *mob){
 
 }
 
+//Fonction principale qui gère tous les mobs
+//Fonction principale !
 void mob_gestion(Game *game){
     mob *p_mob = game->first_mob;
     while (p_mob){
@@ -140,6 +153,8 @@ void mob_gestion(Game *game){
         p_mob = p_mob->mob_next;
     }
 }
+
+//Teste les collision avec les projectile. Je paraphrase un peu mais bon
 bool collisionProjectil(Game *game, mob *mob, int type){
     Projectile *p_projectile = game->projectiles;
     while (p_projectile){   //Si toucher détruire projectile
@@ -156,6 +171,8 @@ bool collisionProjectil(Game *game, mob *mob, int type){
     return false;
 }
 
+
+//Focntion qui détruit un mob
 void destroy_mob(Game *game, mob *c_mob){
     mob_test(__LINE__, c_mob);
 
@@ -164,6 +181,7 @@ void destroy_mob(Game *game, mob *c_mob){
         p_mob = p_mob->mob_next;
     }
     if (c_mob == game->first_mob && !game->first_mob->mob_next){
+        //Si quelqu'un pige pourquoi si on enleve le free c'est pollevent qui plante, merci beeaucoup de me faire parvenir la réponse !
         //free(c_mob->coord);
         free(c_mob);
         game->first_mob = NULL;
@@ -180,6 +198,7 @@ void destroy_mob(Game *game, mob *c_mob){
     }
 }
 
+//Assez explicite aussi, teste s'il y a collision avec le perso
 bool collision_perso(Game* game, mob *mob){
     return collision(game->perso->x, game->perso->y, game->perso->w,
                     game->perso->h, mob->coord->x, mob->coord->y,
@@ -187,9 +206,11 @@ bool collision_perso(Game* game, mob *mob){
     );
 }
 
+//permet de tester les collisions entre mobs
 bool collision_mob(Game* game, mob *monstre, int diff_x){
     mob *p_mob = game->first_mob;
     while (p_mob){
+      //On teste si le mob n'est pas lui même, sinon c'est con
         if (p_mob == monstre){
             if (monstre->mob_next){
                 p_mob = monstre->mob_next;
@@ -211,6 +232,7 @@ bool collision_mob(Game* game, mob *monstre, int diff_x){
     return false;
 }
 
+//Taper sure le perso !
 void hurt_perso(Game *game, int deg){
     if (!game->perso->invincible){
             game->perso->hp -= deg;

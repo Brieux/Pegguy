@@ -1,8 +1,0 @@
-Obj.o: Obj.cpp ../include2/defs.h ../include2/Screen.h ../include2/defs.h \
- ../include2/Obj.h ../include2/Game.h
-Game.o: Game.cpp ../include2/defs.h ../include2/Screen.h \
- ../include2/defs.h ../include2/Obj.h ../include2/Game.h
-Screen.o: Screen.cpp ../include2/defs.h ../include2/Screen.h \
- ../include2/defs.h ../include2/Obj.h ../include2/Game.h
-main.o: main.cpp ../include2/defs.h ../include2/Screen.h \
- ../include2/defs.h ../include2/Obj.h ../include2/Game.h

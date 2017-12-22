@@ -1,5 +1,6 @@
 #include "../include/move.h"
 
+//Fonction principale
 void updateGame(Game *game)
 {
   graviteObj(game);
@@ -31,6 +32,7 @@ void updatePerso(Game *game)
   }
 }
 
+//Demander à Yann, il est deux heures du mat j'ai la flemme de comprendre ça pour commenter
 void updateLinks(Game *game)
 {
   for (int i=0; i<game->nbDynObj; i++)//gestion des liens, à mettre dans une fonction
@@ -75,6 +77,7 @@ void updateLinks(Game *game)
   }
 }
 
+//On met à jour la position des projectiles
 void updateBall(Game *game, DynObj *ball)
 {
   if (ball->active &&
@@ -86,6 +89,7 @@ void updateBall(Game *game, DynObj *ball)
   }
 }
 
+//La on met à jour la position des plateformes mobiles
 void updateMobilePlatform(Game *game, DynObj *platform)
 {
   int xPerso;
