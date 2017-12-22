@@ -266,11 +266,16 @@ void BEBE_fun(mob* mob, Game *game){
         //Si le mob allai tomber, on change de direction
         if (collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y, mob->coord->w, mob->coord->h)){
             mob->coord->Vx = -mob->coord->Vx;
-            
+
         }
-        else if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y + 1, mob->coord->w, mob->coord->h)){
-            //Si le mob va tomber
-            mob->coord->Vx = -mob->coord->Vx;
+        else if (mob->coord->Vx > 0){
+            if (!collisionMap(game, mob->coord->x + mob->coord->Vx + mob->coord->w, mob->coord->y + 1, mob->coord->w, mob->coord->h)){
+                mob->coord->Vx = -mob->coord->Vx;
+              }
+        } else if (mob->coord->Vx < 0){
+          if (!collisionMap(game, mob->coord->x + mob->coord->Vx, mob->coord->y + 1, mob->coord->w, mob->coord->h)){
+              mob->coord->Vx = -mob->coord->Vx;
+          }
         }
 
     //Si collision avec quelque chose
@@ -280,7 +285,7 @@ void BEBE_fun(mob* mob, Game *game){
                 mob->coord->x += mob->coord->Vx;
             }
         }
-    } 
+    }
 
 
 
