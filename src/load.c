@@ -10,7 +10,7 @@ Game *loadGame(int n_map)
   game->screen = initScreen("Peggy");
   loadImagesBank(game);
   game->perso = loadPerso(game);
-  game->sin = loadSin(game); 
+  game->sin = loadSin(game);
   game->input = generateInput();
   game->hud = initHUD(game);
   game->projectiles = NULL;
@@ -171,6 +171,31 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
   return dynObj;
 }
 
+DynObj *modifDynObj(Game *game, DynObj *dynObj, int type, int x, int y, int w, int h, bool solid,
+                      bool active, bool gravite, int vSpeed, int hSpeed, char *image)
+{
+  if (!dynObj){
+    error("Unable to malloc dynObj");
+  }
+  dynObj->type = type;
+  dynObj->x = x;
+  dynObj->y = y;
+  dynObj->w = w;
+  dynObj->h = h;
+  dynObj->solid = solid;
+  dynObj->linked = false;
+  dynObj->active = active;
+  dynObj->gravite = gravite;
+  dynObj->vSpeed = vSpeed;
+  dynObj->hSpeed = hSpeed;
+  dynObj->image = image;
+  dynObj->link = NULL;
+  dynObj->count = 0;
+  dynObj->dialogue = false;
+
+  return dynObj;
+}
+
 void initBlocMap(Game *game, Bloc *bloc, int x, int y, char *image)
 {
   bloc->solid = true;
@@ -208,7 +233,7 @@ void initMap(FILE *file, Game *game)
             printf("Unable to malloc map %d\n", x);
             exit(EXIT_FAILURE);
         }
-    
+
         for (int y = 0; y < game->hmap; y++){
             game->map[x][y] = NULL;
             if (!(game->map[x][y] = malloc(sizeof(Bloc)))){

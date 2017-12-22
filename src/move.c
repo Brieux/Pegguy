@@ -485,19 +485,16 @@ void destroyBox(Game *game, DynObj *dynObj)
       dynObj->active = false;
       break;
     case BOX_DESTROYABLE_BALL :
-      freeDynObj(dynObj);
-      dynObj = initDynObj(game, BALL, x+16, y+32, 32, 32,
+      dynObj = modifDynObj(game, dynObj, BALL, x+16, y+32, 32, 32,
                 false, true, false, 0, 0, "../graphics/billefinale.png");
       break;
     case BOX_DESTROYABLE_DUMMY_LAUNCHER :
-      freeDynObj(dynObj);
-      dynObj = initDynObj(game, DUMMY_LAUNCHER, x+16, y+32, 32, 32,
+      dynObj = modifDynObj(game, dynObj, DUMMY_LAUNCHER, x+16, y+32, 32, 32,
                   false, true, false, 0, 0, "../graphics/dummy_launcher/dummy_launcher.png");
 
       break;
     case BOX_DESTROYABLE_GHOST_GUN :
-      freeDynObj(dynObj);
-      dynObj = initDynObj(game, GHOST_GUN, x+16, y, 32, 32,
+      dynObj = modifDynObj(game, dynObj, GHOST_GUN, x+16, y, 32, 32,
                   false, true, false, 0, 0, "../graphics/ghost_gun/ghost_gun.png");
 
       break;
