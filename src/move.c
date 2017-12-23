@@ -532,13 +532,38 @@ void updateProjectilesPosition(Game *game){
             if (p_projectile->dynObj->y < 100 || p_projectile->dynObj->y > game->hmap*32){
                 deleteProjectile(game, p_projectile);
             }
-        } else {
+        }
+        else if (p_projectile->dynObj->type == HIT_BOKEN && p_projectile->dynObj->count <= 0)
+        {
+          deleteProjectile(game, p_projectile);
+          game->perso->hit = UNDEFINED;
+        }
+        else if (p_projectile->dynObj->type == PLASMA && p_projectile->dynObj->count <= 0)
+        {
+          deleteProjectile(game, p_projectile);
+        }
+        else {
           if (p_projectile->dynObj->gravite)
           {
             if (p_projectile->dynObj->vSpeed >= VDOWN){
                 p_projectile->dynObj->vSpeed = VDOWN;
             } else {
                 p_projectile->dynObj->vSpeed += GRAVITE/2;
+            }
+          }
+          p_projectile->dynObj->count--;
+          if (p_projectile->dynObj->type == HIT_BOKEN)
+          {
+            switch (game->perso->direction)
+            {
+              case RIGHT :
+                p_projectile->dynObj->x = game->perso->x + 32;
+                p_projectile->dynObj->y = game->perso->y;
+                break;
+              case LEFT :
+                p_projectile->dynObj->x = game->perso->x - 32;
+                p_projectile->dynObj->y = game->perso->y;
+                break;
             }
           }
           p_projectile->dynObj->x += p_projectile->dynObj->hSpeed;
@@ -561,32 +586,9 @@ void updateProjectilesPosition(Game *game){
               {
                 deleteProjectile(game, p_projectile);
               }
-
-        }
-
-
-      }
-      if (p_projectile){
-        if (p_projectile->dynObj->type == HIT_BOKEN)
-        {
-          switch (game->perso->direction)
-          {
-            case RIGHT :
-              p_projectile->dynObj->x = game->perso->x + 32;
-              p_projectile->dynObj->y = game->perso->y;
-              break;
-            case LEFT :
-              p_projectile->dynObj->x = game->perso->x - 32;
-              p_projectile->dynObj->y = game->perso->y;
-              break;
-          }
-          p_projectile->dynObj->count--;
-          if (p_projectile->dynObj->count <= 0)
-          {
-            deleteProjectile(game, p_projectile);
-            game->perso->hit = UNDEFINED;
           }
         }
+        if (p_projectile){
           p_projectile = p_projectile->following;
       }
     }while(p_projectile);

@@ -33,7 +33,7 @@ Projectile *initProjectile(Game *game)
 
   projectile->following = NULL;
   char *image = "";
-  int hSpeed = 0, vSpeed = 0, type, x, y;
+  int hSpeed = 0, vSpeed = 0, type, x, y, w = 16, h = 16;
   bool gravite;
 
   switch (game->perso->hand->type)
@@ -114,11 +114,13 @@ Projectile *initProjectile(Game *game)
             break;
       }
       y = game->perso->y;
+      w = 32;
+      h = 64;
       type = HIT_BOKEN;
       gravite = false;
       break;
   }
-  projectile->dynObj = initDynObj(game, type, x, y, 16, 16, false, true,
+  projectile->dynObj = initDynObj(game, type, x, y, w, h, false, true,
                                   gravite, vSpeed, hSpeed, image);
   return projectile;
 }
@@ -126,10 +128,6 @@ Projectile *initProjectile(Game *game)
 void deleteProjectile(Game *game, Projectile *projectile){
     if (!projectile || !game->projectiles){
         return;
-    }
-    if (projectile->dynObj->type == HIT_BOKEN)
-    {
-      game->perso->hit = UNDEFINED;
     }
     Projectile *p_projectile = game->projectiles;
     while(p_projectile->following && p_projectile->following != projectile){

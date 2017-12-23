@@ -174,6 +174,9 @@ DynObj *initDynObj(Game *game, int type, int x, int y, int w, int h, bool solid,
     case HIT_BOKEN :
       dynObj->count = TIME_HIT_BOKEN;
       break;
+    case PLASMA :
+      dynObj->count = PLASMA_RANGE;
+      break;
   }
 
   return dynObj;
